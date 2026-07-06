@@ -2,7 +2,17 @@
 
 Source code đã sẵn sàng để đưa lên internet bằng hosting tĩnh miễn phí.
 
-Quan trọng: hãy deploy thư mục `public/` hoặc file `pathology-learning-hub-public.zip`, không upload toàn bộ thư mục làm việc cũ vì folder gốc có thể còn dữ liệu nội bộ từ app registry trước đây.
+Quan trọng: hãy deploy thư mục `public/` hoặc file `pathology-learning-hub-public.zip`, không upload toàn bộ thư mục làm việc cũ vì folder gốc có thể còn dữ liệu nội bộ từ app registry trước đây. Bản web này chỉ chứa thư viện link chính thống, không chứa Excel, tài khoản WHO/IARC hoặc dữ liệu bệnh án.
+
+## Vercel từ GitHub
+
+1. Upload các file `index.html`, `styles.css`, `app.js`, `README.md`, `DEPLOY.md` lên repository GitHub.
+2. Mở https://vercel.com/new và import repository đó.
+3. Framework Preset: chọn `Other`.
+4. Build Command: để trống.
+5. Output Directory: để trống hoặc đặt `.` nếu Vercel hỏi rõ thư mục xuất bản.
+6. Bấm `Deploy`.
+7. Vào `Project Settings` -> `Domains` để đổi tên miền phụ miễn phí dạng `ten-ban-chon.vercel.app`.
 
 ## Cách nhanh nhất: Netlify Drop
 

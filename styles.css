@@ -143,7 +143,7 @@ a {
   overflow: hidden;
   background:
     linear-gradient(100deg, rgba(13, 32, 50, 0.96), rgba(13, 32, 50, 0.72) 47%, rgba(13, 32, 50, 0.33)),
-    url("https://upload.wikimedia.org/wikipedia/commons/e/e8/Colon_adenocarcinoma_-_biopsy%2C_high_mag.jpg") center / cover;
+    url("https://iarc-publications-website.s3.eu-west-3.amazonaws.com/media/default/0001/08/thumb_7550_default_publication.jpeg") center / cover;
 }
 
 .hero::after {
@@ -399,6 +399,8 @@ h3 {
   gap: 18px;
   position: relative;
   overflow: hidden;
+  text-align: left;
+  cursor: pointer;
 }
 
 .category-card::before {
@@ -413,6 +415,12 @@ h3 {
 .category-card > * {
   position: relative;
   z-index: 1;
+}
+
+.category-card.active,
+.term-card.active {
+  outline: 3px solid rgba(226, 183, 47, 0.95);
+  outline-offset: 3px;
 }
 
 .category-icon {
@@ -453,6 +461,101 @@ h3 {
   grid-template-columns: minmax(0, 1fr) 360px;
   gap: 18px;
   align-items: start;
+}
+
+.lookup-panel {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  background: #f7fbfa;
+}
+
+.lookup-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.lookup-panel .chip-row {
+  margin-top: 12px;
+}
+
+.mini-chip {
+  min-height: 32px;
+  border: 1px solid #bad7d0;
+  border-radius: 999px;
+  padding: 0 11px;
+  background: #ecf8f5;
+  color: var(--teal);
+  font-weight: 850;
+  font-size: 0.82rem;
+}
+
+.mini-chip:hover {
+  border-color: var(--teal);
+  background: white;
+}
+
+.source-results {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.result-card {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  background: white;
+  box-shadow: var(--soft-shadow);
+  display: grid;
+  gap: 12px;
+}
+
+.result-card h3,
+.result-card h4 {
+  margin: 0;
+}
+
+.result-card h3 {
+  margin-top: 8px;
+}
+
+.result-card h4 {
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.result-card p,
+.english-title,
+.source-note {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.english-title {
+  margin: -3px 0 8px;
+  font-weight: 750;
+}
+
+.keyword-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.keyword-row span {
+  min-height: 25px;
+  border-radius: 999px;
+  padding: 4px 9px;
+  background: #f1f5f4;
+  color: #52645f;
+  font-size: 0.76rem;
+  font-weight: 800;
 }
 
 .reader-card,
@@ -702,6 +805,99 @@ label {
   flex-wrap: wrap;
 }
 
+.link-row a {
+  max-width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 11px;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  background: #fbfdfc;
+  color: var(--teal);
+  font-weight: 850;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.link-row a span {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.link-row a:hover {
+  border-color: var(--teal);
+  background: #f1faf8;
+  text-decoration: none;
+}
+
+.compact-links a {
+  width: 100%;
+}
+
+.image-links a {
+  border-color: #d7c48b;
+  background: #fff9e8;
+  color: #8b6500;
+}
+
+.detail-panel {
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: white;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 310px minmax(0, 1fr);
+}
+
+.detail-visual {
+  min-height: 330px;
+  padding: 22px;
+  display: flex;
+  align-items: flex-end;
+  background:
+    linear-gradient(160deg, rgba(13, 32, 50, 0.18), rgba(13, 32, 50, 0.82)),
+    var(--image) center / cover;
+  color: white;
+}
+
+.detail-visual span {
+  width: 74px;
+  height: 74px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  background: var(--gold);
+  color: #1c261f;
+  font-size: 1.35rem;
+  font-weight: 950;
+}
+
+.detail-copy {
+  padding: 22px;
+  display: grid;
+  align-content: center;
+  gap: 14px;
+}
+
+.detail-copy h3 {
+  margin: 0;
+  font-size: clamp(1.45rem, 2.4vw, 2.3rem);
+}
+
+.detail-copy p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
 .mini-list {
   display: grid;
   gap: 7px;
@@ -749,6 +945,8 @@ label {
 
 .term-card {
   padding: 14px;
+  text-align: left;
+  cursor: pointer;
 }
 
 .term-card strong {
@@ -760,6 +958,11 @@ label {
   margin: 0;
   color: var(--muted);
   line-height: 1.5;
+}
+
+.term-detail {
+  grid-column: 1 / -1;
+  grid-template-columns: 1fr;
 }
 
 .source-grid {
@@ -815,7 +1018,8 @@ label {
 
   .featured-grid,
   .system-grid,
-  .source-grid {
+  .source-grid,
+  .source-results {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -823,6 +1027,10 @@ label {
   .reader-layout,
   .terms-section {
     grid-template-columns: 1fr;
+  }
+
+  .detail-panel {
+    grid-template-columns: 240px minmax(0, 1fr);
   }
 
   .term-intro {
@@ -869,12 +1077,22 @@ label {
 
   .category-grid,
   .atlas-grid,
-  .featured-grid,
-  .system-grid,
-  .source-grid,
-  .term-grid,
-  .finding-grid {
+    .featured-grid,
+    .system-grid,
+    .source-grid,
+    .source-results,
+    .term-grid,
+    .finding-grid {
     grid-template-columns: 1fr;
+  }
+
+  .lookup-row,
+  .detail-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-visual {
+    min-height: 240px;
   }
 
   .site-footer {
@@ -906,6 +1124,11 @@ label {
   .hero-stats span,
   .btn {
     width: 100%;
+  }
+
+  .lookup-row .icon-btn {
+    width: 100%;
+    border-radius: 999px;
   }
 
   .featured-strip,
