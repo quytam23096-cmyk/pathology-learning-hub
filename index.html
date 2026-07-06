@@ -4,193 +4,180 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Pathology Learning Hub</title>
+    <meta
+      name="description"
+      content="Thư viện học đọc giải phẫu bệnh tiếng Việt: atlas ảnh mô bệnh học, checklist báo cáo, thuật ngữ và nguồn học chuẩn."
+    />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <div class="app-shell">
-      <aside class="sidebar" aria-label="Điều hướng">
-        <div class="brand">
-          <div class="brand-mark" aria-hidden="true">
-            <span></span>
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="Pathology Learning Hub">
+        <span class="brand-mark" aria-hidden="true">PL</span>
+        <span>
+          <strong>Pathology Hub</strong>
+          <small>Thư viện học GPB</small>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Điều hướng chính">
+        <a href="#categories">Danh mục</a>
+        <a href="#reader">Đọc báo cáo</a>
+        <a href="#atlas">Atlas</a>
+        <a href="#terms">Thuật ngữ</a>
+        <a href="#sources">Nguồn</a>
+      </nav>
+
+      <a class="header-cta" href="#reader">Bắt đầu học</a>
+    </header>
+
+    <main>
+      <section id="home" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <div class="hero-kicker">
+            <span>Atlas mở</span>
+            <span>Checklist GPB</span>
+            <span>Học theo hệ cơ quan</span>
           </div>
-          <div>
-            <strong>Pathology Hub</strong>
-            <small>Học đọc GPB</small>
+          <h1>Thư viện học đọc kết quả giải phẫu bệnh</h1>
+          <p>
+            Biến báo cáo GPB dài và khó thành một lộ trình học dễ bám: nhận diện bệnh phẩm,
+            hiểu mô tả vi thể, nắm kết luận, kiểm tra yếu tố bắt buộc và mở đúng nguồn chuẩn.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#categories">Khám phá danh mục</a>
+            <a class="btn glass" href="#atlas">Xem atlas ảnh</a>
+          </div>
+          <div class="hero-stats" aria-label="Tóm tắt nội dung">
+            <span><strong id="statCategories">12</strong> hệ cơ quan</span>
+            <span><strong id="statAtlas">12</strong> ảnh atlas</span>
+            <span><strong id="statTerms">30+</strong> thuật ngữ</span>
           </div>
         </div>
+      </section>
 
-        <nav class="nav" aria-label="Mục học">
-          <a class="active" href="#read">Đọc báo cáo</a>
-          <a href="#atlas">Atlas</a>
-          <a href="#systems">Hệ cơ quan</a>
-          <a href="#terms">Thuật ngữ</a>
-          <a href="#sources">Nguồn</a>
-        </nav>
-
-        <div class="source-panel">
-          <span>Chế độ</span>
-          <strong>Free static site</strong>
-          <small>Không lưu tài khoản, không gửi dữ liệu ra ngoài.</small>
+      <section class="featured-strip" aria-label="Ca học nổi bật">
+        <div class="strip-head">
+          <span class="eyebrow">Ca học nổi bật</span>
+          <strong>Pattern nên nhận ra sớm</strong>
         </div>
-      </aside>
+        <div id="featuredGrid" class="featured-grid"></div>
+      </section>
 
-      <main class="workspace">
-        <header class="topbar">
+      <section id="categories" class="section categories-section">
+        <div class="section-heading">
           <div>
-            <p class="eyebrow">Giải phẫu bệnh · WHO · PathologyOutlines · CAP</p>
-            <h1>Học đọc kết quả giải phẫu bệnh theo checklist</h1>
-            <p class="lead">
-              Một trang học tập tiếng Việt để biến báo cáo GPB dài và khó thành các câu hỏi nhỏ:
-              bệnh phẩm là gì, mô tả vi thể ra sao, chẩn đoán chính ở đâu, cần bổ sung dấu ấn nào,
-              và nên mở nguồn nào để đọc sâu hơn.
+            <span class="eyebrow">Khám phá theo hệ cơ quan</span>
+            <h2>Chọn một lối vào để học có trật tự</h2>
+          </div>
+          <p>
+            Mỗi danh mục gom các câu hỏi cần kiểm tra, marker hay gặp và đường dẫn nguồn sâu hơn.
+            Cách học này giúp bạn không bị lạc giữa lượng kiến thức quá rộng.
+          </p>
+        </div>
+        <div id="categoryGrid" class="category-grid"></div>
+      </section>
+
+      <section id="reader" class="section reader-section">
+        <div class="reader-card">
+          <div class="section-heading compact">
+            <div>
+              <span class="eyebrow">Bàn đọc báo cáo</span>
+              <h2>Dán báo cáo GPB để tách ý chính</h2>
+            </div>
+            <p>
+              Công cụ chạy trong trình duyệt, không gửi nội dung ra ngoài. Dùng để luyện cách đọc,
+              không thay cho chẩn đoán y khoa.
             </p>
           </div>
-          <div class="top-actions">
-            <a class="btn primary" href="https://www.pathologyoutlines.com/" target="_blank" rel="noreferrer">
-              <span aria-hidden="true">↗</span>
-              PathologyOutlines
-            </a>
-            <a
-              class="btn"
-              href="https://tumourclassification.iarc.who.int/chapters/53"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <span aria-hidden="true">↗</span>
-              WHO chapter
-            </a>
-          </div>
-        </header>
 
-        <section id="read" class="workbench" aria-labelledby="read-title">
-          <article class="panel report-tool">
-            <div class="panel-header">
-              <div>
-                <h2 id="read-title">Bàn đọc báo cáo</h2>
-                <p>Dán báo cáo hoặc dùng ca mẫu để luyện tách ý chính. Phân tích chạy ngay trong trình duyệt.</p>
-              </div>
-              <div class="tool-buttons">
-                <button id="loadSample" class="icon-btn" type="button" title="Nạp ca mẫu" aria-label="Nạp ca mẫu">▶</button>
-                <button id="clearReport" class="icon-btn" type="button" title="Xóa nội dung" aria-label="Xóa nội dung">×</button>
+          <div class="reader-layout">
+            <div class="report-pane">
+              <textarea
+                id="reportInput"
+                spellcheck="false"
+                placeholder="Dán báo cáo GPB tại đây: đại thể, vi thể, kết luận, HMMD, diện cắt, hạch..."
+              ></textarea>
+              <div class="action-row">
+                <button id="analyzeReport" type="button" class="btn primary">Tách ý chính</button>
+                <button id="loadSample" type="button" class="btn">Nạp ca mẫu</button>
+                <button id="clearReport" type="button" class="icon-btn" title="Xóa nội dung" aria-label="Xóa nội dung">
+                  ×
+                </button>
               </div>
             </div>
-
-            <textarea
-              id="reportInput"
-              spellcheck="false"
-              placeholder="Dán báo cáo GPB tại đây: đại thể, vi thể, kết luận, HMMD, diện cắt, hạch..."
-            ></textarea>
-
-            <div class="action-row">
-              <button id="analyzeReport" type="button" class="btn primary">
-                <span aria-hidden="true">✓</span>
-                Tách ý chính
-              </button>
-              <span id="privacyNote">Dữ liệu chỉ nằm trên máy bạn.</span>
-            </div>
-
             <div id="reportFindings" class="finding-grid" aria-live="polite"></div>
-          </article>
-
-          <aside class="panel reading-map">
-            <div class="panel-header compact">
-              <div>
-                <h2>Quy trình 7 bước</h2>
-                <p>Đọc từ bối cảnh đến ý nghĩa lâm sàng.</p>
-              </div>
-            </div>
-            <ol id="workflowList" class="workflow-list"></ol>
-          </aside>
-        </section>
-
-        <section class="metrics-grid" aria-label="Tóm tắt phương pháp học">
-          <article class="metric-card">
-            <span>1</span>
-            <strong>Định danh mẫu</strong>
-            <small>Vị trí lấy mẫu, loại thủ thuật, số mảnh, có đủ mô đích hay không.</small>
-          </article>
-          <article class="metric-card">
-            <span>2</span>
-            <strong>Nhận diện mẫu hình</strong>
-            <small>Viêm, loạn sản, u lành, carcinoma, sarcoma, lymphoma, melanoma.</small>
-          </article>
-          <article class="metric-card">
-            <span>3</span>
-            <strong>Chốt yếu tố báo cáo</strong>
-            <small>Grade, invasion, margin, LVI/PNI, hạch, biomarker, staging.</small>
-          </article>
-          <article class="metric-card attention">
-            <span>4</span>
-            <strong>Mở nguồn đúng lúc</strong>
-            <small>PathologyOutlines để học nhanh; WHO để phân loại; CAP để checklist báo cáo.</small>
-          </article>
-        </section>
-
-        <section id="atlas" class="section-band" aria-labelledby="atlas-title">
-          <div class="section-head">
-            <div>
-              <p class="eyebrow">Atlas ảnh mở</p>
-              <h2 id="atlas-title">Nhìn hình trước, đọc chữ sau</h2>
-            </div>
-            <p>
-              Ảnh minh họa lấy từ Wikimedia Commons và dẫn nguồn riêng. Dùng để học pattern,
-              không thay thế lam kính thật hoặc chẩn đoán của bác sĩ GPB.
-            </p>
           </div>
-          <div id="atlasGrid" class="atlas-grid"></div>
-        </section>
+        </div>
 
-        <section id="systems" class="section-band" aria-labelledby="systems-title">
-          <div class="section-head">
-            <div>
-              <p class="eyebrow">Học theo hệ cơ quan</p>
-              <h2 id="systems-title">Bản đồ kiến thức GPB</h2>
-            </div>
-            <div class="search-box">
-              <label for="systemSearch">Tìm chuyên khoa</label>
-              <input id="systemSearch" type="search" placeholder="VD: tiêu hóa, vú, phổi, da, lymphoma..." />
-            </div>
-          </div>
-          <div id="systemGrid" class="system-grid"></div>
-        </section>
+        <aside class="workflow-panel">
+          <span class="eyebrow">Checklist 7 bước</span>
+          <h2>Đọc từ bối cảnh đến điều trị</h2>
+          <ol id="workflowList" class="workflow-list"></ol>
+        </aside>
+      </section>
 
-        <section id="terms" class="section-band terms-layout" aria-labelledby="terms-title">
-          <div class="terms-intro">
-            <p class="eyebrow">Từ điển nhanh</p>
-            <h2 id="terms-title">Thuật ngữ hay gặp trong báo cáo</h2>
-            <p>
-              Mỗi thuật ngữ được viết theo kiểu “đọc báo cáo cần hiểu gì”, không thay cho định nghĩa hàn lâm.
-              Khi gặp ung thư, hãy đối chiếu thêm protocol CAP và phân loại WHO tương ứng.
-            </p>
-            <label for="termSearch">Lọc thuật ngữ</label>
-            <input id="termSearch" type="search" placeholder="VD: margin, grade, Ki-67, p16, dysplasia..." />
+      <section id="atlas" class="section atlas-section">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Atlas mô bệnh học</span>
+            <h2>Nhìn hình trước, đọc chữ sau</h2>
           </div>
-          <div id="termGrid" class="term-grid"></div>
-        </section>
+          <div class="filter-tools">
+            <label for="atlasSearch">Tìm ảnh</label>
+            <input id="atlasSearch" type="search" placeholder="VD: vú, phổi, lymphoma, tuyến giáp..." />
+          </div>
+        </div>
+        <div id="atlasGrid" class="atlas-grid"></div>
+      </section>
 
-        <section id="sources" class="section-band" aria-labelledby="sources-title">
-          <div class="section-head">
-            <div>
-              <p class="eyebrow">Nguồn học</p>
-              <h2 id="sources-title">Cách dùng nguồn mà không bị ngợp</h2>
-            </div>
-            <p>
-              Trang này tổng hợp bằng lời mới và gắn đường dẫn. Nội dung WHO Online có bản quyền và có phần cần đăng nhập,
-              nên site không sao chép hoặc lưu lại tài liệu đăng ký.
-            </p>
+      <section id="systems" class="section systems-section">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Bản đồ học</span>
+            <h2>Câu hỏi bắt buộc cho từng chuyên khoa</h2>
           </div>
-          <div id="sourceGrid" class="source-grid"></div>
-          <div class="deploy-note">
-            <h3>Đưa lên tên miền miễn phí</h3>
-            <p>
-              Site này là HTML/CSS/JS tĩnh, có thể deploy miễn phí lên GitHub Pages, Netlify hoặc Cloudflare Pages.
-              Khi deploy xong bạn sẽ có dạng tên miền như <code>yourname.github.io</code>,
-              <code>your-site.netlify.app</code> hoặc <code>your-site.pages.dev</code>.
-            </p>
+          <div class="filter-tools">
+            <label for="systemSearch">Lọc chuyên khoa</label>
+            <input id="systemSearch" type="search" placeholder="VD: MMR, p16, hạch, margin..." />
           </div>
-        </section>
-      </main>
-    </div>
+        </div>
+        <div id="systemGrid" class="system-grid"></div>
+      </section>
+
+      <section id="terms" class="section terms-section">
+        <div class="term-intro">
+          <span class="eyebrow">Từ điển nhanh</span>
+          <h2>Thuật ngữ hay gặp trong báo cáo</h2>
+          <p>
+            Viết theo ngôn ngữ học đọc báo cáo: cần hiểu gì, hỏi gì tiếp, và vì sao thuật ngữ đó quan trọng.
+          </p>
+          <label for="termSearch">Lọc thuật ngữ</label>
+          <input id="termSearch" type="search" placeholder="VD: margin, grade, Ki-67, p16..." />
+        </div>
+        <div id="termGrid" class="term-grid"></div>
+      </section>
+
+      <section id="sources" class="section source-section">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Nguồn học chuẩn</span>
+            <h2>Dùng nguồn đúng lúc, không bị ngợp</h2>
+          </div>
+          <p>
+            Website này biên soạn lại bằng lời mới và gắn đường dẫn. Nội dung WHO Online có bản quyền,
+            nên không sao chép hoặc lưu tài liệu đăng ký.
+          </p>
+        </div>
+        <div id="sourceGrid" class="source-grid"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <strong>Pathology Learning Hub</strong>
+      <span>Học tập cá nhân · Có dẫn nguồn · Không thay thế tư vấn y khoa</span>
+    </footer>
 
     <script src="./app.js"></script>
   </body>
