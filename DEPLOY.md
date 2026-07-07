@@ -2,7 +2,7 @@
 
 Source code đã sẵn sàng để đưa lên internet bằng hosting tĩnh miễn phí.
 
-Quan trọng: hãy deploy thư mục `public/` hoặc file `pathology-learning-hub-public.zip`, không upload toàn bộ thư mục làm việc cũ vì folder gốc có thể còn dữ liệu nội bộ từ app registry trước đây. Bản web này chỉ chứa thư viện link chính thống, không chứa Excel, tài khoản WHO/IARC hoặc dữ liệu bệnh án.
+Quan trọng: hãy deploy thư mục `public/` hoặc file `pathology-learning-hub-public.zip`, không upload toàn bộ thư mục làm việc cũ vì folder gốc có thể còn dữ liệu nội bộ từ app registry trước đây. Bản web này là atlas ảnh học tập, không chứa Excel, tài khoản WHO/IARC hoặc dữ liệu bệnh án.
 
 ## Vercel từ GitHub
 

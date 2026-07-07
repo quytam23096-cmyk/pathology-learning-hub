@@ -3,184 +3,134 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pathology Learning Hub</title>
+    <title>Atlas GPB</title>
     <meta
       name="description"
-      content="Thư viện học đọc giải phẫu bệnh tiếng Việt: atlas ảnh mô bệnh học, checklist báo cáo, thuật ngữ và nguồn học chuẩn."
+      content="Atlas giải phẫu bệnh tiếng Việt: ảnh mô bệnh học theo cơ quan, chẩn đoán, pattern cần nhìn và gợi ý học."
     />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <header class="site-header">
-      <a class="brand" href="#home" aria-label="Pathology Learning Hub">
-        <span class="brand-mark" aria-hidden="true">PL</span>
-        <span>
-          <strong>Pathology Hub</strong>
-          <small>Thư viện học GPB</small>
-        </span>
-      </a>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#atlas" aria-label="Atlas GPB">
+          <span class="brand-mark" aria-hidden="true">A</span>
+          <span>
+            <strong>Atlas GPB</strong>
+            <small>Học bằng hình ảnh</small>
+          </span>
+        </a>
 
-      <nav class="nav" aria-label="Điều hướng chính">
-        <a href="#reader">Tra cứu</a>
-        <a href="#categories">Theo cơ quan</a>
-        <a href="#atlas">Nguồn ảnh</a>
-        <a href="#terms">Thuật ngữ</a>
-        <a href="#sources">Nguồn</a>
-      </nav>
+        <label class="search-box" for="atlasSearch">
+          <span>Tìm ca / cơ quan / pattern</span>
+          <input id="atlasSearch" type="search" placeholder="VD: vú, melanoma, granuloma, p40..." autocomplete="off" />
+        </label>
 
-      <a class="header-cta" href="#reader">Bắt đầu học</a>
-    </header>
+        <nav class="side-nav" aria-label="Lọc theo cơ quan">
+          <div class="side-title">Cơ quan</div>
+          <div id="organNav"></div>
+        </nav>
 
-    <main>
-      <section id="home" class="hero">
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-          <div class="hero-kicker">
-          <span>PathologyOutlines</span>
-          <span>WHO/IARC Blue Books</span>
-          <span>CAP · NCI</span>
-          </div>
-          <h1>Thư viện học đọc kết quả giải phẫu bệnh</h1>
-          <p>
-            Nhập thuật ngữ tiếng Việt hoặc tiếng Anh, chọn cơ quan, rồi mở đúng trang nguồn:
-            PathologyOutlines để học hình thái, WHO/IARC để chuẩn hóa phân loại, CAP để rà checklist báo cáo.
-          </p>
-          <div class="hero-actions">
-            <a class="btn primary" href="#reader">Tra cứu nguồn</a>
-            <a class="btn glass" href="#categories">Học theo cơ quan</a>
-          </div>
-          <div class="hero-stats" aria-label="Tóm tắt nội dung">
-            <span><strong id="statCategories">10</strong> hệ cơ quan</span>
-            <span><strong id="statAtlas">12</strong> nguồn ảnh</span>
-            <span><strong id="statTerms">30+</strong> thuật ngữ</span>
-          </div>
+        <div class="side-panel">
+          <strong>Chế độ học</strong>
+          <span>Ảnh nguồn mở, có link gốc. Không dùng dữ liệu bệnh án, không sao chép ảnh WHO/PathologyOutlines.</span>
         </div>
-      </section>
+      </aside>
 
-      <section class="featured-strip" aria-label="Nguồn nổi bật">
-        <div class="strip-head">
-          <span class="eyebrow">Nguồn chính thống</span>
-          <strong>Lối vào nên lưu</strong>
-        </div>
-        <div id="featuredGrid" class="featured-grid"></div>
-      </section>
-
-      <section id="reader" class="section reader-section">
-        <div class="reader-card">
-          <div class="section-heading compact">
-            <div>
-              <span class="eyebrow">Tra cứu nguồn GPB</span>
-              <h2>Tìm bằng tiếng Việt hoặc tiếng Anh</h2>
-            </div>
+      <main class="content">
+        <section id="atlas" class="atlas-hero">
+          <div class="hero-copy">
+            <span class="eyebrow">Atlas giải phẫu bệnh</span>
+            <h1>Nhìn hình, nhận pattern, nhớ chẩn đoán</h1>
             <p>
-              Dữ liệu bên dưới là thư viện link chính thống đã chọn lọc. Trang này không dùng Excel,
-              không dùng dữ liệu bệnh án và không lưu nội dung bạn nhập.
+              Mỗi thẻ ảnh có chẩn đoán, điểm cần nhìn dưới kính, bẫy dễ nhầm và link nguồn để bạn tự mở rộng.
+              Trang này được thiết kế như bàn học atlas: lọc nhanh theo cơ quan hoặc pattern.
             </p>
           </div>
+          <div class="stat-grid" aria-label="Thống kê atlas">
+            <div><strong id="statImages">0</strong><span>ảnh atlas</span></div>
+            <div><strong id="statOrgans">0</strong><span>nhóm cơ quan</span></div>
+            <div><strong id="statPatterns">0</strong><span>pattern học</span></div>
+          </div>
+        </section>
 
-          <div class="lookup-panel">
-            <label for="sourceSearch">Nhập bệnh, cơ quan, marker hoặc thuật ngữ</label>
-            <div class="lookup-row">
-              <input
-                id="sourceSearch"
-                type="search"
-                placeholder="VD: adenocarcinoma đại tràng, MMR MSI, lung squamous, p16, Gleason..."
-                autocomplete="off"
-              />
-              <button id="runSourceSearch" type="button" class="btn primary">Tra cứu</button>
-              <button id="clearSourceSearch" type="button" class="icon-btn" title="Xóa tìm kiếm" aria-label="Xóa tìm kiếm">
-                ×
-              </button>
+        <section class="toolbar" aria-label="Bộ lọc atlas">
+          <div>
+            <span class="eyebrow">Lọc pattern</span>
+            <div id="patternFilters" class="chip-row"></div>
+          </div>
+          <div class="view-actions">
+            <button id="resetFilters" type="button" class="btn">Hiện tất cả</button>
+            <a class="btn primary" href="#sources">Nguồn ảnh</a>
+          </div>
+        </section>
+
+        <section class="spotlight-section" aria-label="Ca nên xem trước">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">Nên xem trước</span>
+              <h2>4 pattern nền tảng hay gặp</h2>
             </div>
-            <div id="quickSearches" class="chip-row" aria-label="Từ khóa gợi ý"></div>
+            <p>Những pattern này xuất hiện đi xuất hiện lại trong báo cáo: tuyến ác tính, carcinoma gai, lymphoma và viêm hạt.</p>
           </div>
+          <div id="spotlightGrid" class="spotlight-grid"></div>
+        </section>
 
-          <div id="sourceResults" class="source-results" aria-live="polite"></div>
-        </div>
-
-        <aside class="workflow-panel">
-          <span class="eyebrow">Cách dùng</span>
-          <h2>Đọc nguồn đúng thứ tự</h2>
-          <ol id="workflowList" class="workflow-list"></ol>
-        </aside>
-      </section>
-
-      <section id="categories" class="section categories-section">
-        <div class="section-heading">
-          <div>
-            <span class="eyebrow">Khám phá theo hệ cơ quan</span>
-            <h2>Bấm vào cơ quan để hiện nguồn học</h2>
+        <section class="section">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">Thư viện ảnh</span>
+              <h2 id="galleryTitle">Tất cả ảnh atlas</h2>
+            </div>
+            <p id="galleryCount">Đang tải atlas...</p>
           </div>
-          <p>
-            Mỗi thẻ mở ra phần tóm tắt cần đọc, từ khóa nên tìm, và link PathologyOutlines,
-            WHO/IARC, CAP liên quan. Link topic chỉ dùng khi đã xác minh được đường dẫn.
-          </p>
-        </div>
-        <div id="categoryGrid" class="category-grid"></div>
-        <div id="organDetail" class="detail-panel" aria-live="polite"></div>
-      </section>
+          <div id="atlasGrid" class="atlas-grid" aria-live="polite"></div>
+        </section>
 
-      <section id="atlas" class="section atlas-section">
-        <div class="section-heading">
-          <div>
-            <span class="eyebrow">Nguồn ảnh & atlas</span>
-            <h2>Mở ảnh tại trang chính thống</h2>
-          </div>
-          <div class="filter-tools">
-            <label for="atlasSearch">Lọc nguồn ảnh</label>
-            <input id="atlasSearch" type="search" placeholder="VD: colon, breast, lung, melanoma, lymphoma..." />
-          </div>
-        </div>
-        <div id="atlasGrid" class="atlas-grid"></div>
-      </section>
+        <section id="caseDetail" class="case-detail" aria-live="polite"></section>
 
-      <section id="systems" class="section systems-section">
-        <div class="section-heading">
-          <div>
-            <span class="eyebrow">Thư viện topic</span>
-            <h2>Topic có nguồn chính thức</h2>
+        <section id="organs" class="section">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">Học theo cơ quan</span>
+              <h2>Bản đồ atlas GPB</h2>
+            </div>
+            <p>Mỗi nhóm cơ quan có checklist riêng để nhìn ảnh: cấu trúc nền, loại tế bào, kiểu xâm nhập, grade và marker.</p>
           </div>
-          <div class="filter-tools">
-            <label for="systemSearch">Lọc chuyên khoa</label>
-          <input id="systemSearch" type="search" placeholder="VD: MMR, p16, hạch, margin, carcinoma..." />
+          <div id="organGrid" class="organ-grid"></div>
+        </section>
+
+        <section id="patterns" class="section">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">Pattern học nhanh</span>
+              <h2>Đọc ảnh bằng câu hỏi ngắn</h2>
+            </div>
+            <p>Không cố nhớ cả trang sách. Hãy đặt vài câu hỏi đúng lúc rồi mở nguồn sâu hơn khi cần.</p>
           </div>
-        </div>
-        <div id="systemGrid" class="system-grid"></div>
-      </section>
+          <div id="patternGrid" class="pattern-grid"></div>
+        </section>
 
-      <section id="terms" class="section terms-section">
-        <div class="term-intro">
-          <span class="eyebrow">Từ điển nhanh</span>
-          <h2>Thuật ngữ hay gặp trong báo cáo</h2>
-          <p>
-            Bấm vào thuật ngữ để xem giải thích ngắn, link nguồn, và nơi mở ảnh/hình minh họa chính thống.
-          </p>
-          <label for="termSearch">Lọc thuật ngữ</label>
-          <input id="termSearch" type="search" placeholder="VD: margin, grade, Ki-67, p16..." />
-        </div>
-        <div id="termGrid" class="term-grid"></div>
-        <div id="termDetail" class="detail-panel term-detail" aria-live="polite"></div>
-      </section>
-
-      <section id="sources" class="section source-section">
-        <div class="section-heading">
-          <div>
-            <span class="eyebrow">Nguồn học chuẩn</span>
-            <h2>Dùng nguồn đúng lúc, không bị ngợp</h2>
+        <section id="sources" class="section source-section">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">Nguồn & bản quyền</span>
+              <h2>Ảnh mở, link rõ ràng</h2>
+            </div>
+            <p>
+              Ảnh atlas dùng từ Wikimedia Commons hoặc nguồn mở tương tự qua trang file gốc.
+              PathologyOutlines, WHO/IARC và CAP được dùng làm lối đọc thêm, không sao chép nội dung đóng.
+            </p>
           </div>
-          <p>
-            Website này biên soạn lại bằng lời mới và gắn đường dẫn. Nội dung WHO Online có bản quyền,
-            nên không sao chép hoặc lưu tài liệu đăng ký.
-          </p>
-        </div>
-        <div id="sourceGrid" class="source-grid"></div>
-      </section>
-    </main>
+          <div id="sourceGrid" class="source-grid"></div>
+        </section>
 
-    <footer class="site-footer">
-      <strong>Pathology Learning Hub</strong>
-      <span>Học tập cá nhân · Có dẫn nguồn · Không thay thế tư vấn y khoa</span>
-    </footer>
+        <footer class="site-footer">
+          <strong>Atlas GPB</strong>
+          <span>Học tập cá nhân · Có dẫn nguồn · Không thay thế chẩn đoán của bác sĩ GPB</span>
+        </footer>
+      </main>
+    </div>
 
     <script src="./app.js"></script>
   </body>

@@ -1,566 +1,597 @@
 const PO = "https://www.pathologyoutlines.com";
 const WHO = "https://publications.iarc.who.int/Book-And-Report-Series/Who-Classification-Of-Tumours";
 const CAP = "https://www.cap.org/protocols-and-guidelines/cancer-protocols/current-cancer-protocols/";
-const NCI_REPORT = "https://www.cancer.gov/about-cancer/diagnosis-staging/diagnosis/pathology-reports-fact-sheet";
-const WHO_ONLINE = "https://tumourclassification.iarc.who.int/";
 
-const covers = {
-  digestive: "https://iarc-publications-website.s3.eu-west-3.amazonaws.com/media/default/0001/06/thumb_5545_default_publication.jpeg",
-  breast: "https://iarc-publications-website.s3.eu-west-3.amazonaws.com/media/default/0001/06/thumb_5564_default_publication.jpeg",
-  thoracic: "https://iarc-publications-website.s3.eu-west-3.amazonaws.com/media/default/0001/07/thumb_6113_default_publication.jpeg",
-  female: "https://iarc-publications-website.s3.eu-west-3.amazonaws.com/media/default/0001/07/thumb_6061_default_publication.jpeg",
-  gu: "https://iarc-publications-website.s3.eu-west-3.amazonaws.com/media/default/0001/07/thumb_6584_default_publication.jpeg",
-  cns: "https://iarc-publications-website.s3.eu-west-3.amazonaws.com/media/default/0001/07/thumb_6263_default_publication.jpeg",
-  soft: "https://iarc-publications-website.s3.eu-west-3.amazonaws.com/media/default/0001/06/thumb_5942_default_publication.jpeg",
-  headneck: "https://iarc-publications-website.s3.eu-west-3.amazonaws.com/media/default/0001/08/thumb_7079_default_publication.jpeg",
-  heme: "https://iarc-publications-website.s3.eu-west-3.amazonaws.com/media/default/0001/08/thumb_7168_default_publication.jpeg",
-  skin: "https://iarc-publications-website.s3.eu-west-3.amazonaws.com/media/default/0001/08/thumb_7550_default_publication.jpg",
+function fileImage(file) {
+  return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=900`;
+}
+
+function fileSource(file) {
+  return `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(file.replaceAll(" ", "_"))}`;
+}
+
+const organs = [
+  { id: "all", label: "Tất cả", short: "ALL", color: "#24515a", guide: "Xem toàn bộ ảnh, sau đó lọc dần theo pattern hoặc cơ quan." },
+  { id: "digestive", label: "Tiêu hóa", short: "GI", color: "#0f766e", guide: "Nhìn kiến trúc tuyến, loạn sản, desmoplasia, hoại tử bẩn và xâm nhập mô đệm." },
+  { id: "hepatobiliary", label: "Gan mật - tụy", short: "HPB", color: "#8a6f16", guide: "Tập trung trabeculae, bile, xơ hóa, tuyến quanh tụy và tổn thương tiền ung thư." },
+  { id: "breast", label: "Vú", short: "BR", color: "#c2415a", guide: "Tách in situ/xâm nhập, type mô học, grade, ER/PR/HER2 và hạch." },
+  { id: "lung", label: "Phổi", short: "LU", color: "#2563eb", guide: "Nhìn tuyến, gai, tế bào nhỏ, necrosis; gắn với TTF-1, p40, neuroendocrine marker khi cần." },
+  { id: "gyn", label: "Phụ khoa", short: "GYN", color: "#8b5cf6", guide: "Xác định cổ tử cung/nội mạc/buồng trứng; chú ý p16, p53, LVSI và mức xâm nhập." },
+  { id: "gu", label: "Tiết niệu - nam", short: "GU", color: "#16a34a", guide: "Tuyến tiền liệt đọc Gleason; thận đọc subtype; bàng quang đọc xâm nhập cơ." },
+  { id: "skin", label: "Da", short: "SK", color: "#ea580c", guide: "Nhìn liên quan thượng bì, palisading, sắc tố, Breslow, ulceration và margin." },
+  { id: "heme", label: "Huyết học", short: "HE", color: "#0891b2", guide: "Đọc kiến trúc hạch, tế bào nhỏ/lớn, apoptosis, necrosis và panel CD/EBER." },
+  { id: "endocrine", label: "Nội tiết", short: "EN", color: "#0d9488", guide: "Tuyến giáp cần nhìn nhân, rãnh nhân, thể vùi, cấu trúc nhú và xâm nhập." },
+  { id: "cns", label: "Thần kinh", short: "CNS", color: "#4f46e5", guide: "Nhìn whorl, psammoma, hoại tử, vi mạch; gắn mô học với marker/phân tử." },
+  { id: "headneck", label: "Đầu cổ", short: "HN", color: "#9333ea", guide: "Gắn với vị trí, keratinization, perineural invasion, p16/EBER khi phù hợp." },
+  { id: "soft", label: "Mô mềm", short: "ST", color: "#db2777", guide: "Nhìn spindle cells, myxoid/collagen, atypia, mitosis, necrosis và marker phân dòng." },
+  { id: "infection", label: "Viêm - nhiễm", short: "INF", color: "#475569", guide: "Nhìn loại viêm: cấp, mạn, hạt, hoại tử, mô bào, ký sinh hoặc virus." },
+];
+
+const patterns = [
+  { id: "all", label: "Tất cả" },
+  { id: "carcinoma", label: "Carcinoma" },
+  { id: "glandular", label: "Tuyến" },
+  { id: "squamous", label: "Gai" },
+  { id: "lymphoid", label: "Lymphoid" },
+  { id: "melanocytic", label: "Melanocytic" },
+  { id: "spindle", label: "Spindle" },
+  { id: "inflammation", label: "Viêm" },
+  { id: "necrosis", label: "Hoại tử" },
+  { id: "ihc", label: "IHC/marker" },
+];
+
+const organLinks = {
+  digestive: [`${PO}/gastrointestinal.html`, `${WHO}/Digestive-System-Tumours-2019`],
+  hepatobiliary: [`${PO}/liver.html`, `${WHO}/Digestive-System-Tumours-2019`],
+  breast: [`${PO}/breast.html`, `${WHO}/Breast-Tumours-2019`],
+  lung: [`${PO}/lung.html`, `${WHO}/Thoracic-Tumours-2021`],
+  gyn: [`${PO}/femalegenital.html`, `${WHO}/Female-Genital-Tumours-2020`],
+  gu: [`${PO}/genitourinary.html`, `${WHO}/Urinary-And-Male-Genital-Tumours-2022`],
+  skin: [`${PO}/skintumors.html`, `${WHO}/Skin-Tumours-2025`],
+  heme: [`${PO}/hematopathology.html`, `${WHO}/Haematolymphoid-Tumours-2024`],
+  endocrine: [`${PO}/thyroid.html`, `${WHO}/Endocrine-And-Neuroendocrine-Tumours-2022`],
+  cns: [`${PO}/Cnstumor.html`, `${WHO}/Central-Nervous-System-Tumours-2021`],
+  headneck: [`${PO}/headneck.html`, `${WHO}/Head-And-Neck-Tumours-2024`],
+  soft: [`${PO}/softtissue.html`, `${WHO}/Soft-Tissue-And-Bone-Tumours-2020`],
+  infection: [`${PO}/infectiousdisease.html`, CAP],
 };
 
-const sourceLinks = {
-  poHome: { label: "PathologyOutlines", url: `${PO}/`, kind: "Nguồn học hình thái" },
-  poColon: { label: "PathologyOutlines - Colon", url: `${PO}/colon.html`, kind: "Trang chuyên mục" },
-  poColonAdenoma: { label: "PathologyOutlines - Colon adenoma", url: `${PO}/topic/colontumoradenoma.html`, kind: "Topic" },
-  poColonAdenoca: { label: "PathologyOutlines - Colon adenocarcinoma", url: `${PO}/topic/colontumoradenocarcinoma.html`, kind: "Topic" },
-  poMMR: { label: "PathologyOutlines - Mismatch repair", url: `${PO}/topic/colonmammalianmismatchrepair.html`, kind: "Topic" },
-  poMSI: { label: "PathologyOutlines - Microsatellite instability", url: `${PO}/topic/colonmicrosatellite.html`, kind: "Topic" },
-  poBreast: { label: "PathologyOutlines - Breast", url: `${PO}/breast.html`, kind: "Trang chuyên mục" },
-  poBreastGrade: { label: "PathologyOutlines - Breast histologic grade", url: `${PO}/topic/breastmalignanthistologic.html`, kind: "Topic" },
-  poLung: { label: "PathologyOutlines - Lung", url: `${PO}/lung.html`, kind: "Trang chuyên mục" },
-  poLungAdenoca: { label: "PathologyOutlines - Lung adenocarcinoma", url: `${PO}/topic/lungtumoradenocarcinoma.html`, kind: "Topic" },
-  poLungScc: { label: "PathologyOutlines - Lung squamous cell carcinoma", url: `${PO}/topic/lungtumorSCC.html`, kind: "Topic" },
-  poLungSmallCell: { label: "PathologyOutlines - Small cell lung carcinoma", url: `${PO}/topic/lungtumorsmallcell.html`, kind: "Topic" },
-  poLungWho: { label: "PathologyOutlines - WHO lung classification", url: `${PO}/topic/lungtumorWHO.html`, kind: "Topic" },
-  poPDL1: { label: "PathologyOutlines - PD-L1", url: `${PO}/topic/stainsPDL1.html`, kind: "Topic" },
-  poCervix: { label: "PathologyOutlines - Cervix", url: `${PO}/cervix.html`, kind: "Trang chuyên mục" },
-  poFemale: { label: "PathologyOutlines - Female genital", url: `${PO}/femalegenital.html`, kind: "Trang chuyên mục" },
-  poGU: { label: "PathologyOutlines - Genitourinary", url: `${PO}/genitourinary.html`, kind: "Trang chuyên mục" },
-  poProstate: { label: "PathologyOutlines - Prostate", url: `${PO}/prostate.html`, kind: "Trang chuyên mục" },
-  poSkin: { label: "PathologyOutlines - Skin tumors", url: `${PO}/skintumors.html`, kind: "Trang chuyên mục" },
-  poHeme: { label: "PathologyOutlines - Hematopathology", url: `${PO}/hematopathology.html`, kind: "Trang chuyên mục" },
-  poSoft: { label: "PathologyOutlines - Soft tissue", url: `${PO}/softtissue.html`, kind: "Trang chuyên mục" },
-  poHeadNeck: { label: "PathologyOutlines - Head & neck", url: `${PO}/headneck.html`, kind: "Trang chuyên mục" },
-  poCns: { label: "PathologyOutlines - CNS tumors", url: `${PO}/Cnstumor.html`, kind: "Trang chuyên mục" },
-  whoOnline: { label: "WHO Classification Online", url: WHO_ONLINE, kind: "WHO/IARC" },
-  whoDigestive: { label: "WHO Digestive System Tumours 2019", url: `${WHO}/Digestive-System-Tumours-2019`, kind: "WHO/IARC volume" },
-  whoBreast: { label: "WHO Breast Tumours 2019", url: `${WHO}/Breast-Tumours-2019`, kind: "WHO/IARC volume" },
-  whoThoracic: { label: "WHO Thoracic Tumours 2021", url: `${WHO}/Thoracic-Tumours-2021`, kind: "WHO/IARC volume" },
-  whoFemale: { label: "WHO Female Genital Tumours 2020", url: `${WHO}/Female-Genital-Tumours-2020`, kind: "WHO/IARC volume" },
-  whoGU: { label: "WHO Urinary and Male Genital Tumours 2022", url: `${WHO}/Urinary-And-Male-Genital-Tumours-2022`, kind: "WHO/IARC volume" },
-  whoCNS: { label: "WHO CNS Tumours 2021", url: `${WHO}/Central-Nervous-System-Tumours-2021`, kind: "WHO/IARC volume" },
-  whoSoft: { label: "WHO Soft Tissue and Bone Tumours 2020", url: `${WHO}/Soft-Tissue-And-Bone-Tumours-2020`, kind: "WHO/IARC volume" },
-  whoHeadNeck: { label: "WHO Head and Neck Tumours 2024", url: `${WHO}/Head-And-Neck-Tumours-2024`, kind: "WHO/IARC volume" },
-  whoHeme: { label: "WHO Haematolymphoid Tumours 2024", url: `${WHO}/Haematolymphoid-Tumours-2024`, kind: "WHO/IARC volume" },
-  whoSkin: { label: "WHO Skin Tumours 2025", url: `${WHO}/Skin-Tumours-2025`, kind: "WHO/IARC volume" },
-  cap: { label: "CAP Current Cancer Protocols", url: CAP, kind: "Checklist báo cáo" },
-  nciReport: { label: "NCI - Pathology Reports", url: NCI_REPORT, kind: "Giải thích bệnh nhân/người học" },
-};
-
-const workflow = [
-  ["Bắt đầu từ cơ quan", "Xác định vị trí bệnh phẩm rồi mở PathologyOutlines đúng chuyên mục."],
-  ["Đọc tên u theo WHO", "Dùng WHO/IARC để chuẩn hóa tên, phân loại, grade và tiêu chuẩn chẩn đoán."],
-  ["Tách hình thái chính", "Tìm pattern: loạn sản, in situ, xâm nhập, subtype, hoại tử, desmoplasia."],
-  ["Rà checklist báo cáo", "Dùng CAP để kiểm kích thước, margin, LVI/PNI, hạch, stage và biomarker."],
-  ["Đọc marker theo bối cảnh", "p16, p53, Ki-67, ER/PR/HER2, MMR/MSI chỉ có nghĩa khi gắn với cơ quan và loại u."],
-  ["Mở ảnh tại nguồn", "Xem ảnh minh họa ngay trên PathologyOutlines hoặc WHO Online, không lấy ảnh trôi nổi."],
-  ["Ghi lại bằng lời mình", "Tóm tắt 3 dòng: bệnh phẩm gì, chẩn đoán gì, yếu tố nào ảnh hưởng điều trị/theo dõi."],
-];
-
-const featured = [
+const atlasItems = [
   {
-    title: "PathologyOutlines",
-    subtitle: "Mở nhanh hình thái, IHC, differential",
-    image: covers.digestive,
-    href: sourceLinks.poHome.url,
-  },
-  {
-    title: "WHO/IARC Blue Books",
-    subtitle: "Chuẩn phân loại u theo cơ quan",
-    image: covers.skin,
-    href: WHO,
-  },
-  {
-    title: "CAP Protocols",
-    subtitle: "Checklist báo cáo ung thư hiện hành",
-    image: covers.breast,
-    href: CAP,
-  },
-  {
-    title: "NCI Pathology Reports",
-    subtitle: "Giải thích nền tảng dễ hiểu",
-    image: covers.thoracic,
-    href: NCI_REPORT,
-  },
-];
-
-const organSystems = [
-  {
-    id: "digestive",
-    code: "GI",
-    name: "Tiêu hóa",
-    count: "Colon, rectum, stomach, pancreas",
-    accent: "#0a7a72",
-    cover: covers.digestive,
-    summary: "Ưu tiên đọc vị trí lấy mẫu, mức độ loạn sản, xâm nhập mô đệm, subtype và MMR/MSI khi là carcinoma đại trực tràng.",
-    focus: ["Polyp/adenoma: low-grade hay high-grade dysplasia?", "Carcinoma: có xâm nhập, grade, margin, LVI/PNI, hạch?", "Đại trực tràng: có cần MMR/MSI hoặc molecular không?"],
-    topicIds: ["colon-adenoma", "colon-adenocarcinoma", "mmr-msi"],
-    links: ["poColon", "whoDigestive", "cap"],
-  },
-  {
-    id: "breast",
-    code: "BR",
-    name: "Vú",
-    count: "DCIS, invasive carcinoma, biomarkers",
-    accent: "#eb5148",
-    cover: covers.breast,
-    summary: "Tách tổn thương in situ hay xâm nhập, loại mô học, grade, kích thước, margin, hạch và ER/PR/HER2.",
-    focus: ["DCIS hay carcinoma xâm nhập?", "Grade mô học/Nottingham đã đủ thành phần chưa?", "ER, PR, HER2, Ki-67 và tình trạng hạch đã được ghi chưa?"],
-    topicIds: ["breast-grade", "breast-carcinoma", "margin"],
-    links: ["poBreast", "poBreastGrade", "whoBreast", "cap"],
-  },
-  {
-    id: "thoracic",
-    code: "LU",
-    name: "Phổi - màng phổi",
-    count: "NSCLC, small cell, PD-L1",
-    accent: "#318ac4",
-    cover: covers.thoracic,
-    summary: "Xác định subtype carcinoma, phân biệt nguyên phát/di căn và kiểm biomarker điều trị đích khi phù hợp.",
-    focus: ["Adenocarcinoma, squamous, small cell hay carcinoma khác?", "TTF-1, p40, neuroendocrine markers hỗ trợ ra sao?", "PD-L1, EGFR/ALK/ROS1 có được yêu cầu theo bối cảnh không?"],
-    topicIds: ["lung-adenocarcinoma", "lung-squamous", "lung-small-cell", "pd-l1"],
-    links: ["poLung", "poLungWho", "whoThoracic", "cap"],
-  },
-  {
-    id: "female",
-    code: "GYN",
-    name: "Phụ khoa",
-    count: "Cervix, endometrium, ovary",
-    accent: "#9251b6",
-    cover: covers.female,
-    summary: "Gắn vị trí giải phẫu với HPV/p16, type mô học, độ xâm nhập, LVSI, margin và stage.",
-    focus: ["Cổ tử cung, nội mạc tử cung hay buồng trứng?", "Tổn thương tiền ung thư hay xâm nhập?", "p16, p53, ER/PR hoặc MMR có vai trò trong bối cảnh này không?"],
-    topicIds: ["p16-cervix", "p53", "stage"],
-    links: ["poCervix", "poFemale", "whoFemale", "cap"],
-  },
-  {
-    id: "gu",
-    code: "GU",
-    name: "Tiết niệu - nam khoa",
-    count: "Prostate, bladder, kidney",
-    accent: "#24b969",
-    cover: covers.gu,
-    summary: "Tuyến tiền liệt cần Gleason/Grade Group; bàng quang cần xâm nhập cơ; thận cần subtype và grade.",
-    focus: ["Sinh thiết, TUR hay bệnh phẩm phẫu thuật cắt?", "Có xâm nhập cơ, vỏ, mạch máu hoặc margin không?", "Gleason/Grade Group, ISUP grade hoặc subtype đã rõ chưa?"],
-    topicIds: ["gleason", "grade", "margin"],
-    links: ["poGU", "poProstate", "whoGU", "cap"],
-  },
-  {
-    id: "skin",
-    code: "SK",
-    name: "Da",
-    count: "BCC, SCC, melanoma",
-    accent: "#f59d18",
-    cover: covers.skin,
-    summary: "Da cần đọc loại u, độ sâu xâm nhập, ulceration, margin; melanoma cần Breslow, mitosis và satellitosis.",
-    focus: ["U biểu mô, melanocytic hay lymphoid?", "Melanoma: Breslow, ulceration, mitosis, margin có đủ không?", "BCC/SCC: type nguy cơ cao và diện cắt đã rõ chưa?"],
-    topicIds: ["breslow", "margin", "mitosis"],
-    links: ["poSkin", "whoSkin", "cap"],
-  },
-  {
-    id: "heme",
-    code: "HE",
-    name: "Huyết học - lympho",
-    count: "Lymphoma, leukemia, CD markers",
-    accent: "#0f9ab5",
-    cover: covers.heme,
-    summary: "Ghép hình thái, IHC/flow, di truyền, vị trí hạch và bối cảnh lâm sàng để phân loại lymphoma/leukemia.",
-    focus: ["Tổn thương phản ứng hay lymphoma?", "Panel CD markers đủ để phân dòng chưa?", "Có cần flow, FISH, clonality hoặc molecular không?"],
-    topicIds: ["ihc", "ki67", "eber"],
-    links: ["poHeme", "whoHeme", "cap"],
-  },
-  {
-    id: "cns",
-    code: "CNS",
-    name: "Thần kinh",
-    count: "Glioma, meningioma, molecular",
-    accent: "#6b5aa9",
-    cover: covers.cns,
-    summary: "CNS hiện đại dựa vào chẩn đoán tích hợp: mô học cộng IDH, ATRX, 1p/19q, p53 và các tiêu chuẩn phân tử.",
-    focus: ["U thần kinh đệm, màng não, phôi thai hay di căn?", "IDH, ATRX, p53, 1p/19q có định hướng không?", "WHO grade và tiêu chuẩn phân tử đã đủ chưa?"],
-    topicIds: ["idh", "1p19q", "grade"],
-    links: ["poCns", "whoCNS", "cap"],
-  },
-  {
-    id: "headneck",
-    code: "HN",
-    name: "Đầu cổ",
-    count: "SCC, salivary, thyroid-adjacent",
-    accent: "#5765c8",
-    cover: covers.headneck,
-    summary: "Luôn gắn với vị trí giải phẫu, HPV/EBV khi phù hợp, type mô học, DOI, PNI, margin và hạch cổ.",
-    focus: ["Vị trí chính xác là gì?", "HPV/p16 hoặc EBV có liên quan không?", "PNI, LVI, DOI, margin và hạch cổ đã ghi chưa?"],
-    topicIds: ["p16-cervix", "eber", "pni"],
-    links: ["poHeadNeck", "whoHeadNeck", "cap"],
-  },
-  {
-    id: "soft",
-    code: "ST",
-    name: "Mô mềm - xương",
-    count: "Sarcoma, bone, fusion",
-    accent: "#c45b8f",
-    cover: covers.soft,
-    summary: "Sarcoma cần type mô học, grade, hoại tử, mitosis, margin và đôi khi cần marker/fusion phân tử.",
-    focus: ["Tổn thương lành, trung gian hay ác tính?", "Grade, hoại tử, mitosis và margin đã đủ chưa?", "Có cần IHC hoặc xét nghiệm fusion/molecular không?"],
-    topicIds: ["grade", "necrosis", "mitosis"],
-    links: ["poSoft", "whoSoft", "cap"],
-  },
-];
-
-const topics = [
-  {
-    id: "colon-adenocarcinoma",
+    id: "colon-adeno",
     organ: "digestive",
-    titleVi: "Adenocarcinoma đại trực tràng",
-    titleEn: "Colorectal adenocarcinoma",
-    keywords: ["ung thư đại tràng", "ung thư trực tràng", "adenocarcinoma đại tràng", "colorectal cancer", "colon adenocarcinoma", "rectal adenocarcinoma", "desmoplasia", "dirty necrosis"],
-    summary: "Khi đọc báo cáo, hãy xác định có xâm nhập thật sự không, grade/subtype, độ lan tại chỗ, margin, LVI/PNI, hạch và chỉ định MMR/MSI.",
-    links: ["poColonAdenoca", "poColon", "whoDigestive", "cap"],
-    imageLinks: ["poColonAdenoca", "whoOnline"],
+    pattern: ["carcinoma", "glandular"],
+    file: "Colon adenocarcinoma - biopsy, high mag.jpg",
+    diagnosis: "Adenocarcinoma đại tràng",
+    english: "Colon adenocarcinoma",
+    stain: "H&E",
+    clues: ["Tuyến góc cạnh bất thường", "Mô đệm desmoplastic", "Tế bào dị dạng và xâm nhập"],
+    learn: "Tìm bằng chứng xâm nhập trước, sau đó đọc grade, LVI/PNI, margin, hạch và MMR/MSI.",
+    pitfall: "Sinh thiết nhỏ có thể khó tách loạn sản cao độ với xâm nhập thật sự.",
+    source: "Wikimedia Commons",
   },
   {
-    id: "colon-adenoma",
+    id: "colon-granuloma",
     organ: "digestive",
-    titleVi: "Adenoma/loạn sản đại trực tràng",
-    titleEn: "Colorectal adenoma and dysplasia",
-    keywords: ["adenoma", "polyp", "loạn sản", "dysplasia", "low grade", "high grade", "đại tràng", "colon polyp"],
-    summary: "Điểm cần bám là type polyp, mức độ loạn sản, có nghi xâm nhập không và tình trạng cắt trọn khi là polypectomy.",
-    links: ["poColonAdenoma", "poColon", "whoDigestive"],
-    imageLinks: ["poColonAdenoma"],
+    pattern: ["inflammation"],
+    file: "Histopathology of granuloma of colonic mucosa.jpg",
+    diagnosis: "Viêm hạt niêm mạc đại tràng",
+    english: "Colonic mucosal granuloma",
+    stain: "H&E",
+    clues: ["Cụm mô bào dạng biểu mô", "Có/không hoại tử", "Đặt trong bối cảnh Crohn, lao, nấm, dị vật"],
+    learn: "Khi thấy granuloma, đừng chốt nguyên nhân vội: cần vị trí, hoại tử, nhuộm đặc biệt và lâm sàng.",
+    pitfall: "Granuloma nhỏ cạnh tuyến vỡ có thể là phản ứng dị vật.",
+    source: "Wikimedia Commons",
   },
   {
-    id: "mmr-msi",
-    organ: "digestive",
-    titleVi: "MMR/MSI trong carcinoma đại trực tràng",
-    titleEn: "Mismatch repair and microsatellite instability",
-    keywords: ["MMR", "MSI", "MLH1", "MSH2", "MSH6", "PMS2", "Lynch", "microsatellite", "mismatch repair", "đại trực tràng"],
-    summary: "MMR/MSI là nhóm thông tin biomarker cần đọc theo bối cảnh carcinoma, có thể ảnh hưởng sàng lọc Lynch và điều trị miễn dịch.",
-    links: ["poMMR", "poMSI", "whoDigestive", "cap"],
-    imageLinks: ["poMMR", "poMSI"],
+    id: "pancreas-ipmn",
+    organ: "hepatobiliary",
+    pattern: ["glandular"],
+    file: "Histopathology of pancreatobiliary intraductal papillary mucinous neoplasm in the pancreas.jpg",
+    diagnosis: "IPMN tụy, kiểu pancreatobiliary",
+    english: "Pancreatobiliary-type IPMN",
+    stain: "H&E",
+    clues: ["Cấu trúc nhú trong ống", "Biểu mô tiết nhầy", "Đánh giá mức độ loạn sản"],
+    learn: "Tập nhìn tổn thương trong ống và mức độ atypia để tách low-grade, high-grade và carcinoma xâm nhập.",
+    pitfall: "Đừng nhầm biểu mô nhú trong ống với carcinoma xâm nhập nếu chưa thấy mô đệm xâm nhập.",
+    source: "Wikimedia Commons",
   },
   {
-    id: "lung-adenocarcinoma",
-    organ: "thoracic",
-    titleVi: "Adenocarcinoma phổi",
-    titleEn: "Lung adenocarcinoma",
-    keywords: ["adenocarcinoma phổi", "lung adenocarcinoma", "TTF-1", "Napsin A", "lepidic", "acinar", "papillary", "solid"],
-    summary: "Cần xác định subtype/pattern, phân biệt nguyên phát hay di căn, và kiểm biomarker điều trị đích khi phù hợp.",
-    links: ["poLungAdenoca", "poLung", "poLungWho", "whoThoracic", "cap"],
-    imageLinks: ["poLungAdenoca", "whoOnline"],
+    id: "pancreas-adenosq",
+    organ: "hepatobiliary",
+    pattern: ["carcinoma", "glandular", "squamous"],
+    file: "Histopathology of adenosquamous carcinoma of the pancreas.jpg",
+    diagnosis: "Carcinoma tuyến-gai tụy",
+    english: "Pancreatic adenosquamous carcinoma",
+    stain: "H&E",
+    clues: ["Thành phần tuyến ác tính", "Thành phần gai ác tính", "Hoại tử và mô đệm phản ứng"],
+    learn: "Khi một u có hai hướng biệt hóa, hãy mô tả rõ từng thành phần và nghĩ đến panel IHC hỗ trợ.",
+    pitfall: "Mẫu nhỏ có thể chỉ bắt được một thành phần, làm lệch chẩn đoán subtype.",
+    source: "Wikimedia Commons",
   },
   {
-    id: "lung-squamous",
-    organ: "thoracic",
-    titleVi: "Carcinoma tế bào gai phổi",
-    titleEn: "Lung squamous cell carcinoma",
-    keywords: ["carcinoma gai phổi", "lung squamous", "squamous cell carcinoma", "p40", "p63", "CK5/6", "keratinization"],
-    summary: "Đọc hình thái gai/sừng hóa khi có, đối chiếu p40/p63/CK5/6 và phân biệt với adenocarcinoma hoặc di căn.",
-    links: ["poLungScc", "poLung", "poLungWho", "whoThoracic", "cap"],
-    imageLinks: ["poLungScc"],
+    id: "hcc",
+    organ: "hepatobiliary",
+    pattern: ["carcinoma"],
+    file: "Hepatocellular carcinoma histopathology (1).jpg",
+    diagnosis: "Carcinoma tế bào gan",
+    english: "Hepatocellular carcinoma",
+    stain: "H&E",
+    clues: ["Bè tế bào gan dày", "Tế bào đa dạng, bào tương ái toan", "Có thể thấy sắc tố mật"],
+    learn: "So với gan nền: mất cấu trúc bè bình thường, tăng mật độ tế bào và bất thường nhân.",
+    pitfall: "U biệt hóa cao có thể giống nốt tái tạo/dysplastic nodule, cần reticulin và marker khi cần.",
+    source: "Wikimedia Commons",
   },
   {
-    id: "lung-small-cell",
-    organ: "thoracic",
-    titleVi: "Carcinoma tế bào nhỏ phổi",
-    titleEn: "Small cell lung carcinoma",
-    keywords: ["small cell", "tế bào nhỏ", "neuroendocrine", "synaptophysin", "chromogranin", "INSM1", "phổi"],
-    summary: "Tập trung vào hình thái tế bào nhỏ, necrosis/mitosis cao và marker neuroendocrine trong bối cảnh phù hợp.",
-    links: ["poLungSmallCell", "poLung", "whoThoracic", "cap"],
-    imageLinks: ["poLungSmallCell"],
+    id: "shock-liver",
+    organ: "hepatobiliary",
+    pattern: ["necrosis", "inflammation"],
+    file: "Histopathology of shock liver.jpg",
+    diagnosis: "Hoại tử trung tâm tiểu thùy gan",
+    english: "Centrilobular necrosis / shock liver",
+    stain: "H&E",
+    clues: ["Hoại tử quanh tĩnh mạch trung tâm", "Tế bào gan ái toan, rời rạc", "Vùng cửa còn tương đối bảo tồn"],
+    learn: "Đây là pattern tổn thương, không phải tên bệnh đơn độc; phải gắn với thiếu máu, sốc, độc chất.",
+    pitfall: "Đừng gọi là viêm gan đặc hiệu nếu chỉ có hoại tử do thiếu máu.",
+    source: "Wikimedia Commons",
   },
   {
-    id: "pd-l1",
-    organ: "thoracic",
-    titleVi: "PD-L1 trong ung thư phổi",
-    titleEn: "PD-L1 immunohistochemistry",
-    keywords: ["PD-L1", "PDL1", "22C3", "SP263", "SP142", "TPS", "CPS", "lung biomarker", "miễn dịch trị liệu"],
-    summary: "PD-L1 cần đọc theo clone, cách chấm điểm và loại u; không tách khỏi bối cảnh điều trị và hướng dẫn xét nghiệm.",
-    links: ["poPDL1", "poLung", "whoThoracic", "cap"],
-    imageLinks: ["poPDL1"],
-  },
-  {
-    id: "breast-grade",
+    id: "breast-idc",
     organ: "breast",
-    titleVi: "Grade mô học ung thư vú",
-    titleEn: "Breast histologic grade",
-    keywords: ["breast grade", "Nottingham", "Elston Ellis", "tubule", "pleomorphism", "mitosis", "grade vú"],
-    summary: "Grade vú thường dựa trên tạo ống, đa hình nhân và mitosis; cần đọc cùng type, kích thước, margin, hạch và biomarker.",
-    links: ["poBreastGrade", "poBreast", "whoBreast", "cap"],
-    imageLinks: ["poBreastGrade", "whoOnline"],
+    pattern: ["carcinoma", "glandular"],
+    file: "Histopathology of invasive ductal carcinoma of the breast.jpg",
+    diagnosis: "Carcinoma tuyến vú xâm nhập",
+    english: "Invasive ductal carcinoma / NST",
+    stain: "H&E",
+    clues: ["Đám tế bào u trong mô đệm/mỡ", "Không còn giới hạn trong ống", "Nhân dị dạng, tạo tuyến thay đổi"],
+    learn: "Luôn đọc type, grade Nottingham, kích thước, margin, hạch và ER/PR/HER2.",
+    pitfall: "Đừng nhầm DCIS lan trong ống với xâm nhập nếu chưa thấy u trong mô đệm.",
+    source: "Wikimedia Commons",
   },
   {
-    id: "breast-carcinoma",
+    id: "breast-dcis",
     organ: "breast",
-    titleVi: "Carcinoma vú và biomarker",
-    titleEn: "Breast carcinoma and biomarkers",
-    keywords: ["carcinoma vú", "breast carcinoma", "DCIS", "IDC", "ILC", "ER", "PR", "HER2", "Ki-67", "sentinel lymph node"],
-    summary: "Tách in situ/xâm nhập, type mô học, grade, kích thước, margin, hạch; ER/PR/HER2 là bộ thông tin cốt lõi.",
-    links: ["poBreast", "whoBreast", "cap"],
-    imageLinks: ["poBreast", "whoOnline"],
+    pattern: ["carcinoma", "glandular"],
+    file: "Breast DCIS histopathology (1).jpg",
+    diagnosis: "DCIS vú",
+    english: "Ductal carcinoma in situ",
+    stain: "H&E",
+    clues: ["Tế bào ác tính trong ống tuyến", "Màng đáy còn giới hạn", "Có thể có hoại tử comedo"],
+    learn: "Học cách tìm myoepithelial/basement membrane để phân biệt in situ với xâm nhập.",
+    pitfall: "Sinh thiết lõi có thể bỏ sót ổ xâm nhập cạnh DCIS.",
+    source: "Wikimedia Commons",
   },
   {
-    id: "p16-cervix",
-    organ: "female",
-    titleVi: "p16/HPV trong cổ tử cung và đầu cổ",
-    titleEn: "p16 and HPV-associated lesions",
-    keywords: ["p16", "HPV", "HSIL", "CIN", "cổ tử cung", "oropharynx", "đầu cổ", "squamous"],
-    summary: "p16 là marker rất phụ thuộc bối cảnh: thường quan trọng trong tổn thương liên quan HPV, nhưng không được diễn giải giống nhau ở mọi cơ quan.",
-    links: ["poCervix", "poHeadNeck", "whoFemale", "whoHeadNeck", "cap"],
-    imageLinks: ["poCervix", "poHeadNeck"],
+    id: "breast-mucinous",
+    organ: "breast",
+    pattern: ["carcinoma", "glandular"],
+    file: "Histopathology of mucinous invasive ductal carcinoma of the breast.jpg",
+    diagnosis: "Carcinoma vú dạng nhầy",
+    english: "Mucinous breast carcinoma",
+    stain: "H&E",
+    clues: ["Hồ chất nhầy ngoại bào", "Đảo tế bào u trôi trong mucin", "Đánh giá thành phần thuần/tạp"],
+    learn: "Nhìn lượng mucin và thành phần carcinoma thông thường đi kèm để hiểu tiên lượng.",
+    pitfall: "Mucin có thể thấy ở tổn thương khác; phải xác định tế bào u xâm nhập.",
+    source: "Wikimedia Commons",
   },
   {
-    id: "gleason",
+    id: "breast-idc-10x",
+    organ: "breast",
+    pattern: ["carcinoma"],
+    file: "Infiltrating ductal carcinoma 10X.jpg",
+    diagnosis: "Carcinoma ống tuyến vú xâm nhập, 10X",
+    english: "Infiltrating ductal carcinoma",
+    stain: "H&E",
+    clues: ["Đám tế bào u không đều", "Mô đệm xơ", "Kiểu xâm nhập vào mô quanh ống"],
+    learn: "Ở độ phóng đại thấp, hãy xác định ranh giới u và pattern xâm nhập trước khi soi chi tiết nhân.",
+    pitfall: "Đừng chỉ nhìn tế bào; kiến trúc xâm nhập thường là manh mối mạnh nhất.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "lung-scc",
+    organ: "lung",
+    pattern: ["carcinoma", "squamous"],
+    file: "Histopathology of squamous-cell carcinoma of the lung.jpg",
+    diagnosis: "Carcinoma tế bào gai phổi",
+    english: "Lung squamous cell carcinoma",
+    stain: "H&E",
+    clues: ["Ổ tế bào dạng gai", "Có thể có sừng hóa/cầu sừng", "p40/p63/CK5/6 hỗ trợ khi kém biệt hóa"],
+    learn: "Tách squamous với adenocarcinoma vì panel marker và điều trị có thể khác.",
+    pitfall: "Carcinoma gai di căn đến phổi có thể giống nguyên phát phổi.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "lung-scc-pearl",
+    organ: "lung",
+    pattern: ["carcinoma", "squamous"],
+    file: "Squamous Cell Carcinoma Lung 40x.jpg",
+    diagnosis: "Carcinoma gai phổi có cầu sừng",
+    english: "Keratinizing lung squamous carcinoma",
+    stain: "H&E",
+    clues: ["Cầu sừng trung tâm", "Bào tương ái toan", "Nhân tăng sắc, dị dạng"],
+    learn: "Cầu sừng là pattern kinh điển giúp nhận diện biệt hóa gai.",
+    pitfall: "Mẫu nhỏ hoại tử nhiều có thể che mất dấu hiệu sừng hóa.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "lung-congestion",
+    organ: "lung",
+    pattern: ["inflammation"],
+    file: "Hemosiderin laden macrophages in chronic venous congestion of lung 40X.jpg",
+    diagnosis: "Đại thực bào chứa hemosiderin ở phổi",
+    english: "Heart failure cells / chronic venous congestion",
+    stain: "H&E",
+    clues: ["Đại thực bào nâu trong phế nang", "Sung huyết mao mạch", "Gợi ý ứ huyết mạn"],
+    learn: "Không phải mọi sắc tố nâu là melanin; đặt vị trí phổi và bối cảnh tim mạch vào trước.",
+    pitfall: "Có thể cần nhuộm sắt nếu cần xác nhận hemosiderin.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "cervix-scc",
+    organ: "gyn",
+    pattern: ["carcinoma", "squamous"],
+    file: "Histopathology of squamous cell carcinoma of the cervix.png",
+    diagnosis: "Carcinoma tế bào gai cổ tử cung",
+    english: "Cervical squamous cell carcinoma",
+    stain: "H&E",
+    clues: ["Đảo tế bào gai xâm nhập", "Cầu sừng hoặc biệt hóa gai", "Đọc LVSI và độ sâu xâm nhập"],
+    learn: "So sánh với HSIL/CIN3: dấu xâm nhập mô đệm là mấu chốt.",
+    pitfall: "p16 hỗ trợ bối cảnh HPV nhưng không thay thế đánh giá xâm nhập.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "cervix-cis",
+    organ: "gyn",
+    pattern: ["squamous"],
+    file: "Ca in situ, cervix 2.jpg",
+    diagnosis: "Carcinoma in situ/HSIL cổ tử cung",
+    english: "Cervical carcinoma in situ / HSIL",
+    stain: "H&E",
+    clues: ["Dày toàn bộ biểu mô", "Mất trưởng thành", "Chưa thấy xâm nhập mô đệm"],
+    learn: "Tập nhận ranh giới màng đáy và sự lan vào tuyến cổ tử cung.",
+    pitfall: "Lan vào tuyến có thể làm tưởng là xâm nhập nếu không nhìn cấu trúc tuyến.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "endometrioid",
+    organ: "gyn",
+    pattern: ["carcinoma", "glandular"],
+    file: "Histopathology of endometrial adenocarcinoma, endometrioid type.jpg",
+    diagnosis: "Adenocarcinoma nội mạc tử cung dạng endometrioid",
+    english: "Endometrioid endometrial carcinoma",
+    stain: "H&E",
+    clues: ["Tuyến chen chúc, back-to-back", "Đánh giá thành phần đặc", "Đọc grade FIGO"],
+    learn: "Grade dựa nhiều vào kiến trúc đặc; sau đó đọc xâm nhập cơ và LVSI.",
+    pitfall: "Tăng sản không điển hình có thể rất sát carcinoma trên mẫu nhỏ.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "krukenberg",
+    organ: "gyn",
+    pattern: ["carcinoma", "glandular"],
+    file: "Gross pathology and histopathology of signet ring cell carcinoma metastasis to the ovary.jpg",
+    diagnosis: "U Krukenberg",
+    english: "Signet-ring cell carcinoma metastasis to ovary",
+    stain: "H&E",
+    clues: ["Tế bào nhẫn", "Mô đệm phản ứng", "Thường là di căn, cần tìm nguồn tiêu hóa"],
+    learn: "Ở buồng trứng, tế bào nhẫn hai bên gợi ý di căn hơn nguyên phát.",
+    pitfall: "Không vội gọi carcinoma buồng trứng nguyên phát khi chưa loại di căn.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "prostate-adeno",
     organ: "gu",
-    titleVi: "Gleason/Grade Group tuyến tiền liệt",
-    titleEn: "Prostate Gleason score and Grade Group",
-    keywords: ["Gleason", "Grade Group", "prostate", "tuyến tiền liệt", "acinus", "cribriform", "ISUP"],
-    summary: "Với ung thư tuyến tiền liệt, cần đọc pattern Gleason, Grade Group, số core dương tính, tỷ lệ u và các yếu tố xâm nhập/margin khi là bệnh phẩm cắt.",
-    links: ["poProstate", "poGU", "whoGU", "cap"],
-    imageLinks: ["poProstate", "whoOnline"],
+    pattern: ["carcinoma", "glandular"],
+    file: "Histopathology of prostate adenocarcinoma involving adipose tissue.jpg",
+    diagnosis: "Adenocarcinoma tuyến tiền liệt",
+    english: "Prostate adenocarcinoma",
+    stain: "H&E",
+    clues: ["Tuyến nhỏ xâm nhập", "Thiếu lớp basal", "Có thể xâm nhập mỡ/quanh thần kinh"],
+    learn: "Đọc Gleason pattern/Grade Group, số core dương tính và extent.",
+    pitfall: "Atrophy/adenosis có thể bắt chước carcinoma trên sinh thiết nhỏ.",
+    source: "Wikimedia Commons",
   },
   {
-    id: "breslow",
+    id: "pap-rcc1",
+    organ: "gu",
+    pattern: ["carcinoma"],
+    file: "Histopathology of papillary renal cell carcinoma type 1.jpg",
+    diagnosis: "Carcinoma tế bào thận dạng nhú type 1",
+    english: "Papillary renal cell carcinoma type 1",
+    stain: "H&E",
+    clues: ["Cấu trúc nhú/ống-nhú", "Đại thực bào bọt trong trục nhú", "Tế bào thường nhỏ, ít bào tương"],
+    learn: "Tập nhìn lõi nhú có mô bào bọt và phân biệt với clear cell RCC.",
+    pitfall: "RCC dạng nhú có nhiều biến thể; cần đọc grade và type cẩn thận.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "pap-rcc2",
+    organ: "gu",
+    pattern: ["carcinoma"],
+    file: "Histopathology of papillary renal cell carcinoma type 2.jpg",
+    diagnosis: "Carcinoma tế bào thận dạng nhú type 2",
+    english: "Papillary renal cell carcinoma type 2",
+    stain: "H&E",
+    clues: ["Tế bào lớn hơn type 1", "Nhân grade cao hơn", "Kiến trúc nhú rõ"],
+    learn: "So sánh type 1 và type 2 bằng tế bào học, không chỉ kiến trúc nhú.",
+    pitfall: "Phân loại RCC hiện đại thay đổi theo WHO; cần đối chiếu nguồn mới.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "renal-infarct",
+    organ: "gu",
+    pattern: ["necrosis"],
+    file: "Renal cortical infarction showing coagulative necrosis 40X.jpg",
+    diagnosis: "Nhồi máu vỏ thận",
+    english: "Renal cortical infarction",
+    stain: "H&E",
+    clues: ["Hoại tử đông", "Bóng tế bào còn khung", "Mất nhân rõ"],
+    learn: "Hoại tử đông giữ kiến trúc mô trong giai đoạn đầu, khác hoại tử hóa lỏng.",
+    pitfall: "Không nhầm vùng cố định kém với hoại tử bệnh lý thật.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "bcc",
     organ: "skin",
-    titleVi: "Breslow trong melanoma",
-    titleEn: "Breslow thickness in melanoma",
-    keywords: ["Breslow", "melanoma", "hắc tố", "ulceration", "mitosis", "satellitosis", "Clark"],
-    summary: "Breslow là độ dày u tính bằng mm trong melanoma; cần đọc cùng ulceration, mitosis, margin và các yếu tố staging khác.",
-    links: ["poSkin", "whoSkin", "cap"],
-    imageLinks: ["poSkin", "whoOnline"],
+    pattern: ["carcinoma"],
+    file: "Histopathology of a pigmented basal-cell carcinoma.jpg",
+    diagnosis: "Carcinoma tế bào đáy sắc tố",
+    english: "Pigmented basal cell carcinoma",
+    stain: "H&E",
+    clues: ["Đám tế bào basaloid", "Palisading ngoại vi", "Khoảng tách mô đệm và sắc tố"],
+    learn: "Đây là card kinh điển để học palisading và retraction artifact.",
+    pitfall: "BCC sắc tố có thể lâm sàng giống melanoma; mô học giúp tách.",
+    source: "Wikimedia Commons",
   },
   {
-    id: "ihc",
+    id: "melanoma-node",
+    organ: "skin",
+    pattern: ["melanocytic", "carcinoma"],
+    file: "Histopathology of a metastatic melanoma to a lymph node.jpg",
+    diagnosis: "Melanoma di căn hạch",
+    english: "Metastatic melanoma to lymph node",
+    stain: "H&E",
+    clues: ["Tế bào dị dạng cao", "Có thể ít sắc tố", "Cần SOX10/S100/Melan-A khi khó"],
+    learn: "Melanoma có thể rất đa dạng; đừng dựa vào sắc tố đơn độc.",
+    pitfall: "Melanoma mất sắc tố có thể giống carcinoma hoặc lymphoma.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "malignant-melanoma",
+    organ: "skin",
+    pattern: ["melanocytic"],
+    file: "Histopathology of Malignant melanoma.jpg",
+    diagnosis: "Melanoma ác tính",
+    english: "Malignant melanoma",
+    stain: "H&E",
+    clues: ["Tế bào hắc tố dị dạng", "Mất trưởng thành", "Tăng mitosis, có thể xâm nhập sâu"],
+    learn: "Đọc Breslow, ulceration, mitosis, regression, satellitosis và margin.",
+    pitfall: "Nevus kích thích hoặc Spitz lesion có thể gây khó trên mẫu nhỏ.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "molluscum",
+    organ: "skin",
+    pattern: ["inflammation"],
+    file: "Histopathology of molluscum contagiosum.jpg",
+    diagnosis: "Molluscum contagiosum",
+    english: "Molluscum contagiosum",
+    stain: "H&E",
+    clues: ["Tăng sản biểu mô dạng lõm", "Thể vùi molluscum", "Tổn thương virus da"],
+    learn: "Tập nhận thể vùi nội bào lớn trong bệnh da do virus.",
+    pitfall: "Mẫu nông có thể chỉ thấy viêm/keratin, dễ bỏ sót thể vùi.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "follicular-lymphoma",
     organ: "heme",
-    titleVi: "HMMD/IHC",
-    titleEn: "Immunohistochemistry",
-    keywords: ["HMMD", "hóa mô miễn dịch", "IHC", "immunohistochemistry", "CD", "marker", "kháng thể"],
-    summary: "IHC dùng kháng thể để hỗ trợ phân dòng, xác định nguồn gốc hoặc biomarker; ý nghĩa luôn phụ thuộc panel và hình thái.",
-    links: ["poHome", "cap", "nciReport"],
-    imageLinks: ["poHome"],
+    pattern: ["lymphoid"],
+    file: "Histopathology of a centroblast in follicular lymphoma.jpg",
+    diagnosis: "Follicular lymphoma",
+    english: "Follicular lymphoma",
+    stain: "H&E",
+    clues: ["Nang lympho bất thường", "Centrocyte/centroblast", "Đọc grade bằng số centroblast"],
+    learn: "Hãy học tế bào centrocyte và centroblast trước khi đọc grade lymphoma nang.",
+    pitfall: "Reactive follicular hyperplasia có thể giống lymphoma nếu không dùng IHC/flow khi cần.",
+    source: "Wikimedia Commons",
   },
   {
-    id: "ki67",
+    id: "nkt",
     organ: "heme",
-    titleVi: "Ki-67",
-    titleEn: "Ki-67 proliferation index",
-    keywords: ["Ki-67", "ki67", "proliferation", "tăng sinh", "mitotic", "lymphoma", "breast"],
-    summary: "Ki-67 phản ánh hoạt tính tăng sinh nhưng ngưỡng và ý nghĩa khác nhau theo loại u; không dùng một mình để kết luận.",
-    links: ["poBreast", "poHeme", "whoHeme", "cap"],
-    imageLinks: ["poBreast", "poHeme"],
+    pattern: ["lymphoid", "necrosis", "ihc"],
+    file: "Histopathology of extranodal NK-T cell lymphoma, nasal type.png",
+    diagnosis: "Lymphoma NK/T ngoại hạch, type mũi",
+    english: "Extranodal NK/T-cell lymphoma, nasal type",
+    stain: "H&E",
+    clues: ["Tế bào lymphoid đơn dạng", "Hoại tử/angiodestruction", "EBER thường quan trọng"],
+    learn: "Với tổn thương vùng mũi hoại tử, nghĩ đến EBER và panel T/NK.",
+    pitfall: "Viêm hoại tử hoặc nhiễm trùng có thể che lấp lymphoma.",
+    source: "Wikimedia Commons",
   },
   {
-    id: "eber",
+    id: "abscess",
+    organ: "infection",
+    pattern: ["inflammation", "necrosis"],
+    file: "Histopathology of abscess.jpg",
+    diagnosis: "Áp xe",
+    english: "Abscess",
+    stain: "H&E",
+    clues: ["Nhiều bạch cầu đa nhân trung tính", "Hoại tử hóa lỏng", "Mảnh vụn tế bào"],
+    learn: "Viêm cấp giàu neutrophil khác với viêm mạn lympho/plasma và viêm hạt mô bào.",
+    pitfall: "Trong u hoại tử cũng có neutrophil; cần tìm tế bào u còn sống ở rìa.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "acute-exudate",
+    organ: "infection",
+    pattern: ["inflammation"],
+    file: "Histopathology of acute inflammatory exudate.jpg",
+    diagnosis: "Dịch rỉ viêm cấp",
+    english: "Acute inflammatory exudate",
+    stain: "H&E",
+    clues: ["Neutrophil ưu thế", "Fibrin/mảnh vụn", "Tổn thương mô cấp"],
+    learn: "Tập phân biệt neutrophil, lymphocyte, plasma cell và histiocyte.",
+    pitfall: "Mảnh vụn hoại tử có thể làm khó nhận diện tế bào viêm.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "thyroid-ptc",
+    organ: "endocrine",
+    pattern: ["carcinoma", "glandular"],
+    file: "Thyroid papillary carcinoma histopathology (2).jpg",
+    diagnosis: "Carcinoma tuyến giáp thể nhú",
+    english: "Papillary thyroid carcinoma",
+    stain: "H&E",
+    clues: ["Nhân sáng", "Rãnh nhân/thể vùi", "Cấu trúc nhú hoặc follicular variant"],
+    learn: "Trong PTC, đặc điểm nhân quan trọng hơn chỉ nhìn cấu trúc nhú.",
+    pitfall: "Reactive nuclear clearing có thể gây nhầm nếu không đủ bộ đặc điểm nhân.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "thyroid-ptc-4",
+    organ: "endocrine",
+    pattern: ["carcinoma"],
+    file: "Thyroid papillary carcinoma histopathology (4).jpg",
+    diagnosis: "Carcinoma tuyến giáp thể nhú, phóng đại khác",
+    english: "Papillary thyroid carcinoma",
+    stain: "H&E",
+    clues: ["Nhân chồng lấp", "Rãnh nhân", "Cấu trúc nhú/vi nhú"],
+    learn: "Xem nhiều độ phóng đại để không bỏ lỡ đặc điểm nhân.",
+    pitfall: "Một số biến thể PTC cần tiêu chuẩn riêng và marker bổ sung.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "meningioma",
+    organ: "cns",
+    pattern: ["spindle"],
+    file: "Histopathology of meningioma.jpg",
+    diagnosis: "Meningioma grade 1",
+    english: "Meningioma",
+    stain: "H&E",
+    clues: ["Whorl", "Tế bào đồng dạng", "Psammoma bodies có thể gặp"],
+    learn: "Tập nhận whorl và psammoma body trước khi học grading meningioma.",
+    pitfall: "Meningioma dạng spindle có thể nhầm schwannoma/fibrous lesion.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "meningioma-psammoma",
+    organ: "cns",
+    pattern: ["spindle"],
+    file: "Meningioma showing Psammoma body.jpg",
+    diagnosis: "Meningioma có thể psammoma",
+    english: "Meningioma with psammoma body",
+    stain: "H&E",
+    clues: ["Cấu trúc vôi hóa đồng tâm", "Nền tế bào màng não", "Whorl quanh psammoma"],
+    learn: "Psammoma body là dấu hình thái lặp lại ở nhiều u; luôn gắn với bối cảnh cơ quan.",
+    pitfall: "Psammoma body không đặc hiệu riêng cho meningioma.",
+    source: "Wikimedia Commons",
+  },
+  {
+    id: "oral-scc",
     organ: "headneck",
-    titleVi: "EBER/EBV",
-    titleEn: "EBER in situ hybridization",
-    keywords: ["EBER", "EBV", "nasopharyngeal carcinoma", "NK/T", "lymphoma", "vòm", "đầu cổ"],
-    summary: "EBER hỗ trợ phát hiện EBV trong một số carcinoma đầu cổ và lymphoma; đọc cùng hình thái và panel marker.",
-    links: ["poHeadNeck", "poHeme", "whoHeadNeck", "whoHeme"],
-    imageLinks: ["poHeadNeck", "poHeme"],
+    pattern: ["carcinoma", "squamous"],
+    file: "Oral cancer (1) squamous cell carcinoma histopathology.jpg",
+    diagnosis: "Carcinoma tế bào gai khoang miệng",
+    english: "Oral squamous cell carcinoma",
+    stain: "H&E",
+    clues: ["Đảo tế bào gai xâm nhập", "Sừng hóa", "Mô đệm phản ứng"],
+    learn: "Ở đầu cổ, đọc thêm độ sâu xâm nhập, PNI, LVI, margin và hạch.",
+    pitfall: "Pseudoepitheliomatous hyperplasia có thể bắt chước SCC trên mẫu nông.",
+    source: "Wikimedia Commons",
   },
   {
-    id: "idh",
-    organ: "cns",
-    titleVi: "IDH trong u thần kinh đệm",
-    titleEn: "IDH in gliomas",
-    keywords: ["IDH", "glioma", "astrocytoma", "oligodendroglioma", "CNS", "u thần kinh đệm"],
-    summary: "IDH là thông tin phân tử cốt lõi trong nhiều u thần kinh đệm; cần đọc cùng 1p/19q, ATRX, p53 và WHO grade.",
-    links: ["poCns", "whoCNS", "cap"],
-    imageLinks: ["poCns", "whoOnline"],
+    id: "pleomorphic-adenoma",
+    organ: "headneck",
+    pattern: ["glandular", "spindle"],
+    file: "Pleomorphic adenoma.jpg",
+    diagnosis: "U tuyến đa dạng tuyến nước bọt",
+    english: "Pleomorphic adenoma",
+    stain: "H&E",
+    clues: ["Thành phần biểu mô và myoepithelial", "Nền myxoid/chondroid", "Giới hạn tương đối rõ"],
+    learn: "Đây là ca tốt để học u tuyến nước bọt có hai pha tế bào và nền mô đệm đặc trưng.",
+    pitfall: "Sinh thiết nhỏ có thể nhầm với u ác tính tuyến nước bọt nếu chỉ thấy một vùng.",
+    source: "Wikimedia Commons",
   },
   {
-    id: "1p19q",
-    organ: "cns",
-    titleVi: "1p/19q",
-    titleEn: "1p/19q codeletion",
-    keywords: ["1p/19q", "1p19q", "oligodendroglioma", "codeletion", "CNS"],
-    summary: "Đồng mất đoạn 1p/19q là tiêu chí quan trọng trong chẩn đoán oligodendroglioma khi đi cùng IDH-mutant.",
-    links: ["poCns", "whoCNS"],
-    imageLinks: ["poCns", "whoOnline"],
+    id: "neurofibroma",
+    organ: "soft",
+    pattern: ["spindle"],
+    file: "Neurofibroma -1.jpg",
+    diagnosis: "Neurofibroma",
+    english: "Neurofibroma",
+    stain: "H&E",
+    clues: ["Tế bào thoi lượn sóng", "Nền collagen/myxoid", "Ít atypia"],
+    learn: "Tập phân biệt spindle lesion lành với sarcoma bằng atypia, mitosis, necrosis và ranh giới.",
+    pitfall: "Schwannoma, perineurioma và scar có thể giống nhau nếu mẫu nhỏ.",
+    source: "Wikimedia Commons",
   },
   {
-    id: "margin",
-    organ: "general",
-    titleVi: "Margin/diện cắt",
-    titleEn: "Surgical margin",
-    keywords: ["margin", "diện cắt", "bờ cắt", "positive margin", "negative margin", "inked margin"],
-    summary: "Margin cho biết u còn sát hoặc chạm bờ phẫu thuật hay không; đây là mục CAP thường yêu cầu trong nhiều protocol ung thư.",
-    links: ["cap", "nciReport"],
-    imageLinks: ["cap"],
+    id: "clear-cell-pap-rcc",
+    organ: "gu",
+    pattern: ["carcinoma"],
+    file: "Clear cell papillary renal cell carcinoma - high mag.jpg",
+    diagnosis: "Clear cell papillary renal cell carcinoma",
+    english: "Clear cell papillary RCC",
+    stain: "H&E",
+    clues: ["Tế bào sáng", "Kiến trúc tuyến/nhú", "Nhân có thể xếp cực về phía lòng tuyến"],
+    learn: "So sánh với clear cell RCC và papillary RCC để học subtype thận.",
+    pitfall: "Subtype RCC cần IHC và tiêu chuẩn WHO, không chỉ một ảnh H&E.",
+    source: "Wikimedia Commons",
   },
   {
-    id: "grade",
-    organ: "general",
-    titleVi: "Grade",
-    titleEn: "Histologic grade",
-    keywords: ["grade", "độ mô học", "độ biệt hóa", "histologic grade", "well differentiated", "poorly differentiated"],
-    summary: "Grade nói về mức độ ác tính/biệt hóa của u, khác với stage; cách chấm grade thay đổi theo từng loại u.",
-    links: ["poBreastGrade", "cap", "nciReport"],
-    imageLinks: ["poBreastGrade"],
-  },
-  {
-    id: "stage",
-    organ: "general",
-    titleVi: "Stage/TNM",
-    titleEn: "Stage and TNM",
-    keywords: ["stage", "TNM", "pT", "pN", "pM", "giai đoạn", "staging", "hạch", "di căn"],
-    summary: "Stage mô tả mức độ lan của bệnh, thường dựa trên u nguyên phát, hạch vùng và di căn xa; cần bệnh phẩm/Thông tin đủ.",
-    links: ["cap", "nciReport"],
-    imageLinks: ["cap"],
-  },
-  {
-    id: "pni",
-    organ: "general",
-    titleVi: "PNI",
-    titleEn: "Perineural invasion",
-    keywords: ["PNI", "xâm nhập thần kinh", "perineural", "nerve invasion"],
-    summary: "PNI là xâm nhập quanh hoặc trong dây thần kinh; có ý nghĩa nguy cơ trong nhiều ung thư, đặc biệt khi protocol yêu cầu báo cáo.",
-    links: ["cap", "poHeadNeck", "poProstate"],
-    imageLinks: ["poHeadNeck", "poProstate"],
-  },
-  {
-    id: "lvi",
-    organ: "general",
-    titleVi: "LVI",
-    titleEn: "Lymphovascular invasion",
-    keywords: ["LVI", "lymphovascular", "xâm nhập mạch", "mạch máu", "mạch bạch huyết", "vascular invasion"],
-    summary: "LVI là u trong mạch máu hoặc mạch bạch huyết; thường liên quan nguy cơ hạch/di căn và có mặt trong nhiều checklist CAP.",
-    links: ["cap", "nciReport"],
-    imageLinks: ["cap"],
-  },
-  {
-    id: "necrosis",
-    organ: "general",
-    titleVi: "Hoại tử",
-    titleEn: "Tumour necrosis",
-    keywords: ["hoại tử", "necrosis", "dirty necrosis", "comedonecrosis", "tumor necrosis"],
-    summary: "Hoại tử là vùng mô chết trong u; ý nghĩa khác nhau theo loại u, có thể tham gia grade hoặc gợi ý pattern.",
-    links: ["poColonAdenoca", "poBreast", "poSoft", "cap"],
-    imageLinks: ["poColonAdenoca", "poBreast", "poSoft"],
-  },
-  {
-    id: "mitosis",
-    organ: "general",
-    titleVi: "Mitosis/phân bào",
-    titleEn: "Mitotic activity",
-    keywords: ["mitosis", "mitotic", "phân bào", "HPF", "mm2", "mitotic rate"],
-    summary: "Số phân bào phản ánh hoạt động tăng sinh; đơn vị đếm và vai trò khác nhau giữa breast, melanoma, sarcoma, GIST và lymphoma.",
-    links: ["poBreastGrade", "poSkin", "poSoft", "cap"],
-    imageLinks: ["poBreastGrade", "poSkin", "poSoft"],
-  },
-  {
-    id: "p53",
-    organ: "general",
-    titleVi: "p53",
-    titleEn: "p53 immunohistochemistry",
-    keywords: ["p53", "TP53", "aberrant", "wild-type", "serous", "endometrial", "ovarian"],
-    summary: "p53 có kiểu biểu hiện hỗ trợ định hướng bất thường TP53 trong một số u, nhưng cách diễn giải phụ thuộc cơ quan và pattern nhuộm.",
-    links: ["poFemale", "whoFemale", "cap"],
-    imageLinks: ["poFemale", "whoOnline"],
+    id: "xp11-rcc",
+    organ: "gu",
+    pattern: ["carcinoma", "ihc"],
+    file: "Xp11.2 translocation renal cell carcinoma - very high mag.jpg",
+    diagnosis: "RCC chuyển đoạn Xp11.2",
+    english: "Xp11.2 translocation RCC",
+    stain: "H&E",
+    clues: ["Kiến trúc nhú/ổ", "Tế bào sáng/eosinophilic", "Có thể cần TFE3"],
+    learn: "Một số subtype thận không thể học bằng hình H&E đơn độc, phải gắn với marker/phân tử.",
+    pitfall: "Dễ nhầm với papillary RCC hoặc clear cell RCC nếu không làm xét nghiệm hỗ trợ.",
+    source: "Wikimedia Commons",
   },
 ];
 
-const termCards = [
-  ["Đại thể", "gross", "Mô tả bệnh phẩm bằng mắt thường: kích thước, số mảnh, vị trí u, diện cắt và cách lấy mẫu.", ["nciReport", "cap"]],
-  ["Vi thể", "microscopic", "Mô tả hình ảnh dưới kính hiển vi, là phần giải thích cơ sở của kết luận.", ["nciReport", "poHome"]],
-  ["H&E", "hematoxylin eosin", "Nhuộm nền tảng để quan sát cấu trúc mô, nhân tế bào và mô đệm.", ["poHome"]],
-  ["Loạn sản", "dysplasia", "Biến đổi tiền ung thư của biểu mô; đọc mức độ thấp/cao và có xâm nhập hay chưa.", ["poColonAdenoma", "poCervix", "whoDigestive"]],
-  ["Carcinoma in situ", "in situ", "Tế bào ác tính còn khu trú trong biểu mô, chưa xâm nhập mô đệm.", ["poBreast", "poCervix", "cap"]],
-  ["Xâm nhập", "invasion invasive", "U vượt cấu trúc giới hạn bình thường vào mô xung quanh, thường ảnh hưởng điều trị và staging.", ["cap", "nciReport"]],
-  ["Grade", "histologic grade độ mô học", "Độ biệt hóa/độ ác tính mô học; cách chấm khác nhau theo từng loại u.", ["poBreastGrade", "cap"]],
-  ["Stage/TNM", "pT pN pM staging", "Giai đoạn dựa trên u nguyên phát, hạch vùng và di căn xa.", ["cap", "nciReport"]],
-  ["Margin/diện cắt", "bờ cắt surgical margin", "Bờ phẫu thuật còn u hay không; đọc cùng loại phẫu thuật và mực đánh dấu.", ["cap", "nciReport"]],
-  ["LVI", "lymphovascular invasion", "Xâm nhập mạch máu hoặc mạch bạch huyết.", ["cap"]],
-  ["PNI", "perineural invasion", "Xâm nhập quanh dây thần kinh, quan trọng trong nhiều ung thư đầu cổ, tụy, tiền liệt tuyến.", ["cap", "poHeadNeck"]],
-  ["Hoại tử", "necrosis", "Vùng mô chết trong u; có thể liên quan grade, type u hoặc đáp ứng điều trị.", ["poColonAdenoca", "poSoft", "cap"]],
-  ["Mitosis", "mitotic activity phân bào", "Số phân bào; cách đếm và ý nghĩa phụ thuộc loại u.", ["poBreastGrade", "poSkin", "cap"]],
-  ["HMMD/IHC", "immunohistochemistry", "Dùng kháng thể để hỗ trợ phân dòng, nguồn gốc hoặc biomarker điều trị.", ["poHome", "cap"]],
-  ["Ki-67", "ki67 proliferation", "Marker tăng sinh; đọc theo bối cảnh, không dùng đơn độc.", ["poBreast", "poHeme", "cap"]],
-  ["p16", "HPV CIN HSIL oropharynx", "Marker phụ thuộc bối cảnh, thường liên quan HPV ở một số vị trí.", ["poCervix", "poHeadNeck", "whoFemale"]],
-  ["p53", "TP53", "Kiểu biểu hiện hỗ trợ định hướng bất thường TP53 trong một số u.", ["poFemale", "whoFemale"]],
-  ["MMR/MSI", "MLH1 MSH2 MSH6 PMS2 microsatellite", "Hệ sửa lỗi bắt cặp DNA; quan trọng trong đại trực tràng và một số nhóm u khác.", ["poMMR", "poMSI", "whoDigestive"]],
-  ["ER/PR/HER2", "breast biomarkers", "Bộ biomarker then chốt trong carcinoma vú.", ["poBreast", "whoBreast", "cap"]],
-  ["Gleason/Grade Group", "prostate", "Hệ thống grade của ung thư tuyến tiền liệt.", ["poProstate", "whoGU", "cap"]],
-  ["Breslow", "melanoma thickness", "Độ dày melanoma tính bằng mm, yếu tố staging quan trọng.", ["poSkin", "whoSkin", "cap"]],
-  ["Synoptic report", "checklist protocol", "Báo cáo dạng checklist giúp không bỏ sót yếu tố quan trọng.", ["cap"]],
-  ["Desmoplasia", "stromal reaction", "Phản ứng mô đệm xơ quanh u xâm nhập, hay gặp trong carcinoma.", ["poColonAdenoca"]],
-  ["Dirty necrosis", "necrosis colon", "Hoại tử bẩn trong lòng tuyến là pattern thường gặp khi học adenocarcinoma đại trực tràng.", ["poColonAdenoca"]],
-  ["TTF-1", "lung thyroid marker", "Marker hỗ trợ nguồn gốc phổi/tuyến giáp tùy bối cảnh.", ["poLungAdenoca", "poLung"]],
-  ["p40", "squamous marker", "Marker hỗ trợ biệt hóa gai, thường dùng trong carcinoma phổi.", ["poLungScc"]],
-  ["EBER", "EBV ISH", "ISH phát hiện EBV, hữu ích trong một số lymphoma và carcinoma đầu cổ.", ["poHeadNeck", "poHeme", "whoHeme"]],
-  ["SOX10", "melanocytic neural crest", "Marker hỗ trợ melanocytic và một số u nguồn gốc thần kinh.", ["poSkin"]],
-  ["1p/19q", "oligodendroglioma codeletion", "Đồng mất đoạn quan trọng trong phân loại oligodendroglioma.", ["poCns", "whoCNS"]],
-  ["IDH", "glioma", "Marker/phân tử quan trọng trong u thần kinh đệm.", ["poCns", "whoCNS"]],
-].map(([title, aliases, explanation, links]) => ({
-  title,
-  aliases: String(aliases).split(" "),
-  explanation,
-  links,
-}));
+const patternGuides = [
+  ["Tuyến ác tính", "Tìm tuyến méo mó, back-to-back, tế bào dị dạng và dấu xâm nhập mô đệm."],
+  ["Biệt hóa gai", "Tìm bào tương hồng, cầu sừng, intercellular bridges và p40/p63 khi cần."],
+  ["Viêm hạt", "Tìm cụm mô bào, tế bào khổng lồ, hoại tử bã đậu hay dị vật."],
+  ["Lymphoid", "Đọc kiến trúc trước: còn nang phản ứng hay bị xóa? Sau đó mới đến CD markers."],
+  ["Melanocytic", "Không dựa vào sắc tố đơn độc; cần SOX10/S100/Melan-A/HMB45 trong ca khó."],
+  ["Spindle cell", "Đặt câu hỏi: tế bào thoi lành hay ác, có necrosis/mitosis/atypia không, marker nào phù hợp?"],
+];
 
 const sourceCards = [
-  {
-    title: "PathologyOutlines",
-    kind: "Official pathology reference",
-    note: "Dùng để đọc nhanh từng bệnh, hình thái vi thể, IHC, differential diagnosis và hình minh họa ngay trong topic.",
-    link: sourceLinks.poHome.url,
-  },
-  {
-    title: "WHO Classification of Tumours Online",
-    kind: "WHO/IARC",
-    note: "Nguồn phân loại u theo WHO. Nội dung đăng nhập có bản quyền nên website này chỉ dẫn link, không sao chép.",
-    link: WHO_ONLINE,
-  },
-  {
-    title: "IARC WHO Blue Books",
-    kind: "Public volume pages",
-    note: "Trang công khai của từng volume WHO, dùng để chọn đúng hệ cơ quan và năm xuất bản.",
-    link: WHO,
-  },
-  {
-    title: "CAP Current Cancer Protocols",
-    kind: "Reporting checklists",
-    note: "Nguồn để rà các yếu tố bắt buộc trong báo cáo ung thư theo protocol hiện hành.",
-    link: CAP,
-  },
-  {
-    title: "NCI Pathology Reports",
-    kind: "Patient/learner guide",
-    note: "Nguồn dễ đọc để hiểu báo cáo GPB gồm những phần gì và vì sao báo cáo quan trọng.",
-    link: NCI_REPORT,
-  },
+  ["Wikimedia Commons", "Nguồn ảnh mở", "Ảnh atlas được nhúng qua Special:FilePath và luôn có link về trang File gốc để xem tác giả/giấy phép.", "https://commons.wikimedia.org/wiki/Category:Histopathology"],
+  ["PathologyOutlines", "Đọc sâu từng bệnh", "Dùng để học thêm clinical, gross, microscopic, IHC và differential diagnosis.", `${PO}/`],
+  ["WHO/IARC Blue Books", "Chuẩn phân loại", "Dùng để đối chiếu tên u, tiêu chuẩn phân loại và các cập nhật theo cơ quan.", WHO],
+  ["CAP Cancer Protocols", "Checklist báo cáo", "Dùng khi cần biết báo cáo ung thư cần đủ những yếu tố nào.", CAP],
 ];
 
+let state = {
+  organ: "all",
+  pattern: "all",
+  query: "",
+  selectedId: atlasItems[0].id,
+};
+
 const els = {
-  featuredGrid: document.getElementById("featuredGrid"),
-  categoryGrid: document.getElementById("categoryGrid"),
-  organDetail: document.getElementById("organDetail"),
-  workflowList: document.getElementById("workflowList"),
-  sourceSearch: document.getElementById("sourceSearch"),
-  runSourceSearch: document.getElementById("runSourceSearch"),
-  clearSourceSearch: document.getElementById("clearSourceSearch"),
-  quickSearches: document.getElementById("quickSearches"),
-  sourceResults: document.getElementById("sourceResults"),
-  atlasGrid: document.getElementById("atlasGrid"),
+  organNav: document.getElementById("organNav"),
+  organGrid: document.getElementById("organGrid"),
+  patternFilters: document.getElementById("patternFilters"),
+  patternGrid: document.getElementById("patternGrid"),
   atlasSearch: document.getElementById("atlasSearch"),
-  systemGrid: document.getElementById("systemGrid"),
-  systemSearch: document.getElementById("systemSearch"),
-  termGrid: document.getElementById("termGrid"),
-  termSearch: document.getElementById("termSearch"),
-  termDetail: document.getElementById("termDetail"),
+  atlasGrid: document.getElementById("atlasGrid"),
+  spotlightGrid: document.getElementById("spotlightGrid"),
+  caseDetail: document.getElementById("caseDetail"),
+  galleryTitle: document.getElementById("galleryTitle"),
+  galleryCount: document.getElementById("galleryCount"),
+  resetFilters: document.getElementById("resetFilters"),
   sourceGrid: document.getElementById("sourceGrid"),
-  statCategories: document.getElementById("statCategories"),
-  statAtlas: document.getElementById("statAtlas"),
-  statTerms: document.getElementById("statTerms"),
+  statImages: document.getElementById("statImages"),
+  statOrgans: document.getElementById("statOrgans"),
+  statPatterns: document.getElementById("statPatterns"),
 };
 
 function escapeHtml(value) {
@@ -580,306 +611,260 @@ function normalize(value) {
     .replace(/đ/g, "d");
 }
 
-function linkObject(key) {
-  return sourceLinks[key] || key;
+function organById(id) {
+  return organs.find((organ) => organ.id === id) || organs[0];
 }
 
-function renderLinks(keys, className = "link-row") {
-  return `<div class="${className}">${keys
-    .map((key) => {
-      const item = linkObject(key);
-      return `<a href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer"><span>${escapeHtml(item.kind)}</span>${escapeHtml(item.label)} ↗</a>`;
-    })
-    .join("")}</div>`;
-}
-
-function topicSearchText(topic) {
-  const organ = organSystems.find((item) => item.id === topic.organ);
+function itemText(item) {
+  const organ = organById(item.organ);
   return normalize([
-    topic.titleVi,
-    topic.titleEn,
-    topic.summary,
-    topic.keywords.join(" "),
-    organ?.name,
-    organ?.code,
+    item.diagnosis,
+    item.english,
+    organ.label,
+    item.pattern.join(" "),
+    item.clues.join(" "),
+    item.learn,
+    item.pitfall,
+    item.stain,
   ].join(" "));
 }
 
-function getTopics(query = "") {
-  const q = normalize(query).trim();
-  if (!q) return topics.slice(0, 8);
-  return topics.filter((topic) => topicSearchText(topic).includes(q));
+function filteredItems() {
+  const query = normalize(state.query.trim());
+  return atlasItems.filter((item) => {
+    const matchesOrgan = state.organ === "all" || item.organ === state.organ;
+    const matchesPattern = state.pattern === "all" || item.pattern.includes(state.pattern);
+    const matchesQuery = !query || itemText(item).includes(query);
+    return matchesOrgan && matchesPattern && matchesQuery;
+  });
 }
 
-function renderFeatured() {
-  els.featuredGrid.innerHTML = featured
-    .map((item) => `
-      <a class="featured-card" href="${escapeHtml(item.href)}" target="_blank" rel="noreferrer" style="--image:url('${escapeHtml(item.image)}')">
-        <strong>${escapeHtml(item.title)}</strong>
-        <span>${escapeHtml(item.subtitle)} ↗</span>
-      </a>
-    `)
+function renderOrganNav() {
+  els.organNav.innerHTML = organs
+    .map((organ) => {
+      const count = organ.id === "all" ? atlasItems.length : atlasItems.filter((item) => item.organ === organ.id).length;
+      return `
+        <button class="nav-pill ${state.organ === organ.id ? "active" : ""}" type="button" data-organ="${escapeHtml(organ.id)}">
+          <span style="--dot:${escapeHtml(organ.color)}"></span>
+          <strong>${escapeHtml(organ.label)}</strong>
+          <em>${count}</em>
+        </button>
+      `;
+    })
     .join("");
+
+  els.organNav.querySelectorAll("[data-organ]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.organ = button.dataset.organ;
+      renderAll();
+    });
+  });
 }
 
-function renderCategories(activeId = organSystems[0].id) {
-  els.categoryGrid.innerHTML = organSystems
-    .map((item) => `
-      <button class="category-card ${item.id === activeId ? "active" : ""}" type="button" data-organ="${escapeHtml(item.id)}" style="--image:url('${escapeHtml(item.cover)}'); --accent:${escapeHtml(item.accent)}; --accent-soft:${escapeHtml(item.accent)}55">
-        <span class="category-icon">${escapeHtml(item.code)}</span>
-        <div>
-          <h3>${escapeHtml(item.name)}</h3>
-          <p>${escapeHtml(item.summary)}</p>
-        </div>
-        <div class="category-meta">
-          <span>${escapeHtml(item.count)}</span>
-          <span>Xem nguồn →</span>
-        </div>
+function renderPatternFilters() {
+  els.patternFilters.innerHTML = patterns
+    .map((pattern) => `
+      <button class="filter-chip ${state.pattern === pattern.id ? "active" : ""}" type="button" data-pattern="${escapeHtml(pattern.id)}">
+        ${escapeHtml(pattern.label)}
       </button>
     `)
     .join("");
 
-  document.querySelectorAll("[data-organ]").forEach((button) => {
-    button.addEventListener("click", () => renderOrganDetail(button.dataset.organ));
-  });
-
-  renderOrganDetail(activeId);
-}
-
-function renderOrganDetail(id) {
-  const item = organSystems.find((organ) => organ.id === id) || organSystems[0];
-  document.querySelectorAll("[data-organ]").forEach((button) => {
-    button.classList.toggle("active", button.dataset.organ === item.id);
-  });
-
-  const related = topics.filter((topic) => item.topicIds.includes(topic.id));
-  els.organDetail.innerHTML = `
-    <div class="detail-visual" style="--image:url('${escapeHtml(item.cover)}')">
-      <span>${escapeHtml(item.code)}</span>
-    </div>
-    <div class="detail-copy">
-      <span class="eyebrow">Đang học: ${escapeHtml(item.name)}</span>
-      <h3>${escapeHtml(item.name)}</h3>
-      <p>${escapeHtml(item.summary)}</p>
-      <ul class="mini-list">${item.focus.map((focus) => `<li>${escapeHtml(focus)}</li>`).join("")}</ul>
-      <div class="chip-row">${related.map((topic) => `<button class="mini-chip" type="button" data-topic="${escapeHtml(topic.id)}">${escapeHtml(topic.titleVi)}</button>`).join("")}</div>
-      ${renderLinks(item.links)}
-    </div>
-  `;
-
-  els.organDetail.querySelectorAll("[data-topic]").forEach((button) => {
+  els.patternFilters.querySelectorAll("[data-pattern]").forEach((button) => {
     button.addEventListener("click", () => {
-      els.sourceSearch.value = topics.find((topic) => topic.id === button.dataset.topic)?.titleVi || "";
-      renderSourceResults();
-      document.getElementById("reader").scrollIntoView({ behavior: "smooth" });
+      state.pattern = button.dataset.pattern;
+      renderAll();
     });
   });
 }
 
-function renderWorkflow() {
-  els.workflowList.innerHTML = workflow
-    .map(([title, detail]) => `<li><strong>${escapeHtml(title)}</strong><span>${escapeHtml(detail)}</span></li>`)
+function renderSpotlight() {
+  const ids = ["colon-adeno", "lung-scc", "follicular-lymphoma", "colon-granuloma"];
+  els.spotlightGrid.innerHTML = ids
+    .map((id) => atlasItems.find((item) => item.id === id))
+    .filter(Boolean)
+    .map((item) => renderAtlasCard(item, true))
     .join("");
+  bindCardClicks(els.spotlightGrid);
 }
 
-function renderQuickSearches() {
-  const quick = ["adenocarcinoma đại tràng", "MMR MSI", "lung squamous", "PD-L1", "breast grade", "p16", "Gleason", "Breslow", "IDH 1p/19q", "margin"];
-  els.quickSearches.innerHTML = quick
-    .map((term) => `<button type="button" class="mini-chip" data-query="${escapeHtml(term)}">${escapeHtml(term)}</button>`)
-    .join("");
-  els.quickSearches.querySelectorAll("[data-query]").forEach((button) => {
-    button.addEventListener("click", () => {
-      els.sourceSearch.value = button.dataset.query;
-      renderSourceResults();
-    });
-  });
-}
-
-function renderSourceResults() {
-  const query = els.sourceSearch.value;
-  const matches = getTopics(query);
-
-  if (!matches.length) {
-    els.sourceResults.innerHTML = `
-      <div class="empty-state">
-        Chưa có mục khớp trong thư viện link đã xác minh. Hãy thử từ khóa rộng hơn như tên cơ quan
-        hoặc mở trực tiếp PathologyOutlines/WHO bằng các nguồn ở cuối trang.
+function renderAtlasCard(item, compact = false) {
+  const organ = organById(item.organ);
+  return `
+    <article class="atlas-card ${compact ? "compact" : ""}" data-case="${escapeHtml(item.id)}">
+      <div class="image-wrap">
+        <img src="${escapeHtml(fileImage(item.file))}" alt="${escapeHtml(item.diagnosis)}" loading="lazy" />
+        <span class="organ-badge" style="--badge:${escapeHtml(organ.color)}">${escapeHtml(organ.label)}</span>
       </div>
-    `;
-    return;
-  }
-
-  els.sourceResults.innerHTML = matches
-    .map((topic) => {
-      const organ = organSystems.find((item) => item.id === topic.organ);
-      return `
-        <article class="result-card">
-          <div>
-            <span class="tag">${escapeHtml(organ?.name || "Tổng quát")}</span>
-            <h3>${escapeHtml(topic.titleVi)}</h3>
-            <p class="english-title">${escapeHtml(topic.titleEn)}</p>
-            <p>${escapeHtml(topic.summary)}</p>
-          </div>
-          <div class="keyword-row">${topic.keywords.slice(0, 8).map((word) => `<span>${escapeHtml(word)}</span>`).join("")}</div>
-          <h4>Nguồn chính thức</h4>
-          ${renderLinks(topic.links)}
-          <h4>Nơi mở ảnh/hình minh họa</h4>
-          ${renderLinks(topic.imageLinks, "link-row image-links")}
-        </article>
-      `;
-    })
-    .join("");
+      <div class="atlas-body">
+        <div class="card-meta">
+          <span>${escapeHtml(item.stain)}</span>
+          <span>${escapeHtml(item.pattern.slice(0, 2).join(" · "))}</span>
+        </div>
+        <h3>${escapeHtml(item.diagnosis)}</h3>
+        <p class="english">${escapeHtml(item.english)}</p>
+        <ul>${item.clues.slice(0, 3).map((clue) => `<li>${escapeHtml(clue)}</li>`).join("")}</ul>
+        <button type="button" class="text-link">Mở ca học</button>
+      </div>
+    </article>
+  `;
 }
 
-function renderAtlas() {
-  const query = normalize(els.atlasSearch.value);
-  const atlasItems = topics.filter((topic) => topic.imageLinks?.length);
-  const filtered = atlasItems.filter((topic) => {
-    const organ = organSystems.find((item) => item.id === topic.organ);
-    return normalize([topic.titleVi, topic.titleEn, topic.keywords.join(" "), organ?.name].join(" ")).includes(query);
-  });
-
-  if (!filtered.length) {
-    els.atlasGrid.innerHTML = `<div class="empty-state">Không thấy nguồn ảnh phù hợp. Thử từ khóa rộng hơn: colon, breast, lung, skin, lymphoma.</div>`;
-    return;
-  }
-
-  els.atlasGrid.innerHTML = filtered
-    .map((topic) => {
-      const organ = organSystems.find((item) => item.id === topic.organ) || organSystems[0];
-      return `
-        <article class="atlas-card atlas-source-card">
-          <img src="${escapeHtml(organ.cover)}" alt="${escapeHtml(organ.name)} WHO cover" loading="lazy" />
-          <div class="atlas-body">
-            <span class="tag">${escapeHtml(organ.name)}</span>
-            <h3>${escapeHtml(topic.titleVi)}</h3>
-            <p>${escapeHtml(topic.summary)}</p>
-            ${renderLinks(topic.imageLinks, "link-row compact-links")}
-          </div>
-        </article>
-      `;
-    })
-    .join("");
-}
-
-function renderSystems() {
-  const query = normalize(els.systemSearch.value);
-  const filtered = topics.filter((topic) => topicSearchText(topic).includes(query));
-
-  if (!filtered.length) {
-    els.systemGrid.innerHTML = `<div class="empty-state">Không thấy topic phù hợp. Thử từ khóa như MMR, p16, margin, carcinoma, breast.</div>`;
-    return;
-  }
-
-  els.systemGrid.innerHTML = filtered
-    .map((topic) => {
-      const organ = organSystems.find((item) => item.id === topic.organ);
-      return `
-        <article class="system-card">
-          <div>
-            <span class="tag">${escapeHtml(organ?.code || "GEN")}</span>
-            <h3>${escapeHtml(topic.titleVi)}</h3>
-            <p class="english-title">${escapeHtml(topic.titleEn)}</p>
-            <p>${escapeHtml(topic.summary)}</p>
-          </div>
-          <div class="chip-row">${topic.keywords.slice(0, 6).map((key) => `<span class="tag">${escapeHtml(key)}</span>`).join("")}</div>
-          ${renderLinks(topic.links)}
-        </article>
-      `;
-    })
-    .join("");
-}
-
-function renderTerms(activeTitle = "Margin/diện cắt") {
-  const query = normalize(els.termSearch.value);
-  const filtered = termCards.filter((term) => normalize([term.title, term.aliases.join(" "), term.explanation].join(" ")).includes(query));
-
-  if (!filtered.length) {
-    els.termGrid.innerHTML = `<div class="empty-state">Không có thuật ngữ phù hợp.</div>`;
-    els.termDetail.innerHTML = "";
-    return;
-  }
-
-  els.termGrid.innerHTML = filtered
-    .map((term) => `
-      <button class="term-card ${term.title === activeTitle ? "active" : ""}" type="button" data-term="${escapeHtml(term.title)}">
-        <strong>${escapeHtml(term.title)}</strong>
-        <p>${escapeHtml(term.explanation)}</p>
-      </button>
-    `)
-    .join("");
-
-  const selected = filtered.find((term) => term.title === activeTitle) || filtered[0];
-  renderTermDetail(selected);
-
-  els.termGrid.querySelectorAll("[data-term]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const term = termCards.find((item) => item.title === button.dataset.term);
-      renderTermDetail(term);
-      els.termGrid.querySelectorAll(".term-card").forEach((card) => card.classList.toggle("active", card === button));
+function bindCardClicks(scope) {
+  scope.querySelectorAll("[data-case]").forEach((card) => {
+    card.addEventListener("click", () => {
+      state.selectedId = card.dataset.case;
+      renderCaseDetail();
+      document.getElementById("caseDetail").scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
 }
 
-function renderTermDetail(term) {
-  if (!term) return;
-  const aliases = term.aliases.filter(Boolean);
-  els.termDetail.innerHTML = `
+function renderGallery() {
+  const items = filteredItems();
+  const organ = organById(state.organ);
+  const pattern = patterns.find((item) => item.id === state.pattern);
+  els.galleryTitle.textContent = state.organ === "all" ? "Tất cả ảnh atlas" : `Atlas ${organ.label}`;
+  els.galleryCount.textContent = `${items.length} ảnh đang hiển thị${pattern && pattern.id !== "all" ? ` · ${pattern.label}` : ""}`;
+
+  if (!items.length) {
+    els.atlasGrid.innerHTML = `<div class="empty-state">Không có ảnh phù hợp. Hãy thử từ khóa rộng hơn hoặc bấm “Hiện tất cả”.</div>`;
+    return;
+  }
+
+  els.atlasGrid.innerHTML = items.map((item) => renderAtlasCard(item)).join("");
+  bindCardClicks(els.atlasGrid);
+}
+
+function renderCaseDetail() {
+  const visible = filteredItems();
+  if (!visible.length) {
+    els.caseDetail.innerHTML = "";
+    return;
+  }
+
+  const item = visible.find((entry) => entry.id === state.selectedId) || visible[0];
+  state.selectedId = item.id;
+  const organ = organById(item.organ);
+  const links = organLinks[item.organ] || [];
+
+  els.caseDetail.innerHTML = `
+    <div class="detail-image">
+      <img src="${escapeHtml(fileImage(item.file))}" alt="${escapeHtml(item.diagnosis)}" loading="lazy" />
+    </div>
     <div class="detail-copy">
-      <span class="eyebrow">Thuật ngữ đang mở</span>
-      <h3>${escapeHtml(term.title)}</h3>
-      <p>${escapeHtml(term.explanation)}</p>
-      <div class="keyword-row">${aliases.map((alias) => `<span>${escapeHtml(alias)}</span>`).join("")}</div>
-      <h4>Nguồn trích dẫn/đối chiếu</h4>
-      ${renderLinks(term.links)}
-      <p class="source-note">Mở các link trên để xem định nghĩa, checklist hoặc hình minh họa tại nguồn chính thức.</p>
+      <span class="eyebrow">${escapeHtml(organ.label)} · ${escapeHtml(item.stain)}</span>
+      <h2>${escapeHtml(item.diagnosis)}</h2>
+      <p class="english">${escapeHtml(item.english)}</p>
+      <div class="detail-grid">
+        <section>
+          <h3>Điểm cần nhìn</h3>
+          <ul>${item.clues.map((clue) => `<li>${escapeHtml(clue)}</li>`).join("")}</ul>
+        </section>
+        <section>
+          <h3>Gợi ý học</h3>
+          <p>${escapeHtml(item.learn)}</p>
+        </section>
+        <section>
+          <h3>Dễ nhầm</h3>
+          <p>${escapeHtml(item.pitfall)}</p>
+        </section>
+      </div>
+      <div class="link-row">
+        <a href="${escapeHtml(fileSource(item.file))}" target="_blank" rel="noreferrer"><span>Nguồn ảnh</span>${escapeHtml(item.source)} ↗</a>
+        ${links.map((link, index) => `<a href="${escapeHtml(link)}" target="_blank" rel="noreferrer"><span>${index === 0 ? "Đọc thêm" : "Phân loại/checklist"}</span>${index === 0 ? "PathologyOutlines" : link.includes("cap.org") ? "CAP" : "WHO/IARC"} ↗</a>`).join("")}
+      </div>
     </div>
   `;
 }
 
-function renderSources() {
-  els.sourceGrid.innerHTML = sourceCards
-    .map((item) => `
-      <article class="source-card">
-        <span class="tag">${escapeHtml(item.kind)}</span>
-        <h3>${escapeHtml(item.title)}</h3>
-        <p>${escapeHtml(item.note)}</p>
-        <a href="${escapeHtml(item.link)}" target="_blank" rel="noreferrer">Mở nguồn ↗</a>
+function renderOrganGrid() {
+  els.organGrid.innerHTML = organs
+    .filter((organ) => organ.id !== "all")
+    .map((organ) => {
+      const count = atlasItems.filter((item) => item.organ === organ.id).length;
+      return `
+        <button class="organ-card" type="button" data-organ-card="${escapeHtml(organ.id)}" style="--accent:${escapeHtml(organ.color)}">
+          <span>${escapeHtml(organ.short)}</span>
+          <h3>${escapeHtml(organ.label)}</h3>
+          <p>${escapeHtml(organ.guide)}</p>
+          <strong>${count} ảnh</strong>
+        </button>
+      `;
+    })
+    .join("");
+
+  els.organGrid.querySelectorAll("[data-organ-card]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.organ = button.dataset.organCard;
+      state.pattern = "all";
+      renderAll();
+      document.getElementById("atlas").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+}
+
+function renderPatternGrid() {
+  els.patternGrid.innerHTML = patternGuides
+    .map(([title, detail]) => `
+      <article class="pattern-card">
+        <h3>${escapeHtml(title)}</h3>
+        <p>${escapeHtml(detail)}</p>
       </article>
     `)
     .join("");
 }
 
-function bindEvents() {
-  els.runSourceSearch.addEventListener("click", renderSourceResults);
-  els.clearSourceSearch.addEventListener("click", () => {
-    els.sourceSearch.value = "";
-    renderSourceResults();
-    els.sourceSearch.focus();
-  });
-  els.sourceSearch.addEventListener("input", renderSourceResults);
-  els.atlasSearch.addEventListener("input", renderAtlas);
-  els.systemSearch.addEventListener("input", renderSystems);
-  els.termSearch.addEventListener("input", () => renderTerms());
+function renderSources() {
+  els.sourceGrid.innerHTML = sourceCards
+    .map(([title, kind, note, url]) => `
+      <article class="source-card">
+        <span class="eyebrow">${escapeHtml(kind)}</span>
+        <h3>${escapeHtml(title)}</h3>
+        <p>${escapeHtml(note)}</p>
+        <a href="${escapeHtml(url)}" target="_blank" rel="noreferrer">Mở nguồn ↗</a>
+      </article>
+    `)
+    .join("");
 }
 
-function initStats() {
-  els.statCategories.textContent = String(organSystems.length);
-  els.statAtlas.textContent = String(topics.filter((topic) => topic.imageLinks?.length).length);
-  els.statTerms.textContent = `${termCards.length}+`;
+function updateStats() {
+  els.statImages.textContent = String(atlasItems.length);
+  els.statOrgans.textContent = String(organs.length - 1);
+  els.statPatterns.textContent = String(patterns.length - 1);
+}
+
+function renderAll() {
+  const visible = filteredItems();
+  if (visible.length && !visible.some((item) => item.id === state.selectedId)) {
+    state.selectedId = visible[0].id;
+  }
+  renderOrganNav();
+  renderPatternFilters();
+  renderGallery();
+  renderCaseDetail();
+}
+
+function bindEvents() {
+  els.atlasSearch.addEventListener("input", () => {
+    state.query = els.atlasSearch.value;
+    renderAll();
+  });
+
+  els.resetFilters.addEventListener("click", () => {
+    state = { ...state, organ: "all", pattern: "all", query: "", selectedId: atlasItems[0].id };
+    els.atlasSearch.value = "";
+    renderAll();
+  });
 }
 
 function init() {
-  initStats();
-  renderFeatured();
-  renderCategories();
-  renderWorkflow();
-  renderQuickSearches();
-  renderSourceResults();
-  renderAtlas();
-  renderSystems();
-  renderTerms();
+  updateStats();
+  renderOrganGrid();
+  renderPatternGrid();
   renderSources();
+  renderSpotlight();
+  renderAll();
   bindEvents();
 }
 

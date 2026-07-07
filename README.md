@@ -1,8 +1,8 @@
-# Pathology Learning Hub
+# Atlas GPB
 
-Trang web tĩnh tiếng Việt để học đọc kết quả giải phẫu bệnh. Nội dung được biên soạn lại theo hướng tra cứu nguồn chính thống, có liên kết ra PathologyOutlines, WHO/IARC Classification of Tumours, CAP Cancer Protocols và NCI.
+Trang web tĩnh tiếng Việt dạng atlas giải phẫu bệnh: ảnh mô bệnh học theo cơ quan, chẩn đoán, điểm cần nhìn dưới kính, bẫy dễ nhầm và gợi ý học.
 
-Trang không dùng dữ liệu Excel, không dùng dữ liệu bệnh án nội bộ và không lưu thông tin đăng nhập WHO/IARC. Các hình/atlas được dẫn tới trang nguồn chính thức thay vì sao chép ảnh có bản quyền vào source.
+Trang không dùng dữ liệu Excel, không dùng dữ liệu bệnh án nội bộ và không lưu thông tin đăng nhập WHO/IARC. Ảnh được lấy từ nguồn mở như Wikimedia Commons qua link trang file gốc; PathologyOutlines, WHO/IARC và CAP chỉ dùng làm link đọc thêm.
 
 ## Chạy tại máy
 
@@ -27,4 +27,4 @@ Xem hướng dẫn từng bước trong `DEPLOY.md`.
 
 ## Ranh giới nội dung
 
-Trang này không sao chép nguyên văn tài liệu có bản quyền và không lưu thông tin đăng nhập. WHO Classification of Tumours Online có phần yêu cầu tài khoản, vì vậy website chỉ dẫn link và tóm tắt bằng lời mới để phục vụ học tập cá nhân.
+Trang này không sao chép nguyên văn tài liệu có bản quyền và không lưu thông tin đăng nhập. WHO Classification of Tumours Online có phần yêu cầu tài khoản, vì vậy website chỉ dẫn link, không sao chép nội dung đăng nhập.
