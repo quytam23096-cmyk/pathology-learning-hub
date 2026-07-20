@@ -591,7 +591,11 @@ const els = {
   sourceGrid: document.getElementById("sourceGrid"),
   statImages: document.getElementById("statImages"),
   statOrgans: document.getElementById("statOrgans"),
-  statPatterns: document.getElementById("statPatterns"),
+  statDiagnoses: document.getElementById("statDiagnoses"),
+  organSummary: document.getElementById("organSummary"),
+  diagnosisTitle: document.getElementById("diagnosisTitle"),
+  diagnosisCount: document.getElementById("diagnosisCount"),
+  diagnosisGrid: document.getElementById("diagnosisGrid"),
 };
 
 function escapeHtml(value) {
@@ -676,6 +680,69 @@ function renderPatternFilters() {
       renderAll();
     });
   });
+}
+
+function renderDiagnosisBrowser() {
+  const organ = organById(state.organ);
+  const items = filteredItems();
+  const organItems = state.organ === "all" ? atlasItems : atlasItems.filter((item) => item.organ === state.organ);
+  const patternNames = Array.from(new Set(organItems.flatMap((item) => item.pattern)))
+    .map((id) => patterns.find((pattern) => pattern.id === id)?.label || id)
+    .slice(0, 6);
+
+  els.organSummary.innerHTML = `
+    <span class="organ-code" style="--organ:${escapeHtml(organ.color)}">${escapeHtml(organ.short)}</span>
+    <div>
+      <span class="eyebrow">${state.organ === "all" ? "Tổng quan atlas" : "Cơ quan đang chọn"}</span>
+      <h2>${escapeHtml(organ.label)}</h2>
+      <p>${escapeHtml(organ.guide)}</p>
+    </div>
+    <div class="summary-metrics">
+      <div><strong>${state.organ === "all" ? organs.length - 1 : 1}</strong><span>cơ quan</span></div>
+      <div><strong>${items.length}</strong><span>chẩn đoán hiện</span></div>
+      <div><strong>${patternNames.length || patterns.length - 1}</strong><span>pattern</span></div>
+    </div>
+    <div class="summary-patterns">
+      ${(patternNames.length ? patternNames : patterns.filter((item) => item.id !== "all").map((item) => item.label).slice(0, 6))
+        .map((label) => `<span>${escapeHtml(label)}</span>`)
+        .join("")}
+    </div>
+  `;
+
+  els.diagnosisTitle.textContent = state.organ === "all" ? "Tất cả chẩn đoán trong atlas" : `Chẩn đoán ${organ.label}`;
+  els.diagnosisCount.textContent = `${items.length} chẩn đoán đang khớp bộ lọc`;
+
+  if (!items.length) {
+    els.diagnosisGrid.innerHTML = `<div class="empty-state">Không có chẩn đoán phù hợp trong cơ quan/pattern/từ khóa này.</div>`;
+    return;
+  }
+
+  els.diagnosisGrid.innerHTML = items.map((item) => renderDiagnosisCard(item)).join("");
+  els.diagnosisGrid.querySelectorAll("[data-diagnosis]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const item = atlasItems.find((entry) => entry.id === button.dataset.diagnosis);
+      if (!item) return;
+      state.selectedId = item.id;
+      state.organ = item.organ;
+      renderAll();
+      document.getElementById("caseDetail").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+}
+
+function renderDiagnosisCard(item) {
+  const organ = organById(item.organ);
+  const active = item.id === state.selectedId ? "active" : "";
+  return `
+    <button class="diagnosis-card ${active}" type="button" data-diagnosis="${escapeHtml(item.id)}">
+      <img src="${escapeHtml(fileImage(item.file))}" alt="${escapeHtml(item.diagnosis)}" loading="lazy" />
+      <span class="organ-badge inline" style="--badge:${escapeHtml(organ.color)}">${escapeHtml(organ.label)}</span>
+      <strong>${escapeHtml(item.diagnosis)}</strong>
+      <em>${escapeHtml(item.english)}</em>
+      <p>${escapeHtml(item.clues.slice(0, 2).join(" · "))}</p>
+      <small>${escapeHtml(item.pattern.map((id) => patterns.find((pattern) => pattern.id === id)?.label || id).slice(0, 3).join(" / "))}</small>
+    </button>
+  `;
 }
 
 function renderSpotlight() {
@@ -831,7 +898,7 @@ function renderSources() {
 function updateStats() {
   els.statImages.textContent = String(atlasItems.length);
   els.statOrgans.textContent = String(organs.length - 1);
-  els.statPatterns.textContent = String(patterns.length - 1);
+  els.statDiagnoses.textContent = String(atlasItems.length);
 }
 
 function renderAll() {
@@ -841,6 +908,7 @@ function renderAll() {
   }
   renderOrganNav();
   renderPatternFilters();
+  renderDiagnosisBrowser();
   renderGallery();
   renderCaseDetail();
 }
@@ -848,6 +916,7 @@ function renderAll() {
 function bindEvents() {
   els.atlasSearch.addEventListener("input", () => {
     state.query = els.atlasSearch.value;
+    state.organ = "all";
     renderAll();
   });
 

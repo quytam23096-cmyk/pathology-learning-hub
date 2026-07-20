@@ -1,6 +1,6 @@
 # Atlas GPB
 
-Trang web tĩnh tiếng Việt dạng atlas giải phẫu bệnh: ảnh mô bệnh học theo cơ quan, chẩn đoán, điểm cần nhìn dưới kính, bẫy dễ nhầm và gợi ý học.
+Trang web tĩnh tiếng Việt dạng atlas giải phẫu bệnh: chia theo cơ quan, trong từng cơ quan có các chẩn đoán cụ thể, ảnh mô bệnh học, điểm cần nhìn dưới kính, bẫy dễ nhầm và gợi ý học.
 
 Trang không dùng dữ liệu Excel, không dùng dữ liệu bệnh án nội bộ và không lưu thông tin đăng nhập WHO/IARC. Ảnh được lấy từ nguồn mở như Wikimedia Commons qua link trang file gốc; PathologyOutlines, WHO/IARC và CAP chỉ dùng làm link đọc thêm.
 

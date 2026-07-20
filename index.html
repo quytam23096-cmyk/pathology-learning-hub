@@ -22,7 +22,7 @@
         </a>
 
         <label class="search-box" for="atlasSearch">
-          <span>Tìm ca / cơ quan / pattern</span>
+          <span>Tìm cơ quan / chẩn đoán / pattern</span>
           <input id="atlasSearch" type="search" placeholder="VD: vú, melanoma, granuloma, p40..." autocomplete="off" />
         </label>
 
@@ -41,16 +41,16 @@
         <section id="atlas" class="atlas-hero">
           <div class="hero-copy">
             <span class="eyebrow">Atlas giải phẫu bệnh</span>
-            <h1>Nhìn hình, nhận pattern, nhớ chẩn đoán</h1>
+            <h1>Atlas theo cơ quan và chẩn đoán</h1>
             <p>
-              Mỗi thẻ ảnh có chẩn đoán, điểm cần nhìn dưới kính, bẫy dễ nhầm và link nguồn để bạn tự mở rộng.
-              Trang này được thiết kế như bàn học atlas: lọc nhanh theo cơ quan hoặc pattern.
+              Chọn một cơ quan, xem từng chẩn đoán thường gặp, rồi mở ca ảnh để học pattern dưới kính.
+              Mỗi chẩn đoán có ảnh, điểm cần nhìn, bẫy dễ nhầm và link nguồn để tự đọc sâu hơn.
             </p>
           </div>
           <div class="stat-grid" aria-label="Thống kê atlas">
             <div><strong id="statImages">0</strong><span>ảnh atlas</span></div>
             <div><strong id="statOrgans">0</strong><span>nhóm cơ quan</span></div>
-            <div><strong id="statPatterns">0</strong><span>pattern học</span></div>
+            <div><strong id="statDiagnoses">0</strong><span>chẩn đoán</span></div>
           </div>
         </section>
 
@@ -62,6 +62,20 @@
           <div class="view-actions">
             <button id="resetFilters" type="button" class="btn">Hiện tất cả</button>
             <a class="btn primary" href="#sources">Nguồn ảnh</a>
+          </div>
+        </section>
+
+        <section id="diagnosisBrowser" class="diagnosis-browser" aria-live="polite">
+          <div id="organSummary" class="organ-summary"></div>
+          <div class="diagnosis-column">
+            <div class="section-heading compact">
+              <div>
+                <span class="eyebrow">Chẩn đoán trong cơ quan</span>
+                <h2 id="diagnosisTitle">Chọn cơ quan để học</h2>
+              </div>
+              <p id="diagnosisCount">Đang tải danh sách chẩn đoán...</p>
+            </div>
+            <div id="diagnosisGrid" class="diagnosis-grid"></div>
           </div>
         </section>
 
