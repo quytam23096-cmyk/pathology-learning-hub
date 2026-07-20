@@ -6,88 +6,93 @@
     <title>Atlas GPB</title>
     <meta
       name="description"
-      content="Atlas giải phẫu bệnh tiếng Việt: ảnh mô bệnh học theo cơ quan, chẩn đoán, pattern cần nhìn và gợi ý học."
+      content="Atlas giải phẫu bệnh tiếng Việt theo cơ quan, chẩn đoán, hình ảnh vi thể, điểm ghi nhớ và nguồn chính thống."
     />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <div class="app-shell">
       <aside class="sidebar">
-        <a class="brand" href="#atlas" aria-label="Atlas GPB">
-          <span class="brand-mark" aria-hidden="true">A</span>
+        <a class="brand" href="#top" aria-label="Atlas GPB">
+          <span class="brand-mark">A</span>
           <span>
             <strong>Atlas GPB</strong>
-            <small>Học bằng hình ảnh</small>
+            <small>Cơ quan · Chẩn đoán · Vi thể</small>
           </span>
         </a>
 
-        <label class="search-box" for="atlasSearch">
-          <span>Tìm cơ quan / chẩn đoán / pattern</span>
-          <input id="atlasSearch" type="search" placeholder="VD: vú, melanoma, granuloma, p40..." autocomplete="off" />
+        <label class="search-box" for="searchInput">
+          <span>Tìm nhanh</span>
+          <input id="searchInput" type="search" placeholder="VD: tuyến giáp, PTC, polyp, TTF-1..." autocomplete="off" />
         </label>
 
-        <nav class="side-nav" aria-label="Lọc theo cơ quan">
+        <nav class="side-nav" aria-label="Danh sách cơ quan">
           <div class="side-title">Cơ quan</div>
           <div id="organNav"></div>
         </nav>
 
         <div class="side-panel">
-          <strong>Chế độ học</strong>
-          <span>Ảnh nguồn mở, có link gốc. Không dùng dữ liệu bệnh án, không sao chép ảnh WHO/PathologyOutlines.</span>
+          <strong>Nguồn dữ liệu</strong>
+          <span>
+            Cấu trúc atlas dựa trên danh mục học thuật, đối chiếu WHO/IARC và PathologyOutlines. Ảnh nhúng dùng nguồn mở có link file gốc.
+          </span>
         </div>
       </aside>
 
-      <main class="content">
-        <section id="atlas" class="atlas-hero">
+      <main id="top" class="content">
+        <section class="hero">
           <div class="hero-copy">
             <span class="eyebrow">Atlas giải phẫu bệnh</span>
-            <h1>Atlas theo cơ quan và chẩn đoán</h1>
+            <h1>Nhìn ảnh trước, nhớ chẩn đoán sau.</h1>
             <p>
-              Chọn một cơ quan, xem từng chẩn đoán thường gặp, rồi mở ca ảnh để học pattern dưới kính.
-              Mỗi chẩn đoán có ảnh, điểm cần nhìn, bẫy dễ nhầm và link nguồn để tự đọc sâu hơn.
+              Mỗi cơ quan được chia thành các chẩn đoán thường gặp. Mỗi thẻ có ảnh vi thể, dấu hiệu cần nhìn,
+              bẫy dễ nhầm, gợi ý báo cáo và link nguồn chính thống để đọc sâu hơn.
             </p>
+            <div class="hero-actions">
+              <a class="btn primary" href="#atlasBoard">Mở atlas</a>
+              <button class="btn ghost" id="openImageManager" type="button">Quản lý ảnh</button>
+            </div>
           </div>
-          <div class="stat-grid" aria-label="Thống kê atlas">
-            <div><strong id="statImages">0</strong><span>ảnh atlas</span></div>
-            <div><strong id="statOrgans">0</strong><span>nhóm cơ quan</span></div>
-            <div><strong id="statDiagnoses">0</strong><span>chẩn đoán</span></div>
+          <div class="hero-stats">
+            <div><strong id="statOrgans">0</strong><span>cơ quan</span></div>
+            <div><strong id="statDx">0</strong><span>chẩn đoán</span></div>
+            <div><strong id="statSources">0</strong><span>nguồn chính</span></div>
           </div>
         </section>
 
         <section class="toolbar" aria-label="Bộ lọc atlas">
           <div>
-            <span class="eyebrow">Lọc pattern</span>
+            <span class="eyebrow">Pattern</span>
             <div id="patternFilters" class="chip-row"></div>
           </div>
-          <div class="view-actions">
-            <button id="resetFilters" type="button" class="btn">Hiện tất cả</button>
-            <a class="btn primary" href="#sources">Nguồn ảnh</a>
-          </div>
+          <button class="btn" id="resetFilters" type="button">Hiện tất cả</button>
         </section>
 
-        <section id="diagnosisBrowser" class="diagnosis-browser" aria-live="polite">
-          <div id="organSummary" class="organ-summary"></div>
-          <div class="diagnosis-column">
-            <div class="section-heading compact">
+        <section id="atlasBoard" class="atlas-board">
+          <div id="chapterPanel" class="chapter-panel"></div>
+          <div class="diagnosis-panel">
+            <div class="panel-heading">
               <div>
-                <span class="eyebrow">Chẩn đoán trong cơ quan</span>
-                <h2 id="diagnosisTitle">Chọn cơ quan để học</h2>
+                <span class="eyebrow">Chẩn đoán</span>
+                <h2 id="diagnosisHeading">Đang tải atlas...</h2>
               </div>
-              <p id="diagnosisCount">Đang tải danh sách chẩn đoán...</p>
+              <p id="diagnosisCount"></p>
             </div>
             <div id="diagnosisGrid" class="diagnosis-grid"></div>
           </div>
         </section>
 
-        <section class="spotlight-section" aria-label="Ca nên xem trước">
+        <section id="caseDetail" class="case-detail" aria-live="polite"></section>
+
+        <section class="section">
           <div class="section-heading">
             <div>
-              <span class="eyebrow">Nên xem trước</span>
-              <h2>4 pattern nền tảng hay gặp</h2>
+              <span class="eyebrow">Poster ghi nhớ</span>
+              <h2 id="posterTitle">Bảng học nhanh</h2>
             </div>
-            <p>Những pattern này xuất hiện đi xuất hiện lại trong báo cáo: tuyến ác tính, carcinoma gai, lymphoma và viêm hạt.</p>
+            <p id="posterNote"></p>
           </div>
-          <div id="spotlightGrid" class="spotlight-grid"></div>
+          <div id="memoryPoster" class="memory-poster"></div>
         </section>
 
         <section class="section">
@@ -96,52 +101,52 @@
               <span class="eyebrow">Thư viện ảnh</span>
               <h2 id="galleryTitle">Tất cả ảnh atlas</h2>
             </div>
-            <p id="galleryCount">Đang tải atlas...</p>
+            <p id="galleryCount"></p>
           </div>
-          <div id="atlasGrid" class="atlas-grid" aria-live="polite"></div>
+          <div id="galleryGrid" class="gallery-grid"></div>
         </section>
 
-        <section id="caseDetail" class="case-detail" aria-live="polite"></section>
-
-        <section id="organs" class="section">
+        <section id="sources" class="section">
           <div class="section-heading">
             <div>
-              <span class="eyebrow">Học theo cơ quan</span>
-              <h2>Bản đồ atlas GPB</h2>
+              <span class="eyebrow">Nguồn học</span>
+              <h2>Link chính thống để đọc sâu</h2>
             </div>
-            <p>Mỗi nhóm cơ quan có checklist riêng để nhìn ảnh: cấu trúc nền, loại tế bào, kiểu xâm nhập, grade và marker.</p>
-          </div>
-          <div id="organGrid" class="organ-grid"></div>
-        </section>
-
-        <section id="patterns" class="section">
-          <div class="section-heading">
-            <div>
-              <span class="eyebrow">Pattern học nhanh</span>
-              <h2>Đọc ảnh bằng câu hỏi ngắn</h2>
-            </div>
-            <p>Không cố nhớ cả trang sách. Hãy đặt vài câu hỏi đúng lúc rồi mở nguồn sâu hơn khi cần.</p>
-          </div>
-          <div id="patternGrid" class="pattern-grid"></div>
-        </section>
-
-        <section id="sources" class="section source-section">
-          <div class="section-heading">
-            <div>
-              <span class="eyebrow">Nguồn & bản quyền</span>
-              <h2>Ảnh mở, link rõ ràng</h2>
-            </div>
-            <p>
-              Ảnh atlas dùng từ Wikimedia Commons hoặc nguồn mở tương tự qua trang file gốc.
-              PathologyOutlines, WHO/IARC và CAP được dùng làm lối đọc thêm, không sao chép nội dung đóng.
-            </p>
+            <p>WHO/IARC dùng để đối chiếu phân loại; PathologyOutlines dùng để học vi thể, IHC và chẩn đoán phân biệt; CAP dùng cho checklist báo cáo.</p>
           </div>
           <div id="sourceGrid" class="source-grid"></div>
         </section>
 
+        <dialog id="imageDialog" class="image-dialog">
+          <form method="dialog" class="dialog-card">
+            <div class="dialog-heading">
+              <div>
+                <span class="eyebrow">Thay ảnh</span>
+                <h2 id="imageDialogTitle">Cập nhật ảnh minh họa</h2>
+              </div>
+              <button class="icon-btn" value="cancel" aria-label="Đóng">×</button>
+            </div>
+            <label>
+              URL ảnh mới
+              <input id="imageUrlInput" type="url" placeholder="https://..." />
+            </label>
+            <label>
+              Ghi chú nguồn ảnh
+              <input id="imageSourceInput" type="text" placeholder="VD: ảnh nội bộ đã được phép dùng, Wikimedia Commons..." />
+            </label>
+            <p class="dialog-help">
+              Site tĩnh nên thay ảnh được lưu trên trình duyệt này. Muốn ảnh hiển thị cho mọi người, hãy thay URL ảnh trong source code rồi push GitHub.
+            </p>
+            <div class="dialog-actions">
+              <button class="btn" id="resetImage" type="button">Khôi phục ảnh gốc</button>
+              <button class="btn primary" id="saveImage" type="button">Lưu ảnh</button>
+            </div>
+          </form>
+        </dialog>
+
         <footer class="site-footer">
           <strong>Atlas GPB</strong>
-          <span>Học tập cá nhân · Có dẫn nguồn · Không thay thế chẩn đoán của bác sĩ GPB</span>
+          <span>Trang học tập, không thay thế chẩn đoán của bác sĩ giải phẫu bệnh.</span>
         </footer>
       </main>
     </div>
