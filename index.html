@@ -38,7 +38,7 @@
         <div class="side-panel">
           <strong>Nguồn dữ liệu</strong>
           <span>
-            Cấu trúc atlas dựa trên danh mục học thuật, đối chiếu WHO/IARC và PathologyOutlines. Ảnh nhúng dùng nguồn mở có link file gốc.
+            Cấu trúc atlas dựa trên danh mục học thuật, đối chiếu WHO/IARC và PathologyOutlines. Ảnh nhúng dùng nguồn mở có liên kết đến tệp gốc.
           </span>
         </div>
       </aside>
@@ -50,7 +50,7 @@
             <h1>Nhìn ảnh trước, nhớ chẩn đoán sau.</h1>
             <p>
               Mỗi cơ quan được chia thành các chẩn đoán thường gặp. Mỗi thẻ có ảnh vi thể, dấu hiệu cần nhìn,
-              bẫy dễ nhầm, gợi ý báo cáo và link nguồn chính thống để đọc sâu hơn.
+              bẫy dễ nhầm, gợi ý báo cáo và liên kết nguồn chính thống để đọc sâu hơn.
             </p>
             <div class="hero-actions">
               <a class="btn primary" href="#atlasBoard">Mở atlas</a>
@@ -67,7 +67,7 @@
 
         <section class="toolbar" aria-label="Bộ lọc atlas">
           <div>
-            <span class="eyebrow">Pattern</span>
+            <span class="eyebrow">Kiểu cấu trúc</span>
             <div id="patternFilters" class="chip-row"></div>
           </div>
           <button class="btn" id="resetFilters" type="button">Hiện tất cả</button>
@@ -115,9 +115,9 @@
           <div class="section-heading">
             <div>
               <span class="eyebrow">Nguồn học</span>
-              <h2>Link chính thống để đọc sâu</h2>
+              <h2>Liên kết chính thống để đọc sâu</h2>
             </div>
-            <p>WHO/IARC dùng để đối chiếu phân loại; PathologyOutlines dùng để học vi thể, IHC và chẩn đoán phân biệt; CAP dùng cho checklist báo cáo.</p>
+            <p>WHO/IARC dùng để đối chiếu phân loại; PathologyOutlines dùng để học vi thể, HMMD/IHC và chẩn đoán phân biệt; CAP dùng cho bảng kiểm báo cáo; tài liệu Bộ Y tế dùng để chuẩn hóa thuật ngữ tiếng Việt.</p>
           </div>
           <div id="sourceGrid" class="source-grid"></div>
         </section>
@@ -140,7 +140,7 @@
               <input id="imageSourceInput" type="text" placeholder="VD: ảnh nội bộ đã được phép dùng, Wikimedia Commons..." />
             </label>
             <p class="dialog-help">
-              Site tĩnh nên thay ảnh được lưu trên trình duyệt này. Muốn ảnh hiển thị cho mọi người, hãy thay URL ảnh trong source code rồi push GitHub.
+              Trang web tĩnh nên ảnh thay thế chỉ được lưu trên trình duyệt này. Muốn ảnh hiển thị cho mọi người, hãy cập nhật URL ảnh trong mã nguồn rồi đẩy thay đổi lên GitHub.
             </p>
             <div class="dialog-actions">
               <button class="btn" id="resetImage" type="button">Khôi phục ảnh gốc</button>
@@ -153,7 +153,7 @@
           <form method="dialog" class="dialog-card studio-card">
             <div class="dialog-heading">
               <div>
-                <span class="eyebrow">Atlas Studio</span>
+                <span class="eyebrow">Trình tạo thẻ atlas</span>
                 <h2>Thêm thẻ chẩn đoán của bạn</h2>
               </div>
               <button class="icon-btn" value="cancel" aria-label="Đóng">×</button>
@@ -164,7 +164,7 @@
                 <select id="customChapter"></select>
               </label>
               <label>
-                Pattern
+                Kiểu cấu trúc
                 <input id="customPattern" type="text" placeholder="VD: carcinoma, glandular, ihc" />
               </label>
               <label>
@@ -180,8 +180,8 @@
                 <input id="customImageUrl" type="url" placeholder="https://..." />
               </label>
               <label class="wide">
-                Nguồn ảnh / link trích dẫn
-                <input id="customSourceUrl" type="url" placeholder="https://commons.wikimedia.org/... hoặc link nguồn được phép" />
+                Nguồn ảnh / liên kết trích dẫn
+                <input id="customSourceUrl" type="url" placeholder="https://commons.wikimedia.org/... hoặc liên kết nguồn được phép" />
               </label>
               <label class="wide">
                 Vi thể cần nhìn
@@ -189,25 +189,25 @@
               </label>
               <label class="wide">
                 Gợi ý báo cáo
-                <textarea id="customReport" rows="3" placeholder="Mỗi ý một dòng: grade, margin, LVI/PNI, marker..."></textarea>
+                <textarea id="customReport" rows="3" placeholder="Mỗi ý một dòng: độ mô học, diện cắt, LVI/PNI, dấu ấn..."></textarea>
               </label>
               <label class="wide">
                 Điểm ghi nhớ
-                <textarea id="customMemory" rows="2" placeholder="Một câu giúp nhớ nhanh pattern này"></textarea>
+                <textarea id="customMemory" rows="2" placeholder="Một câu giúp nhớ nhanh kiểu cấu trúc này"></textarea>
               </label>
               <label class="wide">
                 Dễ nhầm / bẫy chẩn đoán
                 <textarea id="customPitfall" rows="2" placeholder="VD: dễ nhầm với phản ứng viêm, tổn thương giả u..."></textarea>
               </label>
               <label class="wide">
-                Marker / từ khóa
+                Dấu ấn / từ khóa
                 <input id="customMarkers" type="text" placeholder="VD: TTF-1, Napsin A, p40" />
               </label>
             </div>
             <div class="studio-tools">
               <div>
                 <strong id="customCount">0 thẻ tự thêm</strong>
-                <p>Thẻ tự thêm lưu trên trình duyệt này. Dùng xuất JSON để sao lưu hoặc gửi mình đưa vào source public.</p>
+                <p>Thẻ tự thêm lưu trên trình duyệt này. Dùng xuất JSON để sao lưu hoặc đưa vào mã nguồn công khai.</p>
               </div>
               <div class="dialog-actions">
                 <button class="btn" id="exportCustom" type="button">Xuất JSON</button>

@@ -1,5 +1,6 @@
 const PO = "https://www.pathologyoutlines.com";
 const WCT = "https://whobluebooks.iarc.fr/structures";
+const IARC = "https://tumourclassification.iarc.who.int";
 const CAP = "https://www.cap.org/protocols-and-guidelines/cancer-protocols/current-cancer-protocols/";
 const COMMONS_CATEGORY = "https://commons.wikimedia.org/wiki/Category:Histopathology";
 
@@ -17,7 +18,7 @@ const chapters = [
     name: "Tất cả cơ quan",
     short: "ALL",
     color: "#17454b",
-    intro: "Xem toàn bộ atlas, sau đó lọc theo cơ quan, pattern hoặc từ khóa.",
+    intro: "Xem toàn bộ atlas, sau đó lọc theo cơ quan, kiểu cấu trúc hoặc từ khóa.",
     who: "https://whobluebooks.iarc.fr/structures/",
     po: `${PO}/`,
   },
@@ -26,7 +27,7 @@ const chapters = [
     name: "Tuyến giáp",
     short: "THY",
     color: "#5b2bbd",
-    intro: "Bắt đầu bằng cấu trúc nang, chất keo, nhân kiểu PTC, xâm lấn bao/mạch và marker calcitonin khi nghi MTC.",
+    intro: "Bắt đầu bằng cấu trúc nang, chất keo, đặc điểm nhân kiểu PTC, xâm lấn vỏ bao/mạch và dấu ấn calcitonin khi nghi MTC.",
     who: `${WCT}/endocrine-and-neuroendocrine-tumours/`,
     po: `${PO}/thyroid.html`,
   },
@@ -35,7 +36,7 @@ const chapters = [
     name: "Phổi",
     short: "LUNG",
     color: "#2563eb",
-    intro: "Tách adenocarcinoma, squamous, small cell và di căn; chú ý TTF-1, Napsin A, p40, neuroendocrine markers.",
+    intro: "Phân biệt ung thư biểu mô tuyến, ung thư biểu mô tế bào vảy, ung thư biểu mô tế bào nhỏ và u di căn; chú ý TTF-1, Napsin A, p40 cùng các dấu ấn thần kinh nội tiết.",
     who: `${WCT}/thoracic-tumours/`,
     po: `${PO}/lung.html`,
   },
@@ -44,8 +45,8 @@ const chapters = [
     name: "Đại trực tràng",
     short: "CRC",
     color: "#04756f",
-    intro: "Học chuỗi polyp tăng sản - serrated - adenoma - carcinoma, luôn tìm dấu loạn sản và xâm nhập mô đệm.",
-    who: `${WCT}/digestive-system-tumours/`,
+    intro: "Học chuỗi polyp tăng sản - tổn thương răng cưa - u tuyến - ung thư biểu mô; luôn tìm loạn sản và xâm nhập mô đệm.",
+    who: `${IARC}/chapters/31`,
     po: `${PO}/colon.html`,
   },
   {
@@ -53,7 +54,7 @@ const chapters = [
     name: "Vú",
     short: "BR",
     color: "#c2415a",
-    intro: "Tách in situ/xâm nhập, type mô học, Nottingham grade, ER/PR/HER2, Ki-67, margin và hạch.",
+    intro: "Phân biệt tổn thương tại chỗ và xâm nhập; đánh giá típ mô học, độ mô học Nottingham, ER/PR/HER2, Ki-67, diện cắt và hạch.",
     who: `${WCT}/breast-tumours/`,
     po: `${PO}/breast.html`,
   },
@@ -62,7 +63,7 @@ const chapters = [
     name: "Gan mật tụy",
     short: "HPB",
     color: "#96730f",
-    intro: "Nhìn trabeculae, mật, xơ hóa, tuyến quanh tụy, PanIN/IPMN và dấu xâm nhập.",
+    intro: "Đánh giá cấu trúc bè, sắc tố mật, xơ hóa, các tuyến quanh tụy, PanIN/IPMN và dấu hiệu xâm nhập.",
     who: `${WCT}/digestive-system-tumours/`,
     po: `${PO}/liver.html`,
   },
@@ -80,7 +81,7 @@ const chapters = [
     name: "Tiết niệu - nam",
     short: "GU",
     color: "#16a34a",
-    intro: "Tuyến tiền liệt cần Gleason/Grade Group; thận cần subtype; bàng quang cần mức xâm nhập cơ.",
+    intro: "Tuyến tiền liệt cần điểm Gleason/nhóm độ mô học; thận cần xác định típ mô học; bàng quang cần đánh giá mức độ xâm nhập lớp cơ.",
     who: `${WCT}/urinary-and-male-genital-tumours/`,
     po: `${PO}/genitourinary.html`,
   },
@@ -89,7 +90,7 @@ const chapters = [
     name: "Da",
     short: "SKIN",
     color: "#ea580c",
-    intro: "Đọc liên quan thượng bì, palisading, keratinization, sắc tố, Breslow, ulceration và margin.",
+    intro: "Đánh giá liên quan thượng bì, xếp hàng rào, sừng hóa, sắc tố, độ dày Breslow, loét và diện cắt.",
     who: "https://whobluebooks.iarc.who.int/structures/skintumours/",
     po: `${PO}/skintumors.html`,
   },
@@ -98,7 +99,7 @@ const chapters = [
     name: "Hạch - huyết học",
     short: "HEME",
     color: "#0891b2",
-    intro: "Nhìn kiến trúc hạch trước: còn nang phản ứng hay bị xóa? Sau đó mới đọc panel CD và EBER.",
+    intro: "Đánh giá kiến trúc hạch trước: còn nang phản ứng hay đã bị xóa? Sau đó mới đọc bảng dấu ấn CD và EBER.",
     who: "https://whobluebooks.iarc.fr/structures/haematolymphoid/",
     po: `${PO}/hematopathology.html`,
   },
@@ -107,7 +108,7 @@ const chapters = [
     name: "Thần kinh",
     short: "CNS",
     color: "#4f46e5",
-    intro: "Tập nhận whorl, psammoma, hoại tử, vi mạch và gắn mô học với marker/phân tử.",
+    intro: "Tập nhận diện cấu trúc xoáy, thể cát, hoại tử, tăng sinh vi mạch và đối chiếu hình thái với dấu ấn/phân tử.",
     who: `${WCT}/central-nervous-system-tumours/`,
     po: `${PO}/Cnstumor.html`,
   },
@@ -116,7 +117,7 @@ const chapters = [
     name: "Đầu cổ",
     short: "HN",
     color: "#9333ea",
-    intro: "Gắn với vị trí, keratinization, perineural invasion, p16/EBER khi phù hợp.",
+    intro: "Đối chiếu vị trí, mức độ sừng hóa, xâm nhập quanh thần kinh và p16/EBER khi phù hợp.",
     who: `${WCT}/head-and-neck-tumours/`,
     po: `${PO}/headneck.html`,
   },
@@ -125,7 +126,7 @@ const chapters = [
     name: "Mô mềm - xương",
     short: "STB",
     color: "#db2777",
-    intro: "Nhìn spindle cells, myxoid/collagen, atypia, mitosis, necrosis và marker phân dòng.",
+    intro: "Đánh giá tế bào hình thoi, nền dạng nhầy/collagen, mức độ không điển hình, phân bào, hoại tử và dấu ấn định hướng biệt hóa.",
     who: `${WCT}/soft-tissue-and-bone-tumours/`,
     po: `${PO}/softtissue.html`,
   },
@@ -144,14 +145,14 @@ const patterns = [
   ["all", "Tất cả"],
   ["benign", "Lành tính"],
   ["precursor", "Tiền ung thư"],
-  ["carcinoma", "Carcinoma"],
+  ["carcinoma", "Ung thư biểu mô"],
   ["glandular", "Tuyến"],
-  ["squamous", "Gai"],
-  ["neuroendocrine", "Nội tiết TK"],
-  ["lymphoid", "Lymphoid"],
-  ["spindle", "Spindle"],
+  ["squamous", "Tế bào vảy"],
+  ["neuroendocrine", "Thần kinh nội tiết"],
+  ["lymphoid", "Dòng lympho"],
+  ["spindle", "Tế bào hình thoi"],
   ["inflammation", "Viêm"],
-  ["ihc", "IHC/marker"],
+  ["ihc", "HMMD/IHC"],
 ];
 
 const verifiedTopicLinks = {
@@ -166,6 +167,345 @@ const verifiedTopicLinks = {
   "breast-idc": `${PO}/topic/breastmalignantductalnos.html`,
   "cervix-scc": `${PO}/topic/cervixscc.html`,
 };
+
+// Direct WHO Blue Books topic links verified against Digestive System Tumours (5th ed.).
+// These pages may require the reader to sign in with their own WHO/IARC subscription.
+const verifiedWhoLinks = {
+  "colon-hyperplastic": `${IARC}/chaptercontent/31/57`,
+  "colon-ssl": `${IARC}/chaptercontent/31/57`,
+  "colon-tsa": `${IARC}/chaptercontent/31/57`,
+  "colon-adenoma": `${IARC}/chaptercontent/31/59`,
+  "colon-villous": `${IARC}/chaptercontent/31/59`,
+  "colon-high-grade-dysplasia": `${IARC}/chaptercontent/31/59`,
+  "colon-adeno": `${IARC}/chaptercontent/31/62`,
+  "colon-mucinous-adeno": `${IARC}/chaptercontent/31/62`,
+  "colon-signet-ring": `${IARC}/chaptercontent/31/62`,
+};
+
+// Tên tiếng Việt ưu tiên cách dùng trong hướng dẫn Bộ Y tế và danh pháp WHO.
+// Tên tiếng Anh vẫn được giữ riêng trong từng thẻ để hỗ trợ tra cứu song ngữ.
+const standardizedDiagnoses = {
+  "thyroid-follicular-adenoma": "U tuyến thể nang tuyến giáp",
+  "thyroid-niftp": "Tân sinh tuyến giáp dạng nang không xâm nhập với đặc điểm nhân dạng nhú (NIFTP)",
+  "thyroid-ptc": "Ung thư biểu mô tuyến giáp thể nhú",
+  "thyroid-ftc": "Ung thư biểu mô tuyến giáp thể nang",
+  "thyroid-medullary": "Ung thư biểu mô tuyến giáp thể tủy",
+  "thyroid-anaplastic": "Ung thư biểu mô tuyến giáp không biệt hóa",
+  "lung-adeno": "Ung thư biểu mô tuyến phổi",
+  "lung-squamous": "Ung thư biểu mô tế bào vảy của phổi",
+  "lung-small-cell": "Ung thư biểu mô tế bào nhỏ của phổi",
+  "lung-mucinous": "Ung thư biểu mô tuyến dạng nhầy xâm nhập của phổi",
+  "colon-adenoma": "U tuyến đại trực tràng thông thường",
+  "colon-adeno": "Ung thư biểu mô tuyến đại trực tràng",
+  "breast-dcis": "Ung thư biểu mô ống tại chỗ (DCIS) của vú",
+  "breast-idc": "Ung thư biểu mô vú xâm nhập, không thuộc típ đặc biệt (NST)",
+  "breast-ilc": "Ung thư biểu mô tiểu thùy xâm nhập",
+  "breast-mucinous": "Ung thư biểu mô vú dạng nhầy",
+  "hpb-hcc": "Ung thư biểu mô tế bào gan",
+  "hpb-ipmn": "Tân sinh nhầy nhú trong ống tụy (IPMN)",
+  "hpb-shock-liver": "Hoại tử vùng trung tâm tiểu thùy gan",
+  "hpb-fnh": "Tăng sản nốt khu trú của gan (FNH)",
+  "cervix-hsil": "Tổn thương nội biểu mô vảy độ cao cổ tử cung (HSIL/CIN 3)",
+  "cervix-scc": "Ung thư biểu mô tế bào vảy cổ tử cung liên quan HPV",
+  "endometrium-endometrioid": "Ung thư biểu mô dạng nội mạc tử cung",
+  "ovary-krukenberg": "U Krukenberg (ung thư biểu mô tế bào nhẫn di căn buồng trứng)",
+  "prostate-adeno": "Ung thư biểu mô tuyến tiền liệt",
+  "kidney-clear-cell": "Ung thư biểu mô tế bào thận, loại tế bào sáng",
+  "kidney-papillary1": "Ung thư biểu mô tế bào thận dạng nhú",
+  "skin-bcc": "Ung thư biểu mô tế bào đáy",
+  "skin-scc": "Ung thư biểu mô tế bào vảy da",
+  "skin-melanoma": "U hắc tố ác tính da",
+  "heme-follicular": "U lympho thể nang",
+  "heme-hodgkin": "U lympho Hodgkin kinh điển",
+  "cns-meningioma": "U màng não",
+  "headneck-oral-scc": "Ung thư biểu mô tế bào vảy khoang miệng",
+  "headneck-pleomorphic": "U tuyến đa hình tuyến nước bọt",
+  "soft-neurofibroma": "U xơ thần kinh",
+  "lung-ais": "Ung thư biểu mô tuyến tại chỗ của phổi",
+  "lung-acinar-pattern": "Ung thư biểu mô tuyến phổi, kiểu nang tuyến ưu thế",
+  "lung-papillary-pattern": "Ung thư biểu mô tuyến phổi, kiểu nhú ưu thế",
+  "lung-carcinoid": "U thần kinh nội tiết biệt hóa tốt (carcinoid) của phổi",
+  "colon-tsa": "U tuyến răng cưa truyền thống",
+  "colon-villous": "U tuyến nhung mao",
+  "colon-mucinous-adeno": "Ung thư biểu mô tuyến dạng nhầy đại trực tràng",
+  "breast-fibroadenoma": "U xơ tuyến vú",
+  "breast-phyllodes": "U dạng lá (phyllodes) của vú",
+  "breast-lcis": "Ung thư biểu mô tiểu thùy tại chỗ (LCIS)",
+  "breast-metaplastic": "Ung thư biểu mô dị sản của vú",
+  "hpb-cholangiocarcinoma": "Ung thư biểu mô đường mật trong gan",
+  "hpb-pdac": "Ung thư biểu mô tuyến ống tụy",
+  "gyn-ovarian-serous": "Ung thư biểu mô thanh dịch độ cao buồng trứng",
+  "gyn-leiomyosarcoma": "Sarcoma cơ trơn tử cung",
+  "gyn-endometrial-serous": "Ung thư biểu mô thanh dịch nội mạc tử cung",
+  "gu-urothelial-low": "Ung thư biểu mô niệu mạc nhú độ thấp",
+  "gu-urothelial-high": "Ung thư biểu mô niệu mạc độ cao",
+  "kidney-chromophobe": "Ung thư biểu mô tế bào thận kỵ màu",
+  "heme-dlbcl": "U lympho tế bào B lớn lan tỏa",
+  "heme-cll-sll": "Bệnh bạch cầu lympho mạn / u lympho tế bào nhỏ (CLL/SLL)",
+  "cns-glioblastoma": "U nguyên bào thần kinh đệm, IDH kiểu dại",
+  "soft-gist": "U mô đệm đường tiêu hóa (GIST)",
+  "thyroid-tall-cell-ptc": "Ung thư biểu mô tuyến giáp thể nhú, dưới típ tế bào cao",
+  "lung-large-cell-ne": "Ung thư biểu mô thần kinh nội tiết tế bào lớn của phổi",
+  "lung-metastatic-colon": "Ung thư biểu mô tuyến đại trực tràng di căn phổi",
+  "colon-high-grade-dysplasia": "U tuyến đại trực tràng có loạn sản độ cao",
+  "colon-signet-ring": "Ung thư biểu mô tế bào nhẫn đại trực tràng",
+  "gyn-ein": "Tân sinh nội biểu mô nội mạc tử cung (EIN)",
+  "gyn-cervix-adenocarcinoma": "Ung thư biểu mô tuyến cổ tử cung liên quan HPV",
+  "gyn-ovary-mucinous": "U nhầy buồng trứng giáp biên hoặc ác tính",
+  "gyn-mature-teratoma": "U quái trưởng thành dạng nang của buồng trứng",
+  "gu-hgpin": "Tân sinh nội biểu mô tuyến tiền liệt độ cao (HGPIN)",
+  "gu-seminoma": "U tinh bào",
+  "skin-nevus": "Nơ vi tế bào hắc tố lành tính (nốt ruồi)",
+  "skin-dermatofibroma": "U xơ bì",
+  "heme-mantle-cell": "U lympho tế bào áo nang",
+  "heme-marginal-zone": "U lympho vùng rìa",
+  "cns-schwannoma": "U bao dây thần kinh (schwannoma)",
+  "headneck-nasopharyngeal": "Ung thư biểu mô vòm mũi họng không sừng hóa",
+  "soft-lipoma": "U mỡ",
+};
+
+const medicalTermRules = [
+  [/Lepidic\/acinar\/papillary\/micropapillary\/solid patterns/gi, "các kiểu lepidic, nang tuyến, nhú, vi nhú và đặc"],
+  [/Comedo necrosis/gi, "hoại tử comedo"],
+  [/Sclerosing adenosis/gi, "bệnh tuyến xơ hóa"],
+  [/radial scar/gi, "sẹo tia"],
+  [/dysplastic nodule/gi, "nốt loạn sản"],
+  [/Pseudoepitheliomatous hyperplasia/gi, "tăng sản giả biểu mô"],
+  [/centrocytes\/centroblasts/gi, "tế bào tâm nang/nguyên bào tâm nang"],
+  [/fibrous lesion/gi, "tổn thương xơ"],
+  [/salt-and-pepper/gi, "muối tiêu"],
+  [/typical carcinoid/gi, "carcinoid điển hình"],
+  [/Low\/high grade/gi, "độ thấp/độ cao"],
+  [/Variant histology/gi, "biến thể mô học"],
+  [/Raisin-like nuclei/gi, "nhân dạng nho khô"],
+  [/seborrheic keratosis/gi, "dày sừng tiết bã"],
+  [/Horn cysts/gi, "nang sừng"],
+  [/proliferation centers/gi, "trung tâm tăng sinh"],
+  [/Richter transformation/gi, "chuyển dạng Richter"],
+  [/microvascular proliferation/gi, "tăng sinh vi mạch"],
+  [/oncocytic epithelium/gi, "biểu mô ái toan"],
+  [/apoptotic bodies/gi, "thể chết theo chương trình"],
+  [/muscularis mucosae/gi, "cơ niêm"],
+  [/mantle zone/gi, "vùng áo"],
+  [/Verocay bodies/gi, "thể Verocay"],
+  [/atypical hyperplasia/gi, "tăng sản không điển hình"],
+  [/clear cell papillary RCC/gi, "u thận dạng nhú tế bào sáng"],
+  [/clear cell RCC/gi, "ung thư biểu mô tế bào thận típ tế bào sáng"],
+  [/papillary RCC/gi, "ung thư biểu mô tế bào thận dạng nhú"],
+  [/follicular\/mantle\/CLL/gi, "u lympho thể nang/u lympho tế bào vùng áo/CLL"],
+  [/pleomorphic adenoma/gi, "u tuyến đa hình"],
+  [/fibroadenoma cellular/gi, "u xơ tuyến giàu tế bào"],
+  [/fibroadenoma/gi, "u xơ tuyến"],
+  [/mature teratoma/gi, "u quái trưởng thành"],
+  [/case subacute/gi, "ca viêm tuyến giáp bán cấp"],
+  [/follicular carcinoma/gi, "ung thư biểu mô dạng nang"],
+  [/follicular adenoma/gi, "u tuyến dạng nang"],
+  [/follicular variant/gi, "biến thể dạng nang"],
+  [/follicular lymphoma/gi, "u lympho thể nang"],
+  [/mantle cell lymphoma/gi, "u lympho tế bào vùng áo"],
+  [/sessile serrated lesion/gi, "tổn thương răng cưa không cuống"],
+  [/oncocytic metaplasia/gi, "chuyển sản tế bào ái toan"],
+  [/Hürthle cell/gi, "tế bào Hürthle"],
+  [/Hurthle cell/gi, "tế bào Hürthle"],
+  [/WHO\/ISUP grade/gi, "độ mô học WHO/ISUP"],
+  [/WHO grade/gi, "độ mô học WHO"],
+  [/Nottingham grade/gi, "độ mô học Nottingham"],
+  [/FIGO grade/gi, "độ mô học FIGO"],
+  [/Grade nhân/gi, "độ nhân"],
+  [/Grade Group/gi, "nhóm độ mô học"],
+  [/high-grade dysplasia/gi, "loạn sản độ cao"],
+  [/low-grade dysplasia/gi, "loạn sản độ thấp"],
+  [/high grade/gi, "độ cao"],
+  [/high-grade/gi, "độ cao"],
+  [/low-grade/gi, "độ thấp"],
+  [/Breslow thickness/gi, "độ dày Breslow"],
+  [/mitotic rate/gi, "chỉ số phân bào"],
+  [/mitotic count/gi, "số lượng phân bào"],
+  [/nuclear molding/gi, "khuôn nhân"],
+  [/psammoma bodies/gi, "thể cát"],
+  [/crush artifact/gi, "giả ảnh đè ép"],
+  [/core biopsy/gi, "sinh thiết lõi kim"],
+  [/dirty necrosis/gi, "hoại tử bẩn"],
+  [/reactive lymphoid hyperplasia/gi, "quá sản lympho phản ứng"],
+  [/intercellular bridges/gi, "cầu nối gian bào"],
+  [/keratin pearls/gi, "cầu sừng"],
+  [/p16 block-positive/gi, "p16 dương tính kiểu khối"],
+  [/p16 block/gi, "p16 kiểu khối"],
+  [/myoepithelial markers/gi, "các dấu ấn cơ biểu mô"],
+  [/neuroendocrine markers/gi, "các dấu ấn thần kinh nội tiết"],
+  [/basal markers/gi, "các dấu ấn tế bào đáy"],
+  [/basal layer/gi, "lớp tế bào đáy"],
+  [/single-file/gi, "xếp hàng một"],
+  [/back-to-back/gi, "áp sát nhau"],
+  [/dark\/light zone/gi, "vùng tối/vùng sáng"],
+  [/dạng map-like/gi, "dạng bản đồ"],
+  [/map-like/gi, "dạng bản đồ"],
+  [/tangential section/gi, "lát cắt tiếp tuyến"],
+  [/atypical lipomatous tumor/gi, "u mỡ không điển hình"],
+  [/adenocarcinoma/gi, "ung thư biểu mô tuyến"],
+  [/adeno phổi/gi, "ung thư biểu mô tuyến phổi"],
+  [/lung adeno/gi, "ung thư biểu mô tuyến phổi"],
+  [/small cell/gi, "tế bào nhỏ"],
+  [/squamous cell/gi, "tế bào vảy"],
+  [/squamous/gi, "tế bào vảy"],
+  [/carcinoma tế bào gai/gi, "ung thư biểu mô tế bào vảy"],
+  [/carcinoma gai/gi, "ung thư biểu mô tế bào vảy"],
+  [/carcinoma/gi, "ung thư biểu mô"],
+  [/lymphoma/gi, "u lympho"],
+  [/melanoma/gi, "u hắc tố ác tính"],
+  [/neuroendocrine/gi, "thần kinh nội tiết"],
+  [/myoepithelial/gi, "cơ biểu mô"],
+  [/desmoplasia/gi, "phản ứng mô đệm xơ"],
+  [/palisading/gi, "xếp hàng rào"],
+  [/retraction cleft/gi, "khe co rút"],
+  [/keratinization/gi, "sừng hóa"],
+  [/ulceration/gi, "loét"],
+  [/regression/gi, "thoái triển"],
+  [/satellitosis/gi, "vệ tinh"],
+  [/overcall/gi, "kết luận quá mức"],
+  [/under-sample/gi, "lấy mẫu chưa đủ"],
+  [/blue tumor/gi, "u tế bào xanh"],
+  [/borderline/gi, "giáp biên"],
+  [/bilateral/gi, "hai bên"],
+  [/excision/gi, "phẫu thuật cắt bỏ"],
+  [/capsule/gi, "vỏ bao"],
+  [/clonality/gi, "tính đơn dòng"],
+  [/organoid/gi, "dạng cơ quan"],
+  [/rosette/gi, "hoa hồng"],
+  [/dạng storiform/gi, "dạng bánh xe"],
+  [/storiform/gi, "dạng bánh xe"],
+  [/collagen trapping/gi, "bẫy sợi collagen"],
+  [/lipoblast/gi, "nguyên bào mỡ"],
+  [/granuloma/gi, "u hạt"],
+  [/goblet/gi, "hình đài"],
+  [/crypt/gi, "hốc tuyến"],
+  [/mucinous/gi, "dạng nhầy"],
+  [/mucin/gi, "chất nhầy"],
+  [/không atypia/gi, "không có tế bào không điển hình"],
+  [/atypia/gi, "không điển hình"],
+  [/mitosis/gi, "phân bào"],
+  [/necrosis/gi, "hoại tử"],
+  [/spindle cells/gi, "tế bào hình thoi"],
+  [/myxochondroid/gi, "sụn-nhầy"],
+  [/myxoid/gi, "dạng nhầy"],
+  [/patterns/gi, "kiểu cấu trúc"],
+  [/Subtype/gi, "típ mô học"],
+  [/Pattern/gi, "kiểu cấu trúc"],
+  [/Grade/gi, "độ mô học"],
+  [/Margin/gi, "diện cắt"],
+  [/biomarker/gi, "dấu ấn sinh học"],
+  [/markers/gi, "dấu ấn"],
+  [/marker/gi, "dấu ấn"],
+  [/molding/gi, "khuôn nhân"],
+  [/dysplasia/gi, "loạn sản"],
+  [/micropapillary/gi, "vi nhú"],
+  [/papillary/gi, "nhú"],
+  [/acinar/gi, "nang tuyến"],
+  [/lepidic/gi, "mọc dọc vách phế nang (lepidic)"],
+  [/\bsolid\b/gi, "đặc"],
+  [/\badenoma\b/gi, "u tuyến"],
+  [/clear cell/gi, "tế bào sáng"],
+  [/\bspindle\b/gi, "tế bào hình thoi"],
+  [/schwannoma/gi, "u tế bào Schwann"],
+  [/neurofibroma/gi, "u xơ thần kinh"],
+  [/perineurioma/gi, "u tế bào quanh thần kinh"],
+  [/meningioma/gi, "u màng não"],
+  [/seminoma/gi, "u tinh bào"],
+  [/teratoma/gi, "u quái"],
+  [/\bnevus\b/gi, "nốt ruồi tế bào hắc tố"],
+  [/\blipoma\b/gi, "u mỡ"],
+  [/blastoid/gi, "dạng nguyên bào"],
+  [/lymphoepithelial/gi, "lympho-biểu mô"],
+  [/report/gi, "báo cáo"],
+  [/panel/gi, "bảng dấu ấn"],
+  [/brain invasion/gi, "xâm nhập não"],
+  [/mass-forming/gi, "dạng tạo khối"],
+  [/periductal/gi, "quanh ống"],
+  [/coagulative/gi, "đông"],
+  [/tubo-ovarian/gi, "vòi tử cung - buồng trứng"],
+  [/peritoneal/gi, "phúc mạc"],
+  [/staging/gi, "phân giai đoạn"],
+  [/lamina propria/gi, "mô đệm dưới biểu mô"],
+  [/rete testis/gi, "lưới tinh"],
+  [/parakeratosis/gi, "á sừng"],
+  [/elastosis/gi, "thoái hóa sợi đàn hồi"],
+  [/syncytial/gi, "hợp bào"],
+  [/monocytoid/gi, "dạng tế bào mono"],
+  [/ancient/gi, "thoái hóa lâu ngày"],
+  [/epithelioid/gi, "dạng biểu mô"],
+  [/whorled/gi, "dạng xoáy"],
+  [/aberrant/gi, "bất thường"],
+  [/nucleoli/gi, "hạch nhân"],
+  [/maturation/gi, "sự trưởng thành"],
+  [/amelanotic/gi, "không sắc tố"],
+  [/Tế bào melanocytic/gi, "Tế bào hắc tố"],
+  [/melanocytic/gi, "tế bào hắc tố"],
+  [/pagetoid/gi, "kiểu Paget"],
+  [/atrophy/gi, "teo"],
+  [/adenosis/gi, "bệnh tuyến"],
+  [/cellularity/gi, "mật độ tế bào"],
+  [/overgrowth/gi, "tăng sinh quá mức"],
+  [/lobular/gi, "tiểu thùy"],
+  [/pleomorphic/gi, "đa hình"],
+  [/classic/gi, "kinh điển"],
+  [/\btypical\b/gi, "điển hình"],
+  [/serous/gi, "thanh dịch"],
+  [/endometrioid/gi, "dạng nội mạc tử cung"],
+  [/metaplastic/gi, "dị sản"],
+  [/urothelial/gi, "niệu mạc"],
+  [/halo/gi, "quầng sáng"],
+  [/chromophobe/gi, "kỵ màu"],
+  [/oncocytoma/gi, "u tế bào ưa acid (oncocytoma)"],
+  [/eosinophilic/gi, "ưa eosin"],
+  [/keratinocyte/gi, "tế bào sừng"],
+  [/irritated/gi, "kích thích"],
+  [/pigmented/gi, "tăng sắc tố"],
+  [/lymphoid/gi, "dòng lympho"],
+  [/\bsheet\b/gi, "mảng"],
+  [/promoter/gi, "vùng khởi động"],
+  [/oncocytic/gi, "ái toan"],
+  [/stroma/gi, "mô đệm"],
+  [/rupture/gi, "vỡ u"],
+  [/scalloping/gi, "khía lõm"],
+  [/colorectal/gi, "đại trực tràng"],
+  [/enteric/gi, "kiểu ruột"],
+  [/cribriform/gi, "dạng sàng"],
+  [/\blayer\b/gi, "lớp"],
+  [/\bwhorls?\b/gi, "cấu trúc xoáy"],
+  [/\bpsammoma\b/gi, "thể cát"],
+  [/\bplexiform\b/gi, "dạng đám rối"],
+  [/\bchondroid\b/gi, "dạng sụn"],
+  [/\bectopic\b/gi, "lạc chỗ"],
+  [/\bconventional\b/gi, "thông thường"],
+  [/\bacellular\b/gi, "không tế bào"],
+  [/\batypical\b/gi, "không điển hình"],
+  [/basaloid/gi, "dạng đáy"],
+  [/\bbasal\b/gi, "tế bào đáy"],
+  [/tế bào gai/gi, "tế bào vảy"],
+  [/\bGai\b/g, "Tế bào vảy"],
+  [/Hurthle/gi, "Hürthle"],
+  [/Chromogranin(?! A)/gi, "Chromogranin A"],
+  [/thể vùi trong nhân/gi, "giả thể vùi trong nhân"],
+  [/thành phần non/gi, "thành phần chưa trưởng thành"],
+  [/không phải nhìn không điển hình trước/gi, "không dựa vào mức độ không điển hình"],
+  [/\bhiền\b/gi, "lành tính"],
+];
+
+function standardizeMedicalText(value) {
+  const input = String(value || "");
+  const result = medicalTermRules.reduce((text, [pattern, replacement]) => text.replace(pattern, replacement), input);
+  return /^[A-ZÀ-ỸĐ]/.test(input) ? result.charAt(0).toUpperCase() + result.slice(1) : result;
+}
+
+function standardizeBuiltinCase(item) {
+  if (standardizedDiagnoses[item.id]) item.diagnosis = standardizedDiagnoses[item.id];
+  item.micro = item.micro.map(standardizeMedicalText);
+  item.report = item.report.map(standardizeMedicalText);
+  item.memory = standardizeMedicalText(item.memory);
+  item.pitfall = standardizeMedicalText(item.pitfall);
+  item.markers = item.markers.map(standardizeMedicalText);
+  return item;
+}
 
 const cases = [
   {
@@ -605,15 +945,15 @@ const cases = [
   {
     id: "kidney-papillary1",
     chapter: "gu",
-    diagnosis: "Papillary renal cell carcinoma type 1",
-    english: "Papillary RCC type 1",
+    diagnosis: "Ung thư biểu mô tế bào thận dạng nhú",
+    english: "Papillary renal cell carcinoma",
     file: "Histopathology of papillary renal cell carcinoma type 1.jpg",
     pattern: ["carcinoma"],
     source: "Wikimedia Commons",
-    micro: ["Cấu trúc nhú/ống-nhú", "Đại thực bào bọt trong trục nhú", "Tế bào nhỏ, ít bào tương"],
-    report: ["Subtype", "Grade", "Hoại tử", "Xâm lấn"],
-    memory: "Nhú + mô bào bọt = gợi ý papillary RCC.",
-    pitfall: "Cần phân biệt với clear cell papillary RCC và metastasis.",
+    micro: ["Cấu trúc nhú hoặc ống-nhú", "Đại thực bào bọt trong trục nhú có thể gặp", "Hình thái tế bào và bào tương có thể thay đổi"],
+    report: ["Độ mô học WHO/ISUP", "Hoại tử", "Xâm lấn mạch hoặc mô quanh thận", "Giai đoạn pTNM"],
+    memory: "Cấu trúc nhú kèm mô bào bọt gợi ý ung thư biểu mô tế bào thận dạng nhú.",
+    pitfall: "WHO 2022 không còn chia thường quy thành típ 1 và típ 2; cần phân biệt với các u thận dạng nhú khác và u di căn.",
     markers: ["PAX8", "CK7", "AMACR"],
   },
   {
@@ -1537,30 +1877,37 @@ const studioBoosterCases = [
 ];
 
 cases.push(...studioBoosterCases);
+cases.forEach(standardizeBuiltinCase);
 
 const sourceCards = [
   {
     title: "WHO/IARC Blue Books",
     kind: "Phân loại chuẩn",
-    note: "Trang cấu trúc WCT liệt kê hệ thống phân loại theo cơ quan, dùng để đối chiếu tên u và nhóm bệnh.",
-    url: "https://whobluebooks.iarc.fr/structures/",
+    note: "Nguồn phân loại chính thức theo cơ quan và chẩn đoán. Một số trang nội dung cần đăng nhập bằng tài khoản WHO/IARC của chính người đọc.",
+    url: `${IARC}/home`,
   },
   {
     title: "PathologyOutlines",
-    kind: "Vi thể và IHC",
-    note: "Dùng để đọc thêm microscopic features, differential diagnosis và marker. Site có thể chặn bot nhưng mở tốt trên trình duyệt.",
+    kind: "Vi thể và HMMD/IHC",
+    note: "Dùng để đọc thêm đặc điểm vi thể, chẩn đoán phân biệt và các dấu ấn hóa mô miễn dịch. Trang có thể hạn chế truy cập tự động nhưng mở được trên trình duyệt.",
     url: `${PO}/`,
   },
   {
     title: "CAP Cancer Protocols",
-    kind: "Checklist báo cáo",
-    note: "Dùng khi cần biết báo cáo ung thư cần đủ yếu tố nào: grade, margin, LVI/PNI, hạch, biomarker.",
+    kind: "Bảng kiểm báo cáo",
+    note: "Dùng để đối chiếu các yếu tố cần có trong báo cáo ung thư: độ mô học, diện cắt, LVI/PNI, hạch và dấu ấn sinh học.",
     url: CAP,
+  },
+  {
+    title: "Bộ Y tế Việt Nam",
+    kind: "Thuật ngữ và quy trình",
+    note: "Đối chiếu cách dùng thuật ngữ giải phẫu bệnh, mô bệnh học và tên bệnh trong tài liệu chuyên môn tiếng Việt.",
+    url: "https://kcb.vn/upload/2005611/20210723/Huong-dan-qQTKT-Giaiphaubenh.pdf",
   },
   {
     title: "Wikimedia Commons",
     kind: "Ảnh mở minh họa",
-    note: "Ảnh nhúng trong atlas có link về file gốc để kiểm tra tác giả/giấy phép. Có thể thay ảnh bằng nguồn của bạn.",
+    note: "Ảnh nhúng trong atlas có liên kết đến tệp gốc để kiểm tra tác giả và giấy phép. Có thể thay ảnh bằng nguồn của bạn.",
     url: COMMONS_CATEGORY,
   },
 ];
@@ -1728,11 +2075,15 @@ function safeImageAttrs(item) {
 
 function officialLinks(item) {
   const chapter = chapterById(item.chapter);
+  const directWhoLink = verifiedWhoLinks[item.id];
   const links = [
-    { label: "WHO/IARC", url: chapter.who },
+    { label: directWhoLink ? "WHO/IARC · đúng chẩn đoán" : "WHO/IARC · chương cơ quan", url: directWhoLink || chapter.who },
     { label: "PathologyOutlines", url: verifiedTopicLinks[item.id] || chapter.po },
   ];
-  if (item.report.some((entry) => normalize(entry).includes("margin") || normalize(entry).includes("grade") || normalize(entry).includes("hach"))) {
+  if (item.report.some((entry) => {
+    const text = normalize(entry);
+    return text.includes("margin") || text.includes("grade") || text.includes("dien cat") || text.includes("do mo hoc") || text.includes("hach");
+  })) {
     links.push({ label: "CAP", url: CAP });
   }
   return links;
@@ -1794,12 +2145,12 @@ function renderChapterPanel() {
     </div>
     <div class="chapter-metrics">
       <div><strong>${chapterCases.length}</strong><span>chẩn đoán</span></div>
-      <div><strong>${new Set(chapterCases.flatMap((item) => item.pattern)).size}</strong><span>pattern</span></div>
-      <div><strong>${markerCount}</strong><span>marker/gợi ý</span></div>
+      <div><strong>${new Set(chapterCases.flatMap((item) => item.pattern)).size}</strong><span>kiểu cấu trúc</span></div>
+      <div><strong>${markerCount}</strong><span>dấu ấn/gợi ý</span></div>
     </div>
     <div class="chapter-links">
-      <a href="${escapeHtml(chapter.who)}" target="_blank" rel="noreferrer">WHO/IARC classification ↗</a>
-      <a href="${escapeHtml(chapter.po)}" target="_blank" rel="noreferrer">PathologyOutlines chapter ↗</a>
+      <a href="${escapeHtml(chapter.who)}" target="_blank" rel="noreferrer">Phân loại WHO/IARC ↗</a>
+      <a href="${escapeHtml(chapter.po)}" target="_blank" rel="noreferrer">Chương PathologyOutlines ↗</a>
     </div>
   `;
 
@@ -1890,13 +2241,13 @@ function renderDetail() {
 function renderPoster() {
   const chapter = chapterById(state.chapter);
   const pool = (state.chapter === "all" ? cases : cases.filter((item) => item.chapter === state.chapter)).slice(0, 10);
-  els.posterTitle.textContent = state.chapter === "all" ? "10 pattern nền tảng" : `Atlas ${chapter.name}`;
+  els.posterTitle.textContent = state.chapter === "all" ? "10 kiểu cấu trúc nền tảng" : `Atlas ${chapter.name}`;
   els.posterNote.textContent = state.chapter === "thyroid"
     ? "Bố cục mô phỏng poster tuyến giáp: từ lành tính, viêm, u dạng nang đến PTC/MTC/ATC."
     : state.chapter === "lung"
-      ? "Bố cục mô phỏng poster ung thư phổi: tách tuyến, gai, tế bào nhỏ và mucinous."
+      ? "Bảng ôn nhanh ung thư phổi: phân biệt típ tuyến, tế bào vảy, tế bào nhỏ và dạng nhầy."
       : state.chapter === "colon"
-        ? "Bố cục mô phỏng poster polyp đại tràng: hyperplastic, serrated, adenoma và carcinoma."
+        ? "Bảng ôn nhanh polyp đại tràng: phân biệt polyp tăng sản, tổn thương răng cưa, u tuyến và ung thư biểu mô."
         : "Dùng để ôn nhanh: mỗi thẻ là một hình ảnh, ba dấu hiệu chính và một câu ghi nhớ.";
 
   els.memoryPoster.innerHTML = pool.map((item, index) => {
@@ -2070,7 +2421,7 @@ function createCustomCase() {
     report: splitLines(els.customReport.value).length ? splitLines(els.customReport.value) : ["Chưa nhập gợi ý báo cáo"],
     memory: els.customMemory.value.trim() || "Chưa nhập điểm ghi nhớ.",
     pitfall: els.customPitfall.value.trim() || "Chưa nhập bẫy chẩn đoán.",
-    markers: markers.length ? markers : ["Chưa nhập marker"],
+    markers: markers.length ? markers : ["Chưa nhập dấu ấn"],
   };
 }
 
@@ -2123,7 +2474,7 @@ function importCustomCases() {
         pattern: Array.isArray(item.pattern) && item.pattern.length ? item.pattern : ["benign"],
         micro: Array.isArray(item.micro) && item.micro.length ? item.micro : ["Chưa nhập vi thể cần nhìn"],
         report: Array.isArray(item.report) && item.report.length ? item.report : ["Chưa nhập gợi ý báo cáo"],
-        markers: Array.isArray(item.markers) && item.markers.length ? item.markers : ["Chưa nhập marker"],
+        markers: Array.isArray(item.markers) && item.markers.length ? item.markers : ["Chưa nhập dấu ấn"],
       }));
     cases.splice(0, cases.length, ...cases.filter((item) => !item.custom), ...cleaned);
     customCases = cleaned;
