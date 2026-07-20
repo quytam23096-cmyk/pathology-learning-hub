@@ -4,6 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Atlas GPB</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23081014'/%3E%3Cpath d='M16 36c6-18 26-22 36-8-6 18-26 22-36 8Z' fill='%2300a99a'/%3E%3Ccircle cx='34' cy='32' r='9' fill='%23e9fbff'/%3E%3C/svg%3E"
+    />
     <meta
       name="description"
       content="Atlas giải phẫu bệnh tiếng Việt theo cơ quan, chẩn đoán, hình ảnh vi thể, điểm ghi nhớ và nguồn chính thống."
@@ -50,6 +54,7 @@
             </p>
             <div class="hero-actions">
               <a class="btn primary" href="#atlasBoard">Mở atlas</a>
+              <button class="btn ghost" id="openCaseStudio" type="button">Thêm thẻ atlas</button>
               <button class="btn ghost" id="openImageManager" type="button">Quản lý ảnh</button>
             </div>
           </div>
@@ -140,6 +145,82 @@
             <div class="dialog-actions">
               <button class="btn" id="resetImage" type="button">Khôi phục ảnh gốc</button>
               <button class="btn primary" id="saveImage" type="button">Lưu ảnh</button>
+            </div>
+          </form>
+        </dialog>
+
+        <dialog id="caseDialog" class="case-dialog">
+          <form method="dialog" class="dialog-card studio-card">
+            <div class="dialog-heading">
+              <div>
+                <span class="eyebrow">Atlas Studio</span>
+                <h2>Thêm thẻ chẩn đoán của bạn</h2>
+              </div>
+              <button class="icon-btn" value="cancel" aria-label="Đóng">×</button>
+            </div>
+            <div class="form-grid">
+              <label>
+                Cơ quan
+                <select id="customChapter"></select>
+              </label>
+              <label>
+                Pattern
+                <input id="customPattern" type="text" placeholder="VD: carcinoma, glandular, ihc" />
+              </label>
+              <label>
+                Chẩn đoán tiếng Việt
+                <input id="customDiagnosis" type="text" placeholder="VD: Carcinoma tuyến..." />
+              </label>
+              <label>
+                Tên tiếng Anh
+                <input id="customEnglish" type="text" placeholder="VD: Adenocarcinoma..." />
+              </label>
+              <label class="wide">
+                URL ảnh
+                <input id="customImageUrl" type="url" placeholder="https://..." />
+              </label>
+              <label class="wide">
+                Nguồn ảnh / link trích dẫn
+                <input id="customSourceUrl" type="url" placeholder="https://commons.wikimedia.org/... hoặc link nguồn được phép" />
+              </label>
+              <label class="wide">
+                Vi thể cần nhìn
+                <textarea id="customMicro" rows="4" placeholder="Mỗi ý một dòng: cấu trúc, tế bào, mô đệm, hoại tử..."></textarea>
+              </label>
+              <label class="wide">
+                Gợi ý báo cáo
+                <textarea id="customReport" rows="3" placeholder="Mỗi ý một dòng: grade, margin, LVI/PNI, marker..."></textarea>
+              </label>
+              <label class="wide">
+                Điểm ghi nhớ
+                <textarea id="customMemory" rows="2" placeholder="Một câu giúp nhớ nhanh pattern này"></textarea>
+              </label>
+              <label class="wide">
+                Dễ nhầm / bẫy chẩn đoán
+                <textarea id="customPitfall" rows="2" placeholder="VD: dễ nhầm với phản ứng viêm, tổn thương giả u..."></textarea>
+              </label>
+              <label class="wide">
+                Marker / từ khóa
+                <input id="customMarkers" type="text" placeholder="VD: TTF-1, Napsin A, p40" />
+              </label>
+            </div>
+            <div class="studio-tools">
+              <div>
+                <strong id="customCount">0 thẻ tự thêm</strong>
+                <p>Thẻ tự thêm lưu trên trình duyệt này. Dùng xuất JSON để sao lưu hoặc gửi mình đưa vào source public.</p>
+              </div>
+              <div class="dialog-actions">
+                <button class="btn" id="exportCustom" type="button">Xuất JSON</button>
+                <button class="btn" id="clearCustom" type="button">Xóa thẻ tự thêm</button>
+                <button class="btn primary" id="saveCustomCase" type="button">Lưu thẻ</button>
+              </div>
+            </div>
+            <label class="wide">
+              JSON sao lưu
+              <textarea id="customJsonBox" rows="4" placeholder="JSON xuất ra sẽ hiện ở đây. Bạn cũng có thể dán JSON cũ rồi bấm nhập."></textarea>
+            </label>
+            <div class="dialog-actions">
+              <button class="btn" id="importCustom" type="button">Nhập JSON</button>
             </div>
           </form>
         </dialog>

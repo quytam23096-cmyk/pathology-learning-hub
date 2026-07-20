@@ -4,10 +4,12 @@ Website tĩnh tiếng Việt dạng atlas giải phẫu bệnh: chia theo cơ qu
 
 ## Điểm chính
 
-- 13 nhóm cơ quan, 42 thẻ chẩn đoán mẫu.
+- 13 nhóm cơ quan, 97 thẻ chẩn đoán mẫu.
 - Có bộ lọc theo cơ quan, pattern và tìm kiếm tiếng Việt/tiếng Anh.
 - Có poster ghi nhớ theo cơ quan, phù hợp kiểu học bằng hình ảnh.
 - Có nút thay ảnh cho từng chẩn đoán, lưu cục bộ trên trình duyệt.
+- Có Atlas Studio để tự thêm thẻ mới: cơ quan, chẩn đoán, URL ảnh, vi thể cần nhìn, gợi ý báo cáo, điểm ghi nhớ, bẫy chẩn đoán và marker.
+- Có xuất/nhập JSON cho các thẻ tự thêm để sao lưu hoặc đưa vào source public.
 - Ảnh nhúng ưu tiên nguồn mở có link file gốc; WHO/IARC, PathologyOutlines và CAP được dùng làm link đọc thêm.
 
 ## Chạy tại máy

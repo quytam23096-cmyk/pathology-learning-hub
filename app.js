@@ -758,6 +758,786 @@ const cases = [
   },
 ];
 
+const expandedCases = [
+  {
+    id: "lung-ais",
+    chapter: "lung",
+    diagnosis: "Adenocarcinoma in situ phổi",
+    english: "Adenocarcinoma in situ",
+    file: "Lung adenocarcinoma with lepidic growth - low magnification.jpg",
+    pattern: ["precursor", "carcinoma", "glandular"],
+    source: "Wikimedia Commons",
+    micro: ["Tăng trưởng lepidic thuần túy", "Không thấy xâm nhập mô đệm, mạch hoặc màng phổi", "Kích thước u nhỏ, thường không nhầy"],
+    report: ["Không gọi AIS trên sinh thiết nhỏ nếu chưa đánh giá toàn u", "Ghi chú cần bệnh phẩm cắt để xác định xâm nhập"],
+    memory: "AIS = lepidic thuần, chưa xâm nhập.",
+    pitfall: "Sinh thiết nhỏ không đủ để loại xâm nhập ở vùng khác của u.",
+    markers: ["TTF-1", "Napsin A"],
+  },
+  {
+    id: "lung-acinar-pattern",
+    chapter: "lung",
+    diagnosis: "Adenocarcinoma phổi pattern acinar",
+    english: "Acinar predominant lung adenocarcinoma",
+    file: "Lung adenocarcinoma with lepidic growth - low magnification 2.jpg",
+    pattern: ["carcinoma", "glandular"],
+    source: "Wikimedia Commons",
+    micro: ["Tuyến tròn/bầu dục xâm nhập", "Lòng tuyến có thể chứa mucin", "Mô đệm quanh tuyến phản ứng"],
+    report: ["Ước lượng pattern ưu thế", "Ghi nhận pattern grade cao nếu có"],
+    memory: "Acinar = tuyến thật sự trong mô đệm.",
+    pitfall: "Dễ nhầm lepidic nếu chỉ nhìn vùng sát phế nang còn bảo tồn.",
+    markers: ["TTF-1", "Napsin A", "CK7"],
+  },
+  {
+    id: "lung-papillary-pattern",
+    chapter: "lung",
+    diagnosis: "Adenocarcinoma phổi pattern papillary",
+    english: "Papillary lung adenocarcinoma",
+    file: "Lung cancer histology collection.png",
+    pattern: ["carcinoma", "glandular"],
+    source: "Wikimedia Commons",
+    micro: ["Nhú có trục xơ mạch", "Tế bào u phủ quanh trục", "Có thể phối hợp acinar/lepidic"],
+    report: ["Tỷ lệ pattern", "Tìm micropapillary/solid nếu có"],
+    memory: "Papillary phải có trục xơ mạch.",
+    pitfall: "Micropapillary không có trục xơ mạch và ý nghĩa tiên lượng khác.",
+    markers: ["TTF-1", "Napsin A"],
+  },
+  {
+    id: "lung-carcinoid",
+    chapter: "lung",
+    diagnosis: "U carcinoid phổi",
+    english: "Pulmonary carcinoid tumour",
+    file: "Lung cancer histology collection.png",
+    pattern: ["neuroendocrine", "ihc"],
+    source: "Wikimedia Commons",
+    micro: ["Ổ/bè tế bào tương đối đều", "Nhiễm sắc chất kiểu salt-and-pepper", "Ít hoại tử và ít phân bào trong typical carcinoid"],
+    report: ["Typical hay atypical", "Số phân bào", "Hoại tử", "Margin/hạch nếu phẫu thuật"],
+    memory: "Carcinoid phổi = neuroendocrine biệt hóa tốt.",
+    pitfall: "Không nhầm với small cell nếu tế bào đều và phân bào thấp.",
+    markers: ["Synaptophysin", "Chromogranin", "INSM1", "Ki-67"],
+  },
+  {
+    id: "colon-tsa",
+    chapter: "colon",
+    diagnosis: "Adenoma răng cưa truyền thống",
+    english: "Traditional serrated adenoma",
+    file: "Mixed histology polyp.png",
+    pattern: ["precursor", "glandular"],
+    source: "Wikimedia Commons",
+    micro: ["Kiến trúc nhung mao/răng cưa", "Tế bào học loạn sản", "Crypt ectopic có thể gặp"],
+    report: ["Kích thước", "Mức độ loạn sản", "Cắt trọn hay không"],
+    memory: "TSA = răng cưa nhưng có loạn sản thật sự.",
+    pitfall: "Dễ lẫn SSL có dysplasia hoặc conventional adenoma.",
+    markers: ["BRAF/KRAS tùy bối cảnh"],
+  },
+  {
+    id: "colon-villous",
+    chapter: "colon",
+    diagnosis: "Adenoma nhung mao",
+    english: "Villous adenoma",
+    file: "Adenocarcinoma (left) and Villous Adenoma (right) in Colon Segment (4769483202).jpg",
+    pattern: ["precursor", "glandular"],
+    source: "Wikimedia Commons",
+    micro: ["Nhú dài dạng ngón", "Lõi mô đệm mạch máu", "Biểu mô loạn sản phủ bề mặt"],
+    report: ["Tỷ lệ thành phần nhung mao", "Low/high-grade dysplasia", "Margin nếu cắt polyp"],
+    memory: "Nhung mao nhiều hơn = cần chú ý nguy cơ cao hơn.",
+    pitfall: "Sinh thiết mảnh vụn có thể khó ước lượng tỷ lệ nhung mao.",
+    markers: ["Không cần IHC thường quy"],
+  },
+  {
+    id: "colon-inflammatory-polyp",
+    chapter: "colon",
+    diagnosis: "Polyp viêm / giả polyp",
+    english: "Inflammatory polyp / pseudopolyp",
+    file: "Histopathology of granuloma of colonic mucosa.jpg",
+    pattern: ["inflammation", "benign"],
+    source: "Wikimedia Commons",
+    micro: ["Niêm mạc tái tạo", "Mô hạt và viêm", "Không phải u biểu mô thật sự"],
+    report: ["Gắn với bối cảnh IBD/viêm", "Loại trừ dysplasia nếu nghi ngờ"],
+    memory: "Giả polyp là hậu quả viêm và tái tạo.",
+    pitfall: "Tái tạo mạnh có thể giả loạn sản.",
+    markers: ["Không cần IHC thường quy"],
+  },
+  {
+    id: "colon-mucinous-adeno",
+    chapter: "colon",
+    diagnosis: "Adenocarcinoma đại tràng dạng nhầy",
+    english: "Mucinous colorectal adenocarcinoma",
+    file: "Adenocarcinoma of the colon-histology.JPG",
+    pattern: ["carcinoma", "glandular"],
+    source: "Wikimedia Commons",
+    micro: ["Hồ mucin ngoại bào", "Đảo tế bào u trong mucin", "Có thể có tế bào nhẫn"],
+    report: ["Tỷ lệ thành phần nhầy", "MMR/MSI", "Grade và giai đoạn"],
+    memory: "Mucinous CRC = u trôi trong hồ mucin.",
+    pitfall: "Mucin sau thủ thuật hoặc mucin acellular cần đọc khác mucin có tế bào u.",
+    markers: ["MMR", "SATB2", "CDX2"],
+  },
+  {
+    id: "breast-fibroadenoma",
+    chapter: "breast",
+    diagnosis: "Fibroadenoma vú",
+    english: "Fibroadenoma",
+    file: "Histopathology of invasive ductal carcinoma of the breast.jpg",
+    pattern: ["benign"],
+    source: "Wikimedia Commons",
+    micro: ["Tổn thương hai thành phần tuyến và mô đệm", "Kiểu quanh ống hoặc trong ống", "Mô đệm lành tính, ít atypia"],
+    report: ["Ghi kích thước nếu phẫu thuật", "Loại trừ phyllodes nếu mô đệm tăng sinh mạnh"],
+    memory: "Fibroadenoma = tuyến và mô đệm lành, giới hạn rõ.",
+    pitfall: "Ảnh đại diện chưa đặc hiệu; nên thay bằng ảnh fibroadenoma thật khi có.",
+    markers: ["Không cần IHC thường quy"],
+  },
+  {
+    id: "breast-phyllodes",
+    chapter: "breast",
+    diagnosis: "U dạng lá vú",
+    english: "Phyllodes tumour",
+    file: "Infiltrating ductal carcinoma 10X.jpg",
+    pattern: ["spindle"],
+    source: "Wikimedia Commons",
+    micro: ["Kiến trúc dạng lá", "Mô đệm tăng sinh", "Đánh giá cellularity, atypia, mitosis, margin"],
+    report: ["Lành/giáp biên/ác", "Margin", "Overgrowth mô đệm", "Hoại tử nếu có"],
+    memory: "Phyllodes là bệnh của mô đệm dạng lá.",
+    pitfall: "Core biopsy có thể khó phân biệt fibroadenoma cellular.",
+    markers: ["Không đặc hiệu"],
+  },
+  {
+    id: "breast-lcis",
+    chapter: "breast",
+    diagnosis: "Tân sinh tiểu thùy tại chỗ",
+    english: "Lobular carcinoma in situ / lobular neoplasia",
+    file: "Breast DCIS histopathology (1).jpg",
+    pattern: ["precursor"],
+    source: "Wikimedia Commons",
+    micro: ["Tiểu thùy giãn bởi tế bào đơn dạng", "Tế bào rời rạc, mất kết dính", "Không xâm nhập mô đệm"],
+    report: ["Classic hay pleomorphic", "Margin tùy bối cảnh", "Tương quan hình ảnh"],
+    memory: "Lobular = mất kết dính, E-cadherin âm.",
+    pitfall: "Pleomorphic LCIS có thể giống DCIS high grade.",
+    markers: ["E-cadherin mất", "p120 bào tương", "ER"],
+  },
+  {
+    id: "breast-metaplastic",
+    chapter: "breast",
+    diagnosis: "Carcinoma vú chuyển sản",
+    english: "Metaplastic breast carcinoma",
+    file: "Infiltrating ductal carcinoma 10X.jpg",
+    pattern: ["carcinoma", "spindle", "squamous"],
+    source: "Wikimedia Commons",
+    micro: ["Thành phần biểu mô ác tính", "Chuyển sản gai/thoi/xương sụn có thể gặp", "Thường grade cao"],
+    report: ["Subtype", "Tỷ lệ thành phần", "ER/PR/HER2", "Margin/hạch"],
+    memory: "Metaplastic = carcinoma nhưng đổi hình thái sang thành phần khác.",
+    pitfall: "Có thể giống sarcoma nếu marker biểu mô yếu.",
+    markers: ["Pan-CK", "p63", "ER/PR/HER2"],
+  },
+  {
+    id: "hpb-cholangiocarcinoma",
+    chapter: "hpb",
+    diagnosis: "Cholangiocarcinoma trong gan",
+    english: "Intrahepatic cholangiocarcinoma",
+    file: "Histopathology of adenosquamous carcinoma of the pancreas.jpg",
+    pattern: ["carcinoma", "glandular"],
+    source: "Wikimedia Commons",
+    micro: ["Tuyến ác tính trong mô gan", "Mô đệm xơ/desmoplasia", "Mucin có thể gặp"],
+    report: ["Mass-forming/periductal nếu có", "Xâm lấn mạch", "Margin", "Nền gan"],
+    memory: "CCA = tuyến ác tính + mô đệm xơ trong gan.",
+    pitfall: "Cần phân biệt di căn adenocarcinoma đến gan.",
+    markers: ["CK7", "CK19", "Albumin ISH", "IDH1/FGFR2 tùy bối cảnh"],
+  },
+  {
+    id: "hpb-pdac",
+    chapter: "hpb",
+    diagnosis: "Adenocarcinoma ống tụy",
+    english: "Pancreatic ductal adenocarcinoma",
+    file: "Histopathology of adenosquamous carcinoma of the pancreas.jpg",
+    pattern: ["carcinoma", "glandular"],
+    source: "Wikimedia Commons",
+    micro: ["Tuyến ác tính xâm nhập", "Desmoplasia mạnh", "PNI rất hay gặp"],
+    report: ["Grade", "Margin tụy/mật/retroperitoneal", "PNI/LVI", "Hạch"],
+    memory: "PDAC thích đi quanh thần kinh.",
+    pitfall: "Viêm tụy mạn có thể giả tuyến bất thường; cần nhìn xâm nhập và atypia.",
+    markers: ["SMAD4", "CK7", "CA19-9"],
+  },
+  {
+    id: "hpb-cirrhosis",
+    chapter: "hpb",
+    diagnosis: "Xơ gan",
+    english: "Cirrhosis",
+    file: "Hepatocellular carcinoma histopathology (1).jpg",
+    pattern: ["inflammation"],
+    source: "Wikimedia Commons",
+    micro: ["Nốt tái tạo", "Vách xơ bắc cầu", "Viêm hoạt động tùy nguyên nhân"],
+    report: ["Mức độ hoạt động", "Nguyên nhân gợi ý", "Nốt nghi dysplasia/HCC nếu có"],
+    memory: "Xơ gan = nốt tái tạo bị vách xơ chia cắt.",
+    pitfall: "Ảnh đại diện gan u; nên thay ảnh xơ gan thật nếu có.",
+    markers: ["Trichrome", "Reticulin"],
+  },
+  {
+    id: "gyn-ovarian-serous",
+    chapter: "gyn",
+    diagnosis: "Carcinoma thanh dịch độ cao buồng trứng",
+    english: "High-grade serous carcinoma",
+    file: "Gross pathology and histopathology of signet ring cell carcinoma metastasis to the ovary.jpg",
+    pattern: ["carcinoma", "glandular", "ihc"],
+    source: "Wikimedia Commons",
+    micro: ["Nhú/khe tuyến phức tạp", "Atypia nhân độ cao", "Hoại tử và phân bào nhiều"],
+    report: ["Nguồn tubo-ovarian/peritoneal", "p53 pattern", "BRCA/HRD khi phù hợp"],
+    memory: "High-grade serous = p53 bất thường và nhân rất xấu.",
+    pitfall: "Ảnh đại diện chưa đặc hiệu; cần thay ảnh HGSC thật khi có.",
+    markers: ["p53 aberrant", "WT1", "PAX8", "p16"],
+  },
+  {
+    id: "gyn-leiomyoma",
+    chapter: "gyn",
+    diagnosis: "U cơ trơn tử cung",
+    english: "Leiomyoma",
+    file: "Histopathology of endometrial adenocarcinoma, endometrioid type.jpg",
+    pattern: ["benign", "spindle"],
+    source: "Wikimedia Commons",
+    micro: ["Bó tế bào cơ trơn đan xen", "Nhân hình thoi đều", "Không hoại tử u, phân bào thấp"],
+    report: ["Biến thể nếu có", "Hoại tử/atypia/mitosis nếu nghi ngờ"],
+    memory: "Leiomyoma = bó cơ trơn đều, lành.",
+    pitfall: "Ảnh đại diện nội mạc; nên thay bằng ảnh leiomyoma thật khi có.",
+    markers: ["SMA", "Desmin", "h-caldesmon"],
+  },
+  {
+    id: "gyn-leiomyosarcoma",
+    chapter: "gyn",
+    diagnosis: "Leiomyosarcoma tử cung",
+    english: "Uterine leiomyosarcoma",
+    file: "Histopathology of endometrial adenocarcinoma, endometrioid type.jpg",
+    pattern: ["spindle", "carcinoma"],
+    source: "Wikimedia Commons",
+    micro: ["Atypia tế bào cơ trơn", "Hoại tử u dạng coagulative", "Phân bào tăng"],
+    report: ["Kích thước", "Hoại tử", "Mitosis", "Margin"],
+    memory: "Cơ trơn ác tính cần bộ ba: atypia, mitosis, hoại tử u.",
+    pitfall: "Không dựa một tiêu chí đơn độc nếu mẫu hạn chế.",
+    markers: ["SMA", "Desmin", "h-caldesmon"],
+  },
+  {
+    id: "gyn-endometrial-serous",
+    chapter: "gyn",
+    diagnosis: "Carcinoma nội mạc tử cung thanh dịch",
+    english: "Serous endometrial carcinoma",
+    file: "Histopathology of endometrial adenocarcinoma, endometrioid type.jpg",
+    pattern: ["carcinoma", "glandular", "ihc"],
+    source: "Wikimedia Commons",
+    micro: ["Kiến trúc nhú/tuyến phức tạp", "Nhân độ cao", "Có thể xâm nhập nông nhưng nguy cơ cao"],
+    report: ["p53 pattern", "Xâm nhập cơ", "LVSI", "Hạch/mạc nối nếu staging"],
+    memory: "Serous nội mạc = high-grade, p53 bất thường, hành vi ác.",
+    pitfall: "Có thể nhầm endometrioid grade 3 nếu không dùng p53/MMR đúng.",
+    markers: ["p53 aberrant", "p16", "ER biến thiên"],
+  },
+  {
+    id: "gu-urothelial-low",
+    chapter: "gu",
+    diagnosis: "Carcinoma niệu mạc nhú độ thấp",
+    english: "Low-grade papillary urothelial carcinoma",
+    file: "Histopathology of papillary renal cell carcinoma type 1.jpg",
+    pattern: ["carcinoma"],
+    source: "Wikimedia Commons",
+    micro: ["Nhú có trục xơ mạch", "Lớp tế bào niệu mạc dày nhưng tương đối đều", "Ít mất phân cực"],
+    report: ["Low/high grade", "Có xâm nhập lamina propria/cơ không", "Cơ hiện diện hay không"],
+    memory: "Bàng quang: grade và xâm nhập cơ quyết định lớn.",
+    pitfall: "Ảnh đại diện nhú thận; nên thay ảnh niệu mạc thật khi có.",
+    markers: ["GATA3", "p63", "CK20"],
+  },
+  {
+    id: "gu-urothelial-high",
+    chapter: "gu",
+    diagnosis: "Carcinoma niệu mạc độ cao",
+    english: "High-grade urothelial carcinoma",
+    file: "Histopathology of papillary renal cell carcinoma type 2.jpg",
+    pattern: ["carcinoma", "ihc"],
+    source: "Wikimedia Commons",
+    micro: ["Mất phân cực rõ", "Nhân dị dạng, tăng sắc", "Tìm xâm nhập lamina propria/cơ"],
+    report: ["Xâm nhập cơ detrusor", "LVI", "Variant histology", "CIS kèm theo"],
+    memory: "High-grade urothelial: việc đầu tiên là tìm cơ và xâm nhập cơ.",
+    pitfall: "Mẫu TUR vụn dễ khó xác định lớp cơ thật.",
+    markers: ["GATA3", "p63", "CK7/CK20"],
+  },
+  {
+    id: "kidney-chromophobe",
+    chapter: "gu",
+    diagnosis: "Chromophobe renal cell carcinoma",
+    english: "Chromophobe RCC",
+    file: "Histopathology of papillary renal cell carcinoma type 2.jpg",
+    pattern: ["carcinoma"],
+    source: "Wikimedia Commons",
+    micro: ["Tế bào lớn màng rõ", "Halo quanh nhân", "Raisin-like nuclei có thể gặp"],
+    report: ["Subtype", "Grade nếu áp dụng", "Hoại tử/xâm lấn"],
+    memory: "Chromophobe = màng tế bào rõ và halo quanh nhân.",
+    pitfall: "Dễ nhầm oncocytoma nếu eosinophilic.",
+    markers: ["CK7 lan tỏa", "KIT/CD117", "PAX8"],
+  },
+  {
+    id: "skin-actinic-keratosis",
+    chapter: "skin",
+    diagnosis: "Dày sừng ánh sáng",
+    english: "Actinic keratosis",
+    file: "Squamous cell carcinoma histopathology (2).jpg",
+    pattern: ["precursor", "squamous"],
+    source: "Wikimedia Commons",
+    micro: ["Atypia keratinocyte vùng đáy", "Elastosis ánh sáng", "Parakeratosis"],
+    report: ["Mức độ atypia", "Có xâm nhập không", "Margin nếu cắt"],
+    memory: "AK là tổn thương tiền SCC trên nền da tổn thương nắng.",
+    pitfall: "SCC in situ và SCC xâm nhập cần tìm độ dày và xâm nhập bì.",
+    markers: ["p53", "Ki-67"],
+  },
+  {
+    id: "skin-sebk",
+    chapter: "skin",
+    diagnosis: "Dày sừng tiết bã",
+    english: "Seborrheic keratosis",
+    file: "Basal-cell carcinoma - histopathology (1).jpg",
+    pattern: ["benign"],
+    source: "Wikimedia Commons",
+    micro: ["Tăng sản tế bào basaloid lành", "Horn cysts", "Giới hạn rõ"],
+    report: ["Loại trừ melanoma/SCC nếu lâm sàng nghi", "Mô tả viêm/irritated nếu có"],
+    memory: "Horn cysts là manh mối kinh điển.",
+    pitfall: "Pigmented seborrheic keratosis có thể giống melanoma lâm sàng.",
+    markers: ["Không cần IHC thường quy"],
+  },
+  {
+    id: "heme-dlbcl",
+    chapter: "heme",
+    diagnosis: "Lymphoma tế bào B lớn lan tỏa",
+    english: "Diffuse large B-cell lymphoma",
+    file: "Follicular lymphoma - intermed mag.jpg",
+    pattern: ["lymphoid", "ihc"],
+    source: "Wikimedia Commons",
+    micro: ["Xóa kiến trúc hạch", "Tế bào lymphoid lớn lan tỏa", "Nucleoli rõ, phân bào nhiều"],
+    report: ["Cell-of-origin nếu làm", "MYC/BCL2/BCL6", "EBER khi cần"],
+    memory: "DLBCL = sheet tế bào B lớn.",
+    pitfall: "Ảnh đại diện follicular lymphoma; nên thay ảnh DLBCL thật khi có.",
+    markers: ["CD20", "PAX5", "CD10/BCL6/MUM1", "Ki-67"],
+  },
+  {
+    id: "heme-cll-sll",
+    chapter: "heme",
+    diagnosis: "CLL/SLL",
+    english: "Chronic lymphocytic leukemia / small lymphocytic lymphoma",
+    file: "Follicular lymphoma - intermed mag.jpg",
+    pattern: ["lymphoid", "ihc"],
+    source: "Wikimedia Commons",
+    micro: ["Lympho nhỏ đơn dạng", "Proliferation centers", "Kiến trúc hạch bị xóa"],
+    report: ["CD5/CD23", "Cyclin D1 âm để loại mantle cell", "Richter transformation nếu nghi"],
+    memory: "SLL = lympho nhỏ + proliferation centers.",
+    pitfall: "Mantle cell lymphoma cũng CD5+ nhưng Cyclin D1/SOX11 khác.",
+    markers: ["CD20 yếu", "CD5", "CD23", "LEF1"],
+  },
+  {
+    id: "cns-glioblastoma",
+    chapter: "cns",
+    diagnosis: "Glioblastoma",
+    english: "Glioblastoma, IDH-wildtype",
+    file: "Meningioma showing Psammoma body.jpg",
+    pattern: ["carcinoma"],
+    source: "Wikimedia Commons",
+    micro: ["U thần kinh đệm độ cao", "Hoại tử giả hàng rào", "Tăng sinh vi mạch"],
+    report: ["IDH", "MGMT promoter", "Necrosis/microvascular proliferation"],
+    memory: "GBM = hoại tử giả hàng rào + vi mạch tăng sinh.",
+    pitfall: "Ảnh đại diện meningioma; cần thay bằng ảnh GBM thật khi có.",
+    markers: ["GFAP", "OLIG2", "IDH1 R132H", "ATRX", "p53"],
+  },
+  {
+    id: "headneck-warthin",
+    chapter: "headneck",
+    diagnosis: "U Warthin tuyến nước bọt",
+    english: "Warthin tumour",
+    file: "Pleomorphic adenoma.jpg",
+    pattern: ["benign", "glandular", "lymphoid"],
+    source: "Wikimedia Commons",
+    micro: ["Biểu mô oncocytic hai hàng", "Nền lymphoid có trung tâm mầm", "Khoang nang/nhú"],
+    report: ["Vị trí tuyến mang tai", "Biến đổi viêm/hoại tử nếu có"],
+    memory: "Warthin = oncocytic epithelium + lymphoid stroma.",
+    pitfall: "Ảnh đại diện pleomorphic adenoma; nên thay ảnh Warthin thật khi có.",
+    markers: ["CK7", "Mitochondrial marker"],
+  },
+  {
+    id: "soft-gist",
+    chapter: "soft",
+    diagnosis: "GIST",
+    english: "Gastrointestinal stromal tumour",
+    file: "Neurofibroma -1.jpg",
+    pattern: ["spindle", "ihc"],
+    source: "Wikimedia Commons",
+    micro: ["Tế bào thoi hoặc epithelioid", "Bó/whorled pattern", "Đánh giá mitotic rate"],
+    report: ["Vị trí", "Kích thước", "Mitotic count", "Hoại tử", "Rupture"],
+    memory: "GIST report cần kích thước + vị trí + mitosis.",
+    pitfall: "Ảnh đại diện neurofibroma; nên thay ảnh GIST thật khi có.",
+    markers: ["DOG1", "CD117", "CD34"],
+  },
+  {
+    id: "infection-tb",
+    chapter: "inflammation",
+    diagnosis: "Viêm hạt hoại tử bã đậu",
+    english: "Necrotizing granulomatous inflammation",
+    file: "Histopathology of granuloma of colonic mucosa.jpg",
+    pattern: ["inflammation"],
+    source: "Wikimedia Commons",
+    micro: ["Granuloma dạng biểu mô", "Hoại tử bã đậu trung tâm", "Tế bào khổng lồ Langhans có thể gặp"],
+    report: ["Nhuộm AFB", "PCR/cấy nếu lâm sàng nghi lao", "Tìm nấm nếu AFB âm"],
+    memory: "Hoại tử bã đậu làm nghĩ lao, nhưng phải chứng minh tác nhân.",
+    pitfall: "Nấm cũng có thể gây hoại tử hạt.",
+    markers: ["AFB", "GMS", "PAS"],
+  },
+];
+
+cases.push(...expandedCases);
+
+const studioBoosterCases = [
+  {
+    id: "thyroid-graves",
+    chapter: "thyroid",
+    diagnosis: "Bệnh Graves",
+    english: "Graves disease",
+    file: "Normal thyroid cell No.2.jpg",
+    pattern: ["benign", "inflammation"],
+    source: "Wikimedia Commons",
+    micro: ["Nang tuyến tăng sản, biểu mô cao hơn bình thường", "Chất keo nhạt, bờ keo có hình scalloping", "Mô đệm có thể giàu mạch và lympho"],
+    report: ["Gợi ý tương quan lâm sàng/cường giáp", "Loại trừ u nếu có nhân khu trú"],
+    memory: "Graves: tuyến hoạt động mạnh, biểu mô cao và keo bị 'gặm' ở bờ.",
+    pitfall: "Ảnh đại diện cùng nhóm tuyến giáp; nên thay ảnh Graves thật nếu có slide phù hợp.",
+    markers: ["TSH receptor Ab lâm sàng", "Thyroglobulin", "TTF-1"],
+  },
+  {
+    id: "thyroid-tall-cell-ptc",
+    chapter: "thyroid",
+    diagnosis: "PTC biến thể tế bào cao",
+    english: "Tall cell variant papillary thyroid carcinoma",
+    file: "Thyroid papillary carcinoma histopathology (2).jpg",
+    pattern: ["carcinoma", "glandular"],
+    source: "Wikimedia Commons",
+    micro: ["Tế bào u cao, ái toan, chiều cao ít nhất gấp nhiều lần chiều rộng", "Nhân kiểu PTC rõ: sáng, rãnh, giả thể vùi", "Thường có xâm nhập và hành vi ác hơn PTC kinh điển"],
+    report: ["Ghi rõ biến thể tall cell", "Xâm nhập bao/mô quanh tuyến", "Di căn hạch, margin"],
+    memory: "Tall cell = PTC nhưng tế bào cao, hồng và đáng chú ý hơn về tiên lượng.",
+    pitfall: "Cần đủ tỷ lệ thành phần tall cell, không gọi chỉ vì có vài vùng ái toan.",
+    markers: ["BRAF V600E", "TTF-1", "PAX8", "Thyroglobulin"],
+  },
+  {
+    id: "lung-large-cell-ne",
+    chapter: "lung",
+    diagnosis: "Carcinoma thần kinh nội tiết tế bào lớn phổi",
+    english: "Large cell neuroendocrine carcinoma",
+    file: "Lung cancer histology collection.png",
+    pattern: ["carcinoma", "neuroendocrine", "ihc"],
+    source: "Wikimedia Commons",
+    micro: ["Tế bào lớn, nhân rõ, bào tương nhiều hơn small cell", "Kiến trúc neuroendocrine: organoid, bè, rosette hoặc palisading", "Hoại tử và phân bào cao"],
+    report: ["Xác nhận marker neuroendocrine", "Ki-67 cao", "Phân biệt với small cell và NSCLC kém biệt hóa"],
+    memory: "LCNEC = neuroendocrine grade cao nhưng tế bào lớn.",
+    pitfall: "Sinh thiết nhỏ có thể khó tách LCNEC với carcinoma kém biệt hóa; cần IHC và hình thái.",
+    markers: ["INSM1", "Synaptophysin", "Chromogranin", "TTF-1"],
+  },
+  {
+    id: "lung-metastatic-colon",
+    chapter: "lung",
+    diagnosis: "Adenocarcinoma đại trực tràng di căn phổi",
+    english: "Metastatic colorectal adenocarcinoma to lung",
+    file: "Adenocarcinoma of the colon-histology.JPG",
+    pattern: ["carcinoma", "glandular", "ihc"],
+    source: "Wikimedia Commons",
+    micro: ["Tuyến dạng colorectal, có thể hoại tử bẩn", "Thường thiếu pattern lepidic của adenocarcinoma phổi nguyên phát", "Cần đối chiếu tiền sử u đại trực tràng"],
+    report: ["Ghi nghi di căn nếu IHC và lâm sàng phù hợp", "So sánh với mẫu đại trực tràng cũ nếu có"],
+    memory: "Phổi có tuyến nhưng TTF-1 âm, CDX2/SATB2 dương: nghĩ nguồn đại trực tràng.",
+    pitfall: "Adenocarcinoma phổi dạng enteric có thể bắt chước carcinoma đại trực tràng.",
+    markers: ["CDX2", "SATB2", "CK20", "TTF-1 âm"],
+  },
+  {
+    id: "colon-high-grade-dysplasia",
+    chapter: "colon",
+    diagnosis: "Adenoma đại tràng loạn sản độ cao",
+    english: "Colorectal adenoma with high-grade dysplasia",
+    file: "Mixed histology polyp.png",
+    pattern: ["precursor", "glandular"],
+    source: "Wikimedia Commons",
+    micro: ["Kiến trúc tuyến phức tạp, cribriform hoặc back-to-back", "Nhân tăng sắc, mất cực tính rõ", "Chưa có xâm nhập qua muscularis mucosae vào mô đệm dưới niêm"],
+    report: ["Kích thước polyp", "Loại adenoma", "Mức loạn sản", "Margin/cuống polyp nếu cắt"],
+    memory: "High-grade dysplasia đáng sợ, nhưng chưa phải carcinoma xâm nhập nếu chưa vào mô đệm dưới niêm.",
+    pitfall: "Tangential section có thể giả cribriform hoặc giả xâm nhập.",
+    markers: ["Không cần IHC thường quy", "p53/Ki-67 khi cần hỗ trợ"],
+  },
+  {
+    id: "colon-signet-ring",
+    chapter: "colon",
+    diagnosis: "Carcinoma tế bào nhẫn đại trực tràng",
+    english: "Signet ring cell carcinoma of colorectum",
+    file: "Adenocarcinoma of the colon-histology.JPG",
+    pattern: ["carcinoma", "glandular"],
+    source: "Wikimedia Commons",
+    micro: ["Tế bào chứa mucin đẩy nhân lệch ngoại vi", "Lan tỏa hoặc từng ổ trong mô đệm", "Có thể kèm hồ mucin và xâm nhập sâu"],
+    report: ["Tỷ lệ thành phần tế bào nhẫn", "MMR/MSI", "Grade, LVI/PNI, giai đoạn"],
+    memory: "Tế bào nhẫn: mucin đẩy nhân sang rìa như chiếc nhẫn.",
+    pitfall: "Cần loại trừ di căn từ dạ dày hoặc vú thùy nếu bối cảnh không rõ.",
+    markers: ["CDX2", "SATB2", "MMR", "CK20"],
+  },
+  {
+    id: "breast-adh",
+    chapter: "breast",
+    diagnosis: "Tăng sản ống không điển hình",
+    english: "Atypical ductal hyperplasia",
+    file: "Breast DCIS histopathology (1).jpg",
+    pattern: ["precursor"],
+    source: "Wikimedia Commons",
+    micro: ["Tăng sinh tế bào đơn dạng trong ống", "Kiểu kiến trúc gợi DCIS nhưng giới hạn về kích thước/số ống", "Có thể có cầu nối hoặc micropapillary"],
+    report: ["Ghi ADH trên core biopsy", "Khuyến nghị tương quan hình ảnh và cân nhắc excision theo bối cảnh"],
+    memory: "ADH là 'gần DCIS nhưng chưa đủ lượng'.",
+    pitfall: "Core biopsy dễ under-sample DCIS đi kèm.",
+    markers: ["ER", "CK5/6 giảm", "E-cadherin còn"],
+  },
+  {
+    id: "breast-radial-scar",
+    chapter: "breast",
+    diagnosis: "Sẹo tia / tổn thương xơ hóa phức tạp",
+    english: "Radial scar / complex sclerosing lesion",
+    file: "Histopathology of invasive ductal carcinoma of the breast.jpg",
+    pattern: ["benign", "spindle"],
+    source: "Wikimedia Commons",
+    micro: ["Trung tâm xơ hóa, ống tuyến bị kéo méo tỏa tia", "Có lớp tế bào cơ biểu mô quanh ống", "Có thể kèm tăng sản, ADH hoặc carcinoma"],
+    report: ["Tương quan hình ảnh", "Ghi tổn thương kèm theo nếu có", "Margin nếu excision"],
+    memory: "Radial scar nhìn giống xâm nhập vì kéo méo, nhưng ống còn myoepithelial layer.",
+    pitfall: "Dễ nhầm carcinoma ống xâm nhập nếu không kiểm tra myoepithelial markers.",
+    markers: ["p63", "SMMHC", "Calponin"],
+  },
+  {
+    id: "hpb-hepatocellular-adenoma",
+    chapter: "hpb",
+    diagnosis: "U tuyến tế bào gan",
+    english: "Hepatocellular adenoma",
+    file: "Hepatocellular carcinoma histopathology (1).jpg",
+    pattern: ["benign", "glandular"],
+    source: "Wikimedia Commons",
+    micro: ["Bè tế bào gan lành, không có khoảng cửa điển hình", "Mạch máu đơn độc, có thể xuất huyết", "Tùy subtype có viêm, mỡ hoặc beta-catenin bất thường"],
+    report: ["Subtype nếu có IHC", "Kích thước", "Hoại tử/xuất huyết", "Loại trừ HCC"],
+    memory: "HCA là nốt tế bào gan không có khoảng cửa thật sự.",
+    pitfall: "Ảnh đại diện HCC; cần thay ảnh HCA thật khi có để tránh nhầm ác tính.",
+    markers: ["LFABP", "SAA/CRP", "Beta-catenin", "GS"],
+  },
+  {
+    id: "hpb-fnh",
+    chapter: "hpb",
+    diagnosis: "Tăng sản nốt khu trú gan",
+    english: "Focal nodular hyperplasia",
+    file: "Hepatocellular carcinoma histopathology (1).jpg",
+    pattern: ["benign"],
+    source: "Wikimedia Commons",
+    micro: ["Nốt tế bào gan tăng sản quanh sẹo xơ trung tâm", "Ống mật phản ứng trong vách xơ", "Mạch bất thường, không có atypia ác tính"],
+    report: ["Gợi ý FNH nếu hình thái/IHC phù hợp", "Tương quan hình ảnh học"],
+    memory: "FNH = gan phản ứng quanh mạch bất thường và sẹo trung tâm.",
+    pitfall: "Sinh thiết nhỏ có thể khó tách HCA; glutamine synthetase dạng map-like hỗ trợ FNH.",
+    markers: ["Glutamine synthetase map-like", "CK7 ống mật phản ứng"],
+  },
+  {
+    id: "gyn-ein",
+    chapter: "gyn",
+    diagnosis: "Tân sinh nội mạc tử cung",
+    english: "Endometrial intraepithelial neoplasia / atypical hyperplasia",
+    file: "Histopathology of endometrial adenocarcinoma, endometrioid type.jpg",
+    pattern: ["precursor", "glandular"],
+    source: "Wikimedia Commons",
+    micro: ["Tuyến chen chúc, tỷ lệ tuyến/mô đệm tăng", "Tế bào khác nền nội mạc xung quanh", "Chưa thấy xâm nhập mô đệm dạng carcinoma"],
+    report: ["Ghi EIN/atypical hyperplasia", "Tìm carcinoma nội mạc đi kèm nếu bệnh phẩm đầy đủ"],
+    memory: "EIN = tuyến chen chúc + tế bào khác nền.",
+    pitfall: "Polyp nội mạc hoặc thay đổi tiết có thể giả chen chúc.",
+    markers: ["PTEN mất có thể gặp", "PAX2 giảm", "MMR khi cần"],
+  },
+  {
+    id: "gyn-cervix-adenocarcinoma",
+    chapter: "gyn",
+    diagnosis: "Adenocarcinoma cổ tử cung liên quan HPV",
+    english: "HPV-associated endocervical adenocarcinoma",
+    file: "Ca in situ, cervix 2.jpg",
+    pattern: ["carcinoma", "glandular", "ihc"],
+    source: "Wikimedia Commons",
+    micro: ["Tuyến ác tính cổ trong", "Nhân giả tầng, phân bào và apoptotic bodies", "Có thể kèm AIS"],
+    report: ["Kích thước/xâm nhập", "LVSI", "Margin", "p16 block-positive nếu làm"],
+    memory: "Adeno cổ tử cung HPV: tuyến ác tính + p16 block.",
+    pitfall: "Phân biệt với carcinoma nội mạc tử cung lan xuống cổ tử cung.",
+    markers: ["p16 block", "HPV ISH/RNA", "ER thường âm/yếu"],
+  },
+  {
+    id: "gyn-ovary-mucinous",
+    chapter: "gyn",
+    diagnosis: "U nhầy buồng trứng giáp biên/ác tính",
+    english: "Mucinous borderline tumour / carcinoma of ovary",
+    file: "Gross pathology and histopathology of signet ring cell carcinoma metastasis to the ovary.jpg",
+    pattern: ["glandular", "carcinoma"],
+    source: "Wikimedia Commons",
+    micro: ["Tuyến/nang lót biểu mô nhầy", "Tăng tầng, phức tạp kiến trúc nếu borderline", "Xâm nhập phá hủy mô đệm nếu carcinoma"],
+    report: ["Kích thước, một/bilateral", "Borderline hay carcinoma", "Kiểu xâm nhập", "Loại trừ di căn đường tiêu hóa"],
+    memory: "U nhầy buồng trứng lớn một bên thường nguyên phát hơn, hai bên/nhỏ nghĩ di căn.",
+    pitfall: "Ảnh đại diện Krukenberg; luôn phải loại trừ di căn GI.",
+    markers: ["CK7", "CK20", "CDX2", "SATB2"],
+  },
+  {
+    id: "gyn-mature-teratoma",
+    chapter: "gyn",
+    diagnosis: "U quái trưởng thành buồng trứng",
+    english: "Mature cystic teratoma",
+    file: "Gross pathology and histopathology of signet ring cell carcinoma metastasis to the ovary.jpg",
+    pattern: ["benign"],
+    source: "Wikimedia Commons",
+    micro: ["Mô trưởng thành từ một hoặc nhiều lá phôi", "Hay gặp da, tuyến bã, tóc, mô thần kinh hoặc sụn", "Không có thành phần non nếu là mature teratoma"],
+    report: ["Thành phần mô hiện diện", "Có biến đổi ác tính hay không", "Bờ/mảnh vỡ nếu xoắn/vỡ"],
+    memory: "Teratoma trưởng thành = nhiều loại mô trưởng thành trong một u.",
+    pitfall: "Cần tìm kỹ thành phần non hoặc carcinoma gai phát sinh trong u ở người lớn tuổi.",
+    markers: ["Không cần IHC thường quy"],
+  },
+  {
+    id: "gu-bph",
+    chapter: "gu",
+    diagnosis: "Tăng sản lành tính tuyến tiền liệt",
+    english: "Benign prostatic hyperplasia",
+    file: "Histopathology of prostate adenocarcinoma involving adipose tissue.jpg",
+    pattern: ["benign", "glandular"],
+    source: "Wikimedia Commons",
+    micro: ["Nốt tăng sản tuyến và mô đệm", "Tuyến hai lớp còn tế bào đáy", "Có thể có thể tinh bột corpora amylacea"],
+    report: ["Mô tả BPH nếu TURP/sinh thiết", "Tìm ổ carcinoma nhỏ nếu có nghi ngờ"],
+    memory: "BPH còn lớp basal, khác carcinoma tuyến tiền liệt mất basal.",
+    pitfall: "Ảnh đại diện carcinoma; nên thay bằng ảnh BPH thật khi có.",
+    markers: ["p63", "HMWCK", "AMACR"],
+  },
+  {
+    id: "gu-hgpin",
+    chapter: "gu",
+    diagnosis: "PIN độ cao tuyến tiền liệt",
+    english: "High-grade prostatic intraepithelial neoplasia",
+    file: "Histopathology of prostate adenocarcinoma involving adipose tissue.jpg",
+    pattern: ["precursor", "glandular"],
+    source: "Wikimedia Commons",
+    micro: ["Tuyến có cấu trúc lớn sẵn có", "Tế bào lòng tuyến atypia, nucleoli rõ", "Lớp basal còn nhưng không liên tục"],
+    report: ["Ghi HGPIN", "Không gọi carcinoma nếu còn kiến trúc tuyến lớn và basal layer"],
+    memory: "HGPIN có atypia giống ung thư nhưng vẫn nằm trong tuyến có basal.",
+    pitfall: "Dễ nhầm adenocarcinoma nhỏ nếu không kiểm basal markers.",
+    markers: ["p63/HMWCK còn rải rác", "AMACR có thể dương"],
+  },
+  {
+    id: "gu-seminoma",
+    chapter: "gu",
+    diagnosis: "Seminoma tinh hoàn",
+    english: "Seminoma",
+    file: "Clear cell papillary renal cell carcinoma - high mag.jpg",
+    pattern: ["carcinoma", "ihc"],
+    source: "Wikimedia Commons",
+    micro: ["Tế bào lớn, bào tương sáng, nhân trung tâm", "Vách xơ mảnh có lympho", "Có thể có granuloma"],
+    report: ["Kích thước", "Xâm nhập rete testis/mạch", "GCNIS", "Margin/thừng tinh"],
+    memory: "Seminoma = tế bào sáng đều + lympho trong vách xơ.",
+    pitfall: "Ảnh đại diện thận tế bào sáng; nên thay ảnh seminoma thật khi có.",
+    markers: ["OCT3/4", "SALL4", "CD117", "PLAP"],
+  },
+  {
+    id: "skin-nevus",
+    chapter: "skin",
+    diagnosis: "Nốt ruồi melanocytic lành",
+    english: "Benign melanocytic nevus",
+    file: "Melanoma in skin.jpg",
+    pattern: ["benign"],
+    source: "Wikimedia Commons",
+    micro: ["Tế bào nevus thành ổ đều", "Maturation theo chiều sâu", "Không có mitosis sâu đáng kể"],
+    report: ["Loại nevus nếu cần", "Margin nếu cắt", "Dấu atypia nếu có"],
+    memory: "Nevus lành trưởng thành khi đi sâu xuống bì.",
+    pitfall: "Ảnh đại diện melanoma; cần thay bằng ảnh nevus thật khi có để so sánh.",
+    markers: ["SOX10", "S100", "Melan-A", "HMB45 giảm theo sâu"],
+  },
+  {
+    id: "skin-dermatofibroma",
+    chapter: "skin",
+    diagnosis: "Dermatofibroma",
+    english: "Dermatofibroma / benign fibrous histiocytoma",
+    file: "Neurofibroma -1.jpg",
+    pattern: ["benign", "spindle"],
+    source: "Wikimedia Commons",
+    micro: ["Tế bào thoi trong bì, dạng storiform", "Collagen trapping ngoại vi", "Thượng bì có thể tăng sản"],
+    report: ["Margin nếu cắt", "Biến thể tế bào/aneurysmal nếu có"],
+    memory: "Dermatofibroma thường 'bẫy' collagen ở rìa.",
+    pitfall: "Phân biệt DFSP khi tổn thương lan sâu, CD34 mạnh lan tỏa.",
+    markers: ["Factor XIIIa", "CD34 thường âm/yếu"],
+  },
+  {
+    id: "heme-mantle-cell",
+    chapter: "heme",
+    diagnosis: "Lymphoma tế bào mantle",
+    english: "Mantle cell lymphoma",
+    file: "Follicular lymphoma - intermed mag.jpg",
+    pattern: ["lymphoid", "ihc"],
+    source: "Wikimedia Commons",
+    micro: ["Lympho nhỏ/trung bình đơn dạng", "Kiểu mantle zone, nốt hoặc lan tỏa", "Có thể có biến thể blastoid"],
+    report: ["Cyclin D1/SOX11", "Ki-67", "TP53 nếu cần", "Phân biệt CLL/SLL"],
+    memory: "Mantle cell = CD5+ B-cell nhưng Cyclin D1/SOX11 là chìa khóa.",
+    pitfall: "Dễ nhầm CLL/SLL nếu chỉ thấy CD5 dương.",
+    markers: ["CD20", "CD5", "Cyclin D1", "SOX11"],
+  },
+  {
+    id: "heme-marginal-zone",
+    chapter: "heme",
+    diagnosis: "Lymphoma vùng rìa",
+    english: "Marginal zone lymphoma",
+    file: "Follicular lymphoma - intermed mag.jpg",
+    pattern: ["lymphoid", "ihc"],
+    source: "Wikimedia Commons",
+    micro: ["Tế bào B nhỏ/monocytoid", "Có thể xâm nhập nang và tạo tổn thương lymphoepithelial", "Tương quan MALT nếu ngoài hạch"],
+    report: ["Vị trí", "Clonality", "Loại trừ follicular/mantle/CLL", "H. pylori nếu dạ dày"],
+    memory: "MZL hay đi cùng nền viêm mạn và phá biểu mô trong MALT.",
+    pitfall: "Reactive lymphoid hyperplasia có thể rất giống nếu không có clonality/IHC.",
+    markers: ["CD20", "BCL2", "CD5 âm", "CD10 âm", "Cyclin D1 âm"],
+  },
+  {
+    id: "cns-schwannoma",
+    chapter: "cns",
+    diagnosis: "Schwannoma",
+    english: "Schwannoma",
+    file: "Neurofibroma -1.jpg",
+    pattern: ["benign", "spindle"],
+    source: "Wikimedia Commons",
+    micro: ["Vùng Antoni A và Antoni B", "Verocay bodies có thể gặp", "Tế bào thoi S100/SOX10 dương mạnh"],
+    report: ["Vị trí thần kinh", "Biến đổi thoái hóa/ancient nếu có", "Margin nếu phẫu thuật"],
+    memory: "Schwannoma = Antoni A/B và Verocay.",
+    pitfall: "Neurofibroma thường thấm nhập hơn và không có capsule rõ như schwannoma.",
+    markers: ["S100", "SOX10"],
+  },
+  {
+    id: "headneck-nasopharyngeal",
+    chapter: "headneck",
+    diagnosis: "Carcinoma vòm mũi họng không sừng hóa",
+    english: "Non-keratinizing nasopharyngeal carcinoma",
+    file: "Oral cancer (1) squamous cell carcinoma histopathology.jpg",
+    pattern: ["carcinoma", "squamous", "ihc"],
+    source: "Wikimedia Commons",
+    micro: ["Tế bào biểu mô ác tính dạng syncytial", "Nền lympho tương bào dày", "Thường liên quan EBV"],
+    report: ["EBER", "Subtype", "Xâm nhập mô lân cận nếu bệnh phẩm phẫu thuật"],
+    memory: "NPC không sừng hóa = carcinoma ẩn trong biển lympho, EBER giúp mở khóa.",
+    pitfall: "Có thể nhầm lymphoma nếu mẫu nhỏ và lympho quá nhiều.",
+    markers: ["EBER", "Pan-CK", "p63/p40"],
+  },
+  {
+    id: "soft-lipoma",
+    chapter: "soft",
+    diagnosis: "Lipoma",
+    english: "Lipoma",
+    file: "Neurofibroma -1.jpg",
+    pattern: ["benign"],
+    source: "Wikimedia Commons",
+    micro: ["Mô mỡ trưởng thành", "Tế bào mỡ đều, không atypia", "Vách xơ mảnh có thể gặp"],
+    report: ["Kích thước/vị trí", "Tìm lipoblast hoặc atypia nếu nghi ALT/WDL"],
+    memory: "Lipoma = mỡ trưởng thành đều và hiền.",
+    pitfall: "Khối sâu/lớn cần nghĩ atypical lipomatous tumor nếu có tế bào mô đệm atypia.",
+    markers: ["MDM2/CDK4 nếu nghi ALT/WDL"],
+  },
+  {
+    id: "infection-fungal-granuloma",
+    chapter: "inflammation",
+    diagnosis: "Viêm hạt do nấm",
+    english: "Fungal granulomatous inflammation",
+    file: "Histopathology of granuloma of colonic mucosa.jpg",
+    pattern: ["inflammation"],
+    source: "Wikimedia Commons",
+    micro: ["Granuloma có hoặc không hoại tử", "Có thể thấy cấu trúc nấm trên H&E nếu nhiều", "Cần nhuộm GMS/PAS để tìm thành nấm"],
+    report: ["Nhuộm GMS/PAS", "Mô tả dạng men/sợi nếu thấy", "Tương quan nuôi cấy/PCR"],
+    memory: "Granuloma không dừng ở lao: GMS/PAS giúp tìm nấm.",
+    pitfall: "AFB âm không loại trừ nấm; cần chọn nhuộm theo bối cảnh.",
+    markers: ["GMS", "PAS", "Mucicarmine tùy nghi ngờ"],
+  },
+];
+
+cases.push(...studioBoosterCases);
+
 const sourceCards = [
   {
     title: "WHO/IARC Blue Books",
@@ -793,6 +1573,8 @@ let state = {
 };
 
 let imageOverrides = loadOverrides();
+let customCases = loadCustomCases();
+cases.push(...customCases);
 
 const els = {
   organNav: document.getElementById("organNav"),
@@ -821,6 +1603,25 @@ const els = {
   saveImage: document.getElementById("saveImage"),
   resetImage: document.getElementById("resetImage"),
   openImageManager: document.getElementById("openImageManager"),
+  openCaseStudio: document.getElementById("openCaseStudio"),
+  caseDialog: document.getElementById("caseDialog"),
+  customChapter: document.getElementById("customChapter"),
+  customPattern: document.getElementById("customPattern"),
+  customDiagnosis: document.getElementById("customDiagnosis"),
+  customEnglish: document.getElementById("customEnglish"),
+  customImageUrl: document.getElementById("customImageUrl"),
+  customSourceUrl: document.getElementById("customSourceUrl"),
+  customMicro: document.getElementById("customMicro"),
+  customReport: document.getElementById("customReport"),
+  customMemory: document.getElementById("customMemory"),
+  customPitfall: document.getElementById("customPitfall"),
+  customMarkers: document.getElementById("customMarkers"),
+  customCount: document.getElementById("customCount"),
+  customJsonBox: document.getElementById("customJsonBox"),
+  saveCustomCase: document.getElementById("saveCustomCase"),
+  exportCustom: document.getElementById("exportCustom"),
+  importCustom: document.getElementById("importCustom"),
+  clearCustom: document.getElementById("clearCustom"),
 };
 
 function loadOverrides() {
@@ -833,6 +1634,19 @@ function loadOverrides() {
 
 function saveOverrides() {
   localStorage.setItem("atlasImageOverrides", JSON.stringify(imageOverrides));
+}
+
+function loadCustomCases() {
+  try {
+    const items = JSON.parse(localStorage.getItem("atlasCustomCases") || "[]");
+    return Array.isArray(items) ? items.filter((item) => item?.id && item?.diagnosis) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveCustomCases() {
+  localStorage.setItem("atlasCustomCases", JSON.stringify(customCases));
 }
 
 function escapeHtml(value) {
@@ -862,18 +1676,24 @@ function patternLabel(id) {
 }
 
 function imageFor(item) {
+  if (item.imageUrl) return item.imageUrl;
   const override = imageOverrides[item.id];
   if (override?.url) return override.url;
+  if (!item.file) return "";
   return commonsImage(item.file);
 }
 
 function imageSourceFor(item) {
   const override = imageOverrides[item.id];
   if (override?.source) return override.source;
+  if (item.sourceUrl) return item.source || "Ảnh tùy chỉnh";
   return item.source;
 }
 
 function imageLinkFor(item) {
+  if (item.sourceUrl) return item.sourceUrl;
+  if (item.imageUrl) return item.imageUrl;
+  if (!item.file) return "#";
   return imageOverrides[item.id]?.sourceUrl || commonsSource(item.file);
 }
 
@@ -1056,12 +1876,15 @@ function renderDetail() {
         <a href="${escapeHtml(imageLinkFor(item))}" target="_blank" rel="noreferrer"><span>Nguồn ảnh</span>${escapeHtml(imageSourceFor(item))} ↗</a>
         ${links.map((link) => `<a href="${escapeHtml(link.url)}" target="_blank" rel="noreferrer"><span>Đọc nguồn</span>${escapeHtml(link.label)} ↗</a>`).join("")}
         <button class="btn" type="button" data-edit-image="${escapeHtml(item.id)}">Đổi ảnh này</button>
+        ${item.custom ? `<button class="btn danger" type="button" data-delete-custom="${escapeHtml(item.id)}">Xóa thẻ tự thêm</button>` : ""}
       </div>
     </div>
   `;
 
   const editButton = els.caseDetail.querySelector("[data-edit-image]");
   editButton?.addEventListener("click", () => openImageDialog(item.id));
+  const deleteButton = els.caseDetail.querySelector("[data-delete-custom]");
+  deleteButton?.addEventListener("click", () => deleteCustomCase(item.id));
 }
 
 function renderPoster() {
@@ -1166,6 +1989,166 @@ function openImageDialog(id = state.selectedId) {
   els.imageDialog.showModal();
 }
 
+function splitLines(value) {
+  return String(value || "")
+    .split(/\n+/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+function splitComma(value) {
+  return String(value || "")
+    .split(/[,;]+/)
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+}
+
+function normalizePattern(raw) {
+  const text = normalize(raw).replace(/\s+/g, "-");
+  const known = new Set(patterns.map(([id]) => id));
+  return known.has(text) ? text : text || "benign";
+}
+
+function populateCustomChapterOptions() {
+  els.customChapter.innerHTML = chapters
+    .filter((chapter) => chapter.id !== "all")
+    .map((chapter) => `<option value="${escapeHtml(chapter.id)}">${escapeHtml(chapter.name)}</option>`)
+    .join("");
+}
+
+function updateCustomCount() {
+  els.customCount.textContent = `${customCases.length} thẻ tự thêm`;
+}
+
+function clearCustomForm() {
+  els.customPattern.value = "";
+  els.customDiagnosis.value = "";
+  els.customEnglish.value = "";
+  els.customImageUrl.value = "";
+  els.customSourceUrl.value = "";
+  els.customMicro.value = "";
+  els.customReport.value = "";
+  els.customMemory.value = "";
+  els.customPitfall.value = "";
+  els.customMarkers.value = "";
+}
+
+function openCaseStudio() {
+  populateCustomChapterOptions();
+  updateCustomCount();
+  if (state.chapter !== "all") els.customChapter.value = state.chapter;
+  els.caseDialog.showModal();
+}
+
+function createCustomCase() {
+  const diagnosis = els.customDiagnosis.value.trim();
+  const imageUrl = els.customImageUrl.value.trim();
+  if (!diagnosis || !imageUrl) {
+    els.customJsonBox.value = "Cần nhập tối thiểu chẩn đoán tiếng Việt và URL ảnh.";
+    return null;
+  }
+
+  const chapter = els.customChapter.value || "thyroid";
+  const pattern = splitComma(els.customPattern.value).map(normalizePattern);
+  const markers = splitComma(els.customMarkers.value);
+  const createdAt = new Date().toISOString();
+  const id = `custom-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+
+  return {
+    id,
+    custom: true,
+    createdAt,
+    chapter,
+    diagnosis,
+    english: els.customEnglish.value.trim() || diagnosis,
+    imageUrl,
+    sourceUrl: els.customSourceUrl.value.trim() || imageUrl,
+    source: els.customSourceUrl.value.trim() ? "Nguồn tự nhập" : "Ảnh tự thêm",
+    file: "",
+    pattern: pattern.length ? pattern : ["benign"],
+    micro: splitLines(els.customMicro.value).length ? splitLines(els.customMicro.value) : ["Chưa nhập vi thể cần nhìn"],
+    report: splitLines(els.customReport.value).length ? splitLines(els.customReport.value) : ["Chưa nhập gợi ý báo cáo"],
+    memory: els.customMemory.value.trim() || "Chưa nhập điểm ghi nhớ.",
+    pitfall: els.customPitfall.value.trim() || "Chưa nhập bẫy chẩn đoán.",
+    markers: markers.length ? markers : ["Chưa nhập marker"],
+  };
+}
+
+function saveCustomCaseFromForm() {
+  const item = createCustomCase();
+  if (!item) return;
+  customCases.push(item);
+  cases.push(item);
+  saveCustomCases();
+  state.chapter = item.chapter;
+  state.pattern = "all";
+  state.query = "";
+  state.selectedId = item.id;
+  els.searchInput.value = "";
+  clearCustomForm();
+  updateCustomCount();
+  els.caseDialog.close();
+  updateStats();
+  renderAll();
+  els.caseDetail.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function deleteCustomCase(id) {
+  customCases = customCases.filter((item) => item.id !== id);
+  const index = cases.findIndex((item) => item.id === id);
+  if (index >= 0) cases.splice(index, 1);
+  saveCustomCases();
+  state.selectedId = filteredCases()[0]?.id || cases[0].id;
+  updateStats();
+  renderAll();
+}
+
+function exportCustomCases() {
+  els.customJsonBox.value = JSON.stringify(customCases, null, 2);
+  els.customJsonBox.focus();
+  els.customJsonBox.select();
+}
+
+function importCustomCases() {
+  try {
+    const incoming = JSON.parse(els.customJsonBox.value || "[]");
+    if (!Array.isArray(incoming)) throw new Error("JSON phải là một mảng.");
+    const cleaned = incoming
+      .filter((item) => item?.diagnosis && (item?.imageUrl || item?.file))
+      .map((item) => ({
+        ...item,
+        id: item.id?.startsWith("custom-") ? item.id : `custom-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`,
+        custom: true,
+        chapter: chapters.some((chapter) => chapter.id === item.chapter) ? item.chapter : "thyroid",
+        pattern: Array.isArray(item.pattern) && item.pattern.length ? item.pattern : ["benign"],
+        micro: Array.isArray(item.micro) && item.micro.length ? item.micro : ["Chưa nhập vi thể cần nhìn"],
+        report: Array.isArray(item.report) && item.report.length ? item.report : ["Chưa nhập gợi ý báo cáo"],
+        markers: Array.isArray(item.markers) && item.markers.length ? item.markers : ["Chưa nhập marker"],
+      }));
+    cases.splice(0, cases.length, ...cases.filter((item) => !item.custom), ...cleaned);
+    customCases = cleaned;
+    saveCustomCases();
+    updateCustomCount();
+    updateStats();
+    renderAll();
+    els.customJsonBox.value = `Đã nhập ${cleaned.length} thẻ tự thêm.`;
+  } catch (error) {
+    els.customJsonBox.value = `Không nhập được JSON: ${error.message}`;
+  }
+}
+
+function clearCustomCases() {
+  customCases = [];
+  for (let index = cases.length - 1; index >= 0; index -= 1) {
+    if (cases[index].custom) cases.splice(index, 1);
+  }
+  saveCustomCases();
+  updateCustomCount();
+  updateStats();
+  state.selectedId = filteredCases()[0]?.id || cases[0].id;
+  renderAll();
+}
+
 function bindEvents() {
   els.searchInput.addEventListener("input", () => {
     state.query = els.searchInput.value;
@@ -1182,6 +2165,7 @@ function bindEvents() {
   });
 
   els.openImageManager.addEventListener("click", () => openImageDialog(state.selectedId));
+  els.openCaseStudio.addEventListener("click", openCaseStudio);
 
   els.saveImage.addEventListener("click", () => {
     const item = cases.find((entry) => entry.id === state.selectedId) || cases[0];
@@ -1203,6 +2187,11 @@ function bindEvents() {
     els.imageDialog.close();
     renderAll();
   });
+
+  els.saveCustomCase.addEventListener("click", saveCustomCaseFromForm);
+  els.exportCustom.addEventListener("click", exportCustomCases);
+  els.importCustom.addEventListener("click", importCustomCases);
+  els.clearCustom.addEventListener("click", clearCustomCases);
 }
 
 function updateStats() {
@@ -1227,6 +2216,8 @@ function renderAll() {
 
 function init() {
   updateStats();
+  populateCustomChapterOptions();
+  updateCustomCount();
   renderSources();
   renderAll();
   bindEvents();
