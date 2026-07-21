@@ -8,6 +8,7 @@ Website tĩnh tiếng Việt dạng atlas giải phẫu bệnh: chia theo cơ qu
 - Cả 97 thẻ có nội dung học song ngữ Việt - Anh: đặc điểm vi thể/tế bào, gợi ý báo cáo, điểm ghi nhớ và bẫy chẩn đoán.
 - 70 thẻ có ảnh mở đã đối chiếu tên tệp và giấy phép; 27 thẻ còn lại hiện trạng thái chờ thay vì dùng ảnh gần giống hoặc sai thực thể.
 - Thư viện danh mục WHO/IARC gồm 14 quyển và 2.674 mục phân loại/thực thể lấy từ cấu trúc công khai chính thức.
+- 80 liên kết WHO Online đã được kiểm tra bằng tìm kiếm tiêu đề chính thức: 68 liên kết đúng thực thể và 12 liên kết tới thực thể cha được dán nhãn riêng; không gắn liên kết thực thể cho bệnh không thuộc phân loại u.
 - WHO Online hiện có bản beta ấn bản 6 cho hệ tiêu hóa và vú; atlas ghi chú riêng trạng thái này, còn liên kết thực thể đã kiểm tra thuộc ấn bản 5 vẫn được dán nhãn ấn bản 5 để tránh nhập nhằng.
 - Có tìm kiếm song ngữ toàn danh mục WHO, lọc theo quyển và mở thẻ học tiếng Việt khi atlas đã có nội dung tương ứng.
 - Các thực thể đã đối chiếu hiển thị mã hình thái ICD-O-4; tổn thương không tân sinh ghi rõ không áp dụng, còn mã phụ thuộc cấp độ/xâm nhập được giải thích riêng.
@@ -17,7 +18,8 @@ Website tĩnh tiếng Việt dạng atlas giải phẫu bệnh: chia theo cơ qu
 - Có trình tạo thẻ atlas để tự thêm: cơ quan, chẩn đoán, URL ảnh, vi thể cần nhìn, gợi ý báo cáo, điểm ghi nhớ, bẫy chẩn đoán và dấu ấn.
 - Có xuất/nhập JSON cho các thẻ tự thêm để sao lưu hoặc đưa vào mã nguồn công khai.
 - Ảnh nhúng ưu tiên nguồn mở có liên kết tệp gốc; WHO/IARC, PathologyOutlines, CAP và tài liệu Bộ Y tế được dùng để đối chiếu phân loại, vi thể, báo cáo và thuật ngữ tiếng Việt.
-- WebPathology được mở bằng liên kết gallery hoặc tìm kiếm đúng tên chẩn đoán. Atlas không sao chép hay nhúng hình ảnh WebPathology vì nội dung này có bản quyền.
+- Kho WebPathology gồm 1.004 URL gallery/danh mục duy nhất thuộc 18 nhóm cơ quan, lấy từ sitemap công khai và tìm được bằng tiếng Việt hoặc tiếng Anh.
+- WebPathology luôn được mở ở trang nguồn độc lập. Atlas không sao chép, tải lại, đóng khung hay nhúng hình ảnh WebPathology vì nội dung này có bản quyền.
 
 ## Chuẩn hóa thuật ngữ
 
@@ -45,6 +47,18 @@ python scripts/build-who-catalog.py
 
 Bộ sinh chỉ thu thập cấu trúc phân loại và tên thực thể. Nó không sao chép mô tả, bảng, tiêu chuẩn chẩn đoán hoặc hình ảnh của WHO Classification of Tumours Online.
 
+Tệp `who-diagnosis-links.js` chứa các `bookId/chapterId` đã kiểm tra qua tìm kiếm tiêu đề của WHO Online. Tệp không chứa tài khoản, mật khẩu, token đăng nhập hay nội dung thuê bao. Mỗi liên kết được gắn quan hệ `exact` (đúng thực thể) hoặc `parent` (thực thể cha) để giao diện không trình bày quá mức độ chính xác đã xác minh.
+
+## Cập nhật kho WebPathology
+
+Tệp `webpathology-catalog.js` được tạo từ sitemap công khai và tự khử trùng lặp giữa biến thể tên miền có/không có `www`:
+
+```powershell
+python scripts/build-webpathology-catalog.py
+```
+
+Bộ sinh chỉ lưu URL trang gallery/danh mục công khai. Không có tệp ảnh hoặc ảnh thu nhỏ WebPathology nào được tải vào repo.
+
 ## Dữ liệu kiểm định
 
 Tệp `atlas-curation.js` là lớp dữ liệu kiểm định của atlas: liên kết chủ đề PathologyOutlines, quyển và năm WHO, mã ICD-O-4, hệ thống Bethesda/FIGO khi phù hợp, tên tệp ảnh mở và trạng thái xác minh. Không thêm mã hoặc ảnh bằng suy đoán. Ảnh thay thế phải có trang tệp nguồn, giấy phép và mô tả khớp thực thể.
@@ -59,4 +73,4 @@ Với Vercel: import GitHub repo, chọn framework `Other`, để trống Build 
 
 ## Ranh giới nội dung
 
-Trang này không lưu tài khoản đăng nhập, không chứa dữ liệu bệnh án và không sao chép nguyên văn tài liệu có bản quyền. Danh pháp tiếng Anh trong thư viện WHO được giữ nguyên để bảo toàn tên chính thức; phần diễn giải tiếng Việt được biên soạn độc lập. WHO Classification of Tumours Online và PathologyOutlines được gắn liên kết để người học tự mở nguồn chính thống.
+Trang này không lưu tài khoản đăng nhập, không chứa dữ liệu bệnh án và không sao chép nguyên văn tài liệu có bản quyền. Danh pháp tiếng Anh trong thư viện WHO được giữ nguyên để bảo toàn tên chính thức; phần diễn giải tiếng Việt được biên soạn độc lập. WHO Classification of Tumours Online, PathologyOutlines và WebPathology được gắn liên kết để người học tự mở nguồn gốc.

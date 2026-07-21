@@ -172,19 +172,10 @@ const verifiedTopicLinks = {
 };
 Object.assign(verifiedTopicLinks, curation.topicLinks || {});
 
-// Direct WHO Blue Books topic links verified against Digestive System Tumours (5th ed.).
-// These pages may require the reader to sign in with their own WHO/IARC subscription.
-const verifiedWhoLinks = {
-  "colon-hyperplastic": `${IARC}/chaptercontent/31/57`,
-  "colon-ssl": `${IARC}/chaptercontent/31/57`,
-  "colon-tsa": `${IARC}/chaptercontent/31/57`,
-  "colon-adenoma": `${IARC}/chaptercontent/31/59`,
-  "colon-villous": `${IARC}/chaptercontent/31/59`,
-  "colon-high-grade-dysplasia": `${IARC}/chaptercontent/31/59`,
-  "colon-adeno": `${IARC}/chaptercontent/31/62`,
-  "colon-mucinous-adeno": `${IARC}/chaptercontent/31/62`,
-  "colon-signet-ring": `${IARC}/chaptercontent/31/62`,
-};
+// Direct entity identifiers were checked against WHO Classification of Tumours
+// Online search. These pages may require the reader's own WHO/IARC subscription.
+const whoDiagnosisCatalog = window.WHO_DIAGNOSIS_LINKS || { links: {} };
+const verifiedWhoMetadata = whoDiagnosisCatalog.links || {};
 
 // Tên tiếng Việt ưu tiên cách dùng trong hướng dẫn Bộ Y tế và danh pháp WHO.
 // Tên tiếng Anh vẫn được giữ riêng trong từng thẻ để hỗ trợ tra cứu song ngữ.
@@ -1973,7 +1964,7 @@ const sourceCards = [
   {
     title: "WebPathology",
     kind: "Thư viện ảnh tham khảo",
-    note: "Liên kết mở WebPathology ở cửa sổ riêng theo đúng tên chẩn đoán. Không sao chép hoặc nhúng ảnh vì nội dung WebPathology có bản quyền và cần xin phép trước khi đăng lại.",
+    note: "Kho liên kết được lập từ sitemap công khai, gồm gallery và danh mục ảnh mở ở cửa sổ riêng. Atlas không sao chép hoặc nhúng ảnh vì nội dung WebPathology có bản quyền và cần xin phép trước khi đăng lại.",
     url: "https://www.webpathology.com/",
   },
   {
@@ -2000,6 +1991,10 @@ const whoCatalog = window.WHO_ATLAS_CATALOG || { volumes: [], entries: [] };
 const whoVolumes = Array.isArray(whoCatalog.volumes) ? whoCatalog.volumes : [];
 const whoEntries = Array.isArray(whoCatalog.entries) ? whoCatalog.entries : [];
 const whoVolumeMap = new Map(whoVolumes.map((volume) => [volume.id, volume]));
+const webPathologyCatalog = window.WEBPATHOLOGY_CATALOG || { organs: [], entries: [] };
+const webPathologyOrgans = Array.isArray(webPathologyCatalog.organs) ? webPathologyCatalog.organs : [];
+const webPathologyEntries = Array.isArray(webPathologyCatalog.entries) ? webPathologyCatalog.entries : [];
+const webPathologyOrganMap = new Map(webPathologyOrgans.map((organ) => [organ.id, organ]));
 const whoVolumeChapters = {
   digestive: ["colon", "hpb", "soft"],
   breast: ["breast"],
@@ -2035,6 +2030,9 @@ let state = {
   whoVolume: "all",
   whoQuery: "",
   whoLimit: 36,
+  webPathOrgan: "all",
+  webPathQuery: "",
+  webPathLimit: 36,
 };
 
 let imageOverrides = loadOverrides();
@@ -2063,6 +2061,7 @@ const els = {
   statWho: document.getElementById("statWho"),
   statSources: document.getElementById("statSources"),
   sideWhoCount: document.getElementById("sideWhoCount"),
+  sideWebPathCount: document.getElementById("sideWebPathCount"),
   whoVolumeCount: document.getElementById("whoVolumeCount"),
   whoEntryCount: document.getElementById("whoEntryCount"),
   whoLinkedCount: document.getElementById("whoLinkedCount"),
@@ -2072,6 +2071,14 @@ const els = {
   whoResultSummary: document.getElementById("whoResultSummary"),
   whoCatalogGrid: document.getElementById("whoCatalogGrid"),
   whoLoadMore: document.getElementById("whoLoadMore"),
+  webPathOrganCount: document.getElementById("webPathOrganCount"),
+  webPathEntryCount: document.getElementById("webPathEntryCount"),
+  webPathSearchInput: document.getElementById("webPathSearchInput"),
+  webPathResetFilters: document.getElementById("webPathResetFilters"),
+  webPathOrganFilters: document.getElementById("webPathOrganFilters"),
+  webPathResultSummary: document.getElementById("webPathResultSummary"),
+  webPathologyGrid: document.getElementById("webPathologyGrid"),
+  webPathLoadMore: document.getElementById("webPathLoadMore"),
   imageDialog: document.getElementById("imageDialog"),
   imageDialogTitle: document.getElementById("imageDialogTitle"),
   imageUrlInput: document.getElementById("imageUrlInput"),
@@ -2218,6 +2225,88 @@ function filteredWhoEntries() {
   });
 }
 
+const webPathologyChapterOrgans = {
+  thyroid: ["endocrine"],
+  lung: ["pulmonary"],
+  colon: ["gastrointestinal"],
+  breast: ["breast"],
+  hpb: ["gastrointestinal"],
+  gyn: ["gynecologic"],
+  gu: ["genitourinary"],
+  skin: ["dermpath"],
+  heme: ["hematopathology"],
+  cns: ["neuropath"],
+  headneck: ["head-and-neck"],
+  soft: ["soft-tissue", "orthopedic"],
+  inflammation: ["infectious-disease"],
+};
+
+function prepareWebPathologyCatalog() {
+  webPathologyEntries.forEach((entry) => {
+    const organ = webPathologyOrganMap.get(entry.organ) || {};
+    entry.searchText = normalize([
+      entry.titleEn,
+      ...(entry.trailEn || []),
+      organ.nameEn,
+      organ.nameVi,
+      ...(organ.aliases || []),
+    ].join(" "));
+  });
+}
+
+function expandedWebPathologyQueries(value) {
+  const query = normalize(value);
+  if (!query) return [];
+  const expanded = new Set([query]);
+  cases.forEach((item) => {
+    const bilingualTerms = [item.diagnosis, item.english, ...(item.whoTerms || [])].map(normalize);
+    if (bilingualTerms.includes(query)) {
+      expanded.add(normalize(item.english));
+    }
+  });
+  return [...expanded];
+}
+
+function webPathologyQueryMatches(searchText, query) {
+  if (query.includes(" ") && searchText.includes(query)) return true;
+  const tokens = query.split(" ").filter((token) => token.length > 1);
+  const searchTokens = searchText.split(" ").filter(Boolean);
+  return tokens.length > 0 && tokens.every((token) => (
+    searchTokens.includes(token)
+    || (token.length >= 5 && searchTokens.some((candidate) => candidate.startsWith(token)))
+  ));
+}
+
+function filteredWebPathologyEntries() {
+  const queries = expandedWebPathologyQueries(state.webPathQuery);
+  return webPathologyEntries.filter((entry) => {
+    const organOk = state.webPathOrgan === "all" || entry.organ === state.webPathOrgan;
+    const queryOk = queries.length === 0 || queries.some((query) => webPathologyQueryMatches(entry.searchText, query));
+    return organOk && queryOk;
+  });
+}
+
+const exactWebPathologyCache = new Map();
+
+function exactWebPathologyEntryFor(item) {
+  if (exactWebPathologyCache.has(item.id)) return exactWebPathologyCache.get(item.id);
+  const target = normalize(item.english);
+  const allowedOrgans = webPathologyChapterOrgans[item.chapter] || [];
+  const match = webPathologyEntries.find((entry) => (
+    allowedOrgans.includes(entry.organ)
+    && normalize(entry.titleEn) === target
+  )) || null;
+  exactWebPathologyCache.set(item.id, match);
+  return match;
+}
+
+function whoLinkLabel(metadata) {
+  if (!metadata) return "WHO/IARC · danh mục quyển (không phải trang thực thể)";
+  if (metadata.relation === "exact") return `WHO/IARC ${metadata.edition} · đúng thực thể`;
+  if (metadata.relation === "related") return `WHO/IARC ${metadata.edition} · thực thể liên quan đã xác minh`;
+  return `WHO/IARC ${metadata.edition} · thực thể cha đã xác minh`;
+}
+
 function chapterById(id) {
   return chapters.find((chapter) => chapter.id === id) || chapters[0];
 }
@@ -2257,6 +2346,8 @@ function imageSearchLinkFor(item) {
 
 function webPathologyUrlFor(item) {
   if (item.webPathologyUrl) return item.webPathologyUrl;
+  const exactEntry = exactWebPathologyEntryFor(item);
+  if (exactEntry) return exactEntry.url;
   return `https://www.webpathology.com/search-result?query=${encodeURIComponent(item.english)}`;
 }
 
@@ -2345,13 +2436,15 @@ function bilingualMemory(item) {
 
 function officialLinks(item) {
   const chapter = chapterById(item.chapter);
-  const directWhoLink = verifiedWhoLinks[item.id];
+  const whoMetadata = verifiedWhoMetadata[item.id];
+  const directWhoLink = whoMetadata?.url;
   const chapterStandard = item.classification || curation.chapterStandards?.[item.chapter];
   const exactPathologyOutlines = verifiedTopicLinks[item.id];
+  const directWebPathology = item.webPathologyUrl || exactWebPathologyEntryFor(item)?.url;
   const links = [
-    { label: directWhoLink ? "WHO/IARC 5th ed · trang đúng thực thể" : "WHO/IARC · danh mục quyển (không phải trang thực thể)", url: directWhoLink || chapterStandard?.url || chapter.who },
+    { label: whoLinkLabel(whoMetadata), url: directWhoLink || chapterStandard?.url || chapter.who },
     { label: exactPathologyOutlines ? "PathologyOutlines · đúng chủ đề" : "PathologyOutlines · tìm đúng tên chẩn đoán", url: exactPathologyOutlines || pathologyOutlinesSearchUrl(item.english) },
-    { label: item.webPathologyUrl ? "WebPathology · gallery đúng chủ đề" : "WebPathology · tìm đúng tên chẩn đoán", url: webPathologyUrlFor(item) },
+    { label: directWebPathology ? "WebPathology · gallery đúng tên" : "WebPathology · tìm đúng tên chẩn đoán", url: directWebPathology || webPathologyUrlFor(item) },
   ];
   if (item.report.some((entry) => {
     const text = normalize(entry);
@@ -2666,9 +2759,12 @@ function renderWhoLibrary() {
     els.whoCatalogGrid.innerHTML = visible.map((entry) => {
       const volume = whoVolumeMap.get(entry.volumeId) || {};
       const linkedCase = whoMatches.get(entry);
-      const exactWhoUrl = linkedCase ? verifiedWhoLinks[linkedCase.id] : "";
+      const whoMetadata = linkedCase ? verifiedWhoMetadata[linkedCase.id] : null;
+      const exactWhoUrl = whoMetadata?.url || "";
       const exactPoUrl = linkedCase ? verifiedTopicLinks[linkedCase.id] : "";
-      const exactWebPathologyUrl = linkedCase?.webPathologyUrl || "";
+      const exactWebPathologyUrl = linkedCase
+        ? linkedCase.webPathologyUrl || exactWebPathologyEntryFor(linkedCase)?.url || ""
+        : "";
       const path = [entry.sectionEn, entry.groupEn, entry.categoryEn]
         .filter(Boolean)
         .filter((value, index, values) => values.indexOf(value) === index)
@@ -2684,9 +2780,9 @@ function renderWhoLibrary() {
           ${linkedCase?.icdo?.code ? `<span class="who-icdo">ICD-O-4 ${escapeHtml(linkedCase.icdo.code)}</span>` : ""}
           <p class="who-entry-path">${escapeHtml(path || volume.nameEn || "WHO Classification of Tumours")}</p>
           <div class="who-entry-actions">
-            <a href="${escapeHtml(exactWhoUrl || volume.sourceUrl || whoCatalog.source)}" target="_blank" rel="noreferrer">${exactWhoUrl ? "WHO 5th ed · đúng thực thể" : "Danh mục quyển WHO"} ↗</a>
+            <a href="${escapeHtml(exactWhoUrl || volume.sourceUrl || whoCatalog.source)}" target="_blank" rel="noreferrer">${exactWhoUrl ? escapeHtml(whoLinkLabel(whoMetadata)) : "Danh mục quyển WHO"} ↗</a>
             <a href="${escapeHtml(exactPoUrl || pathologyOutlinesSearchUrl(entry.nameEn))}" target="_blank" rel="noreferrer">${exactPoUrl ? "PathologyOutlines đúng chủ đề" : "Tìm trên PathologyOutlines"} ↗</a>
-            <a href="${escapeHtml(linkedCase ? webPathologyUrlFor(linkedCase) : webPathologyEntryUrl(entry))}" target="_blank" rel="noreferrer">${exactWebPathologyUrl ? "WebPathology: gallery trực tiếp" : "WebPathology: tìm đúng tên"} ↗</a>
+            <a href="${escapeHtml(exactWebPathologyUrl || (linkedCase ? webPathologyUrlFor(linkedCase) : webPathologyEntryUrl(entry)))}" target="_blank" rel="noreferrer">${exactWebPathologyUrl ? "WebPathology: gallery đúng tên" : "WebPathology: tìm đúng tên"} ↗</a>
             ${linkedCase ? `<button type="button" data-who-case="${escapeHtml(linkedCase.id)}">Mở thẻ học song ngữ</button>` : ""}
           </div>
         </article>
@@ -2704,6 +2800,58 @@ function renderWhoLibrary() {
   });
   els.whoCatalogGrid.querySelectorAll("[data-who-case]").forEach((button) => {
     button.addEventListener("click", () => openAtlasCaseFromWho(button.dataset.whoCase));
+  });
+}
+
+function renderWebPathologyLibrary() {
+  const filtered = filteredWebPathologyEntries();
+  const visible = filtered.slice(0, state.webPathLimit);
+  els.webPathOrganCount.textContent = webPathologyOrgans.length.toLocaleString("vi-VN");
+  els.webPathEntryCount.textContent = webPathologyEntries.length.toLocaleString("vi-VN");
+
+  const allButton = `
+    <button class="webpath-organ-button ${state.webPathOrgan === "all" ? "active" : ""}" type="button" data-webpath-organ="all">
+      Tất cả <em>${webPathologyEntries.length.toLocaleString("vi-VN")}</em>
+    </button>
+  `;
+  const organButtons = webPathologyOrgans.map((organ) => `
+    <button class="webpath-organ-button ${state.webPathOrgan === organ.id ? "active" : ""}" type="button" data-webpath-organ="${escapeHtml(organ.id)}" title="${escapeHtml(organ.nameEn)}">
+      ${escapeHtml(organ.nameVi)} <em>${Number(organ.entryCount).toLocaleString("vi-VN")}</em>
+    </button>
+  `).join("");
+  els.webPathOrganFilters.innerHTML = allButton + organButtons;
+
+  els.webPathResultSummary.textContent = filtered.length
+    ? `${filtered.length.toLocaleString("vi-VN")} liên kết phù hợp · đang hiển thị ${visible.length.toLocaleString("vi-VN")}`
+    : "Không tìm thấy gallery phù hợp. Hãy thử tên chẩn đoán tiếng Anh ngắn hơn hoặc chọn nhóm cơ quan khác.";
+
+  if (!visible.length) {
+    els.webPathologyGrid.innerHTML = `<div class="empty-state">Không có liên kết WebPathology phù hợp với bộ lọc hiện tại.</div>`;
+  } else {
+    els.webPathologyGrid.innerHTML = visible.map((entry) => {
+      const organ = webPathologyOrganMap.get(entry.organ) || {};
+      const trail = (entry.trailEn || []).slice(0, -1).join(" › ");
+      return `
+        <article class="webpath-card">
+          <div class="webpath-card-meta">
+            <span>${escapeHtml(organ.nameVi || entry.organ)}</span>
+            <span>${escapeHtml(organ.nameEn || "WebPathology")}</span>
+          </div>
+          <h3 lang="en">${escapeHtml(entry.titleEn)}</h3>
+          <p lang="en">${escapeHtml(trail || organ.nameEn || "Image gallery")}</p>
+          <a href="${escapeHtml(entry.url)}" target="_blank" rel="noreferrer">Mở gallery trên WebPathology ↗</a>
+        </article>
+      `;
+    }).join("");
+  }
+
+  els.webPathLoadMore.hidden = visible.length >= filtered.length;
+  els.webPathOrganFilters.querySelectorAll("[data-webpath-organ]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.webPathOrgan = button.dataset.webpathOrgan;
+      state.webPathLimit = 36;
+      renderWebPathologyLibrary();
+    });
   });
 }
 
@@ -2958,6 +3106,25 @@ function bindEvents() {
     renderWhoLibrary();
   });
 
+  els.webPathSearchInput.addEventListener("input", () => {
+    state.webPathQuery = els.webPathSearchInput.value;
+    state.webPathLimit = 36;
+    renderWebPathologyLibrary();
+  });
+
+  els.webPathResetFilters.addEventListener("click", () => {
+    state.webPathOrgan = "all";
+    state.webPathQuery = "";
+    state.webPathLimit = 36;
+    els.webPathSearchInput.value = "";
+    renderWebPathologyLibrary();
+  });
+
+  els.webPathLoadMore.addEventListener("click", () => {
+    state.webPathLimit += 36;
+    renderWebPathologyLibrary();
+  });
+
   els.openImageManager.addEventListener("click", () => openImageDialog(state.selectedId));
   els.openCaseStudio.addEventListener("click", openCaseStudio);
 
@@ -2994,6 +3161,7 @@ function updateStats() {
   els.statWho.textContent = whoEntries.length.toLocaleString("vi-VN");
   els.statSources.textContent = String(sourceCards.length);
   els.sideWhoCount.textContent = whoEntries.length.toLocaleString("vi-VN");
+  els.sideWebPathCount.textContent = webPathologyEntries.length.toLocaleString("vi-VN");
 }
 
 function renderAll() {
@@ -3012,11 +3180,13 @@ function renderAll() {
 
 function init() {
   prepareWhoCatalog();
+  prepareWebPathologyCatalog();
   updateStats();
   populateCustomChapterOptions();
   updateCustomCount();
   renderSources();
   renderWhoLibrary();
+  renderWebPathologyLibrary();
   renderAll();
   bindEvents();
 }

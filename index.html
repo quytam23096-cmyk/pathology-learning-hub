@@ -35,6 +35,11 @@
           <strong id="sideWhoCount">0</strong>
         </a>
 
+        <a class="side-library-link" href="#webPathologyLibrary">
+          <span>Kho ảnh WebPathology</span>
+          <strong id="sideWebPathCount">0</strong>
+        </a>
+
         <nav class="side-nav" aria-label="Danh sách cơ quan">
           <div class="side-title">Cơ quan</div>
           <div id="organNav"></div>
@@ -160,6 +165,44 @@
           <div id="galleryGrid" class="gallery-grid"></div>
         </section>
 
+        <section id="webPathologyLibrary" class="webpath-library section" aria-labelledby="webPathologyTitle">
+          <div class="webpath-heading">
+            <div>
+              <span class="eyebrow">Kho liên kết ảnh WebPathology</span>
+              <h2 id="webPathologyTitle">Mở gallery đúng chủ đề trên nguồn gốc</h2>
+              <p>
+                Chỉ mục được tạo từ sitemap công khai của WebPathology. Mỗi kết quả mở trang gallery toàn màn hình trên
+                WebPathology; atlas không sao chép, tải lại hoặc nhúng hình ảnh có bản quyền.
+              </p>
+            </div>
+            <div class="webpath-metrics">
+              <div><strong id="webPathOrganCount">0</strong><span>nhóm cơ quan</span></div>
+              <div><strong id="webPathEntryCount">0</strong><span>liên kết công khai</span></div>
+            </div>
+          </div>
+
+          <div class="webpath-controls">
+            <label for="webPathSearchInput">
+              Tìm tiếng Việt hoặc tiếng Anh
+              <input id="webPathSearchInput" type="search" placeholder="VD: tuyến giáp, thyroid, papillary carcinoma, lymphoma..." autocomplete="off" />
+            </label>
+            <button class="btn" id="webPathResetFilters" type="button">Xóa bộ lọc</button>
+          </div>
+          <div id="webPathOrganFilters" class="webpath-organ-filters" aria-label="Lọc kho WebPathology theo cơ quan"></div>
+          <div class="webpath-result-bar">
+            <p id="webPathResultSummary">Đang nạp kho liên kết...</p>
+            <a href="https://www.webpathology.com/" target="_blank" rel="noreferrer">Mở WebPathology ↗</a>
+          </div>
+          <div id="webPathologyGrid" class="webpath-grid"></div>
+          <div class="who-load-row">
+            <button class="btn" id="webPathLoadMore" type="button">Hiện thêm liên kết</button>
+          </div>
+          <p class="who-rights-note">
+            WebPathology giữ bản quyền nội dung và hình ảnh. Kho này chỉ lưu URL công khai do sitemap cung cấp và luôn
+            mở trang nguồn độc lập; không có tệp ảnh WebPathology nào được lưu trong mã nguồn của Atlas GPB.
+          </p>
+        </section>
+
         <section id="sources" class="section">
           <div class="section-heading">
             <div>
@@ -282,6 +325,8 @@
     </div>
 
     <script src="./who-catalog.js"></script>
+    <script src="./who-diagnosis-links.js"></script>
+    <script src="./webpathology-catalog.js"></script>
     <script src="./atlas-curation.js"></script>
     <script src="./atlas-bilingual.js"></script>
     <script src="./app.js"></script>
