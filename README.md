@@ -5,8 +5,10 @@ Website tĩnh tiếng Việt dạng atlas giải phẫu bệnh: chia theo cơ qu
 ## Điểm chính
 
 - 13 nhóm cơ quan, 97 thẻ chẩn đoán mẫu.
+- 70 thẻ có ảnh mở đã đối chiếu tên tệp và giấy phép; 27 thẻ còn lại hiện trạng thái chờ thay vì dùng ảnh gần giống hoặc sai thực thể.
 - Thư viện danh mục WHO/IARC gồm 14 quyển và 2.674 mục phân loại/thực thể lấy từ cấu trúc công khai chính thức.
-- Có tìm kiếm toàn danh mục WHO, lọc theo quyển và mở thẻ học tiếng Việt khi atlas đã có nội dung tương ứng.
+- Có tìm kiếm song ngữ toàn danh mục WHO, lọc theo quyển và mở thẻ học tiếng Việt khi atlas đã có nội dung tương ứng.
+- Các thực thể đã đối chiếu hiển thị mã hình thái ICD-O-4; tổn thương không tân sinh ghi rõ không áp dụng, còn mã phụ thuộc cấp độ/xâm nhập được giải thích riêng.
 - Có bộ lọc theo cơ quan, kiểu cấu trúc và tìm kiếm tiếng Việt/tiếng Anh.
 - Có poster ghi nhớ theo cơ quan, phù hợp kiểu học bằng hình ảnh.
 - Có nút thay ảnh cho từng chẩn đoán, lưu cục bộ trên trình duyệt.
@@ -39,6 +41,10 @@ python scripts/build-who-catalog.py
 ```
 
 Bộ sinh chỉ thu thập cấu trúc phân loại và tên thực thể. Nó không sao chép mô tả, bảng, tiêu chuẩn chẩn đoán hoặc hình ảnh của WHO Classification of Tumours Online.
+
+## Dữ liệu kiểm định
+
+Tệp `atlas-curation.js` là lớp dữ liệu kiểm định của atlas: liên kết chủ đề PathologyOutlines, quyển và năm WHO, mã ICD-O-4, hệ thống Bethesda/FIGO khi phù hợp, tên tệp ảnh mở và trạng thái xác minh. Không thêm mã hoặc ảnh bằng suy đoán. Ảnh thay thế phải có trang tệp nguồn, giấy phép và mô tả khớp thực thể.
 
 ## Deploy miễn phí
 

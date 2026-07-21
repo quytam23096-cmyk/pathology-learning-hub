@@ -27,7 +27,7 @@
 
         <label class="search-box" for="searchInput">
           <span>Tìm nhanh</span>
-          <input id="searchInput" type="search" placeholder="VD: tuyến giáp, PTC, polyp, TTF-1..." autocomplete="off" />
+          <input id="searchInput" type="search" placeholder="VD: tuyến giáp, thyroid, PTC, TTF-1..." autocomplete="off" />
         </label>
 
         <a class="side-library-link" href="#whoLibrary">
@@ -54,8 +54,8 @@
             <span class="eyebrow">Atlas giải phẫu bệnh</span>
             <h1>Nhìn ảnh trước, nhớ chẩn đoán sau.</h1>
             <p>
-              Mỗi cơ quan được chia thành các chẩn đoán thường gặp. Mỗi thẻ có ảnh vi thể, dấu hiệu cần nhìn,
-              bẫy dễ nhầm, gợi ý báo cáo và liên kết nguồn chính thống để đọc sâu hơn.
+              Mỗi cơ quan được chia thành các chẩn đoán song ngữ. Thẻ học kết hợp ảnh đã xác minh, dấu hiệu vi thể,
+              HMMD định hướng, ICD-O-4 và liên kết WHO/IARC, PathologyOutlines để đối chiếu.
             </p>
             <div class="hero-actions">
               <a class="btn primary" href="#atlasBoard">Mở atlas</a>
@@ -78,8 +78,8 @@
               <span class="eyebrow">Bản đồ phân loại WHO/IARC</span>
               <h2 id="whoLibraryTitle">Tra cứu toàn bộ cấu trúc công khai</h2>
               <p>
-                Danh mục giữ nguyên tên tiếng Anh chính thức để tránh sai danh pháp. Giao diện, hướng dẫn và
-                các thẻ học chuyên sâu được biên soạn bằng tiếng Việt.
+                Danh mục giữ nguyên tên tiếng Anh chính thức, đồng thời liên kết tên tiếng Việt và ICD-O-4 ở
+                các thực thể đã đối chiếu. Tìm kiếm hỗ trợ cả tiếng Việt lẫn tiếng Anh.
               </p>
             </div>
             <div class="who-library-metrics">
@@ -92,7 +92,7 @@
           <div class="who-catalog-controls">
             <label for="whoSearchInput">
               Tìm danh pháp WHO
-              <input id="whoSearchInput" type="search" placeholder="VD: papillary thyroid carcinoma, glioblastoma, lymphoma..." autocomplete="off" />
+              <input id="whoSearchInput" type="search" placeholder="VD: ung thư tuyến giáp thể nhú / papillary thyroid carcinoma..." autocomplete="off" />
             </label>
             <button class="btn" id="whoResetFilters" type="button">Xóa bộ lọc</button>
           </div>
@@ -280,6 +280,7 @@
     </div>
 
     <script src="./who-catalog.js"></script>
+    <script src="./atlas-curation.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>

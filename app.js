@@ -3,6 +3,7 @@ const WCT = "https://whobluebooks.iarc.fr/structures";
 const IARC = "https://tumourclassification.iarc.who.int";
 const CAP = "https://www.cap.org/protocols-and-guidelines/cancer-protocols/current-cancer-protocols/";
 const COMMONS_CATEGORY = "https://commons.wikimedia.org/wiki/Category:Histopathology";
+const curation = window.ATLAS_CURATION || {};
 
 function commonsImage(file) {
   return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=1100`;
@@ -167,6 +168,7 @@ const verifiedTopicLinks = {
   "breast-idc": `${PO}/topic/breastmalignantductalnos.html`,
   "cervix-scc": `${PO}/topic/cervixscc.html`,
 };
+Object.assign(verifiedTopicLinks, curation.topicLinks || {});
 
 // Direct WHO Blue Books topic links verified against Digestive System Tumours (5th ed.).
 // These pages may require the reader to sign in with their own WHO/IARC subscription.
@@ -469,6 +471,7 @@ const medicalTermRules = [
   [/scalloping/gi, "khía lõm"],
   [/colorectal/gi, "đại trực tràng"],
   [/enteric/gi, "kiểu ruột"],
+  [/\bcore\b/gi, "mảnh sinh thiết kim lõi"],
   [/cribriform/gi, "dạng sàng"],
   [/\blayer\b/gi, "lớp"],
   [/\bwhorls?\b/gi, "cấu trúc xoáy"],
@@ -1879,6 +1882,44 @@ const studioBoosterCases = [
 cases.push(...studioBoosterCases);
 cases.forEach(standardizeBuiltinCase);
 
+function applyVerifiedCuration(item) {
+  const metadata = curation.caseMetadata?.[item.id] || {};
+  const legacyImage = curation.verifiedLegacyImages?.[item.id];
+  const replacement = curation.imageReplacements?.[item.id];
+
+  Object.assign(item, metadata);
+  item.classification = curation.chapterStandards?.[item.chapter] || null;
+  if (item.chapter === "thyroid" && !item.systems) {
+    item.systems = [{
+      label: "Bethesda 2023",
+      note: "Chỉ áp dụng cho tế bào học FNA tuyến giáp; không thay thế chẩn đoán mô bệnh học của thực thể này.",
+      url: curation.sources?.bethesda2023 || "https://journals.sagepub.com/doi/10.1089/thy.2023.0141",
+    }];
+  }
+  item.imageVerified = false;
+  item.imageKind = "Chưa xác minh";
+  item.imageNote = "Ảnh cũ không được hiển thị vì chưa đủ bằng chứng khớp chính xác với chẩn đoán.";
+
+  if (legacyImage) {
+    item.imageVerified = true;
+    item.imageKind = legacyImage.kind || "Vi thể";
+    item.imageNote = legacyImage.note || "Ảnh mở đã được đối chiếu với tên chẩn đoán và trang tệp gốc.";
+  }
+
+  if (replacement) {
+    item.file = replacement.file;
+    item.source = replacement.source;
+    item.sourceUrl = replacement.sourceUrl;
+    item.imageVerified = true;
+    item.imageKind = replacement.kind || "Vi thể";
+    item.imageNote = replacement.note || "Ảnh mở đã được đối chiếu với tên chẩn đoán và trang tệp gốc.";
+  }
+
+  return item;
+}
+
+cases.forEach(applyVerifiedCuration);
+
 const sourceCards = [
   {
     title: "WHO/IARC Blue Books",
@@ -1915,6 +1956,24 @@ const sourceCards = [
     kind: "Ảnh mở minh họa",
     note: "Ảnh nhúng trong atlas có liên kết đến tệp gốc để kiểm tra tác giả và giấy phép. Có thể thay ảnh bằng nguồn của bạn.",
     url: COMMONS_CATEGORY,
+  },
+  {
+    title: "ICD-O-4",
+    kind: "Mã hình thái ung thư",
+    note: "International Classification of Diseases for Oncology (Phân loại Bệnh Quốc tế về Ung thư), bản ICD-O-4 do IARC công bố ngày 20/07/2026. Atlas chỉ hiện mã đã đối chiếu; mã vị trí giải phẫu phụ thuộc đúng vị trí lấy mẫu.",
+    url: curation.sources?.icdo4 || `${IARC}/icd-o-4/`,
+  },
+  {
+    title: "The Bethesda System 2023",
+    kind: "Tế bào học tuyến giáp",
+    note: "Hệ thống sáu nhóm dành cho FNA tuyến giáp. Không dùng Bethesda để thay thế chẩn đoán mô bệnh học.",
+    url: curation.sources?.bethesda2023 || "https://journals.sagepub.com/doi/10.1089/thy.2023.0141",
+  },
+  {
+    title: "FIGO 2023 - nội mạc tử cung",
+    kind: "Phân giai đoạn",
+    note: "Chỉ gắn ở các thẻ ung thư nội mạc tử cung phù hợp; phân giai đoạn cần đầy đủ dữ liệu giải phẫu bệnh, phân tử và lâm sàng/phẫu thuật.",
+    url: curation.sources?.figo2023Endometrium || "https://pmc.ncbi.nlm.nih.gov/articles/PMC10482588/",
   },
 ];
 
@@ -2081,6 +2140,12 @@ function findAtlasCaseForWho(entry) {
   const aliasId = whoEntryAliases[`${entry.volumeId}|${target}`];
   if (aliasId) return cases.find((item) => item.id === aliasId) || null;
 
+  const curatedAlias = cases.find((item) => (
+    Array.isArray(item.whoTerms)
+    && item.whoTerms.some((term) => normalizeWhoName(term) === target)
+  ));
+  if (curatedAlias) return curatedAlias;
+
   const allowedChapters = whoVolumeChapters[entry.volumeId] || [];
   return cases.find((item) => (
     allowedChapters.includes(item.chapter)
@@ -2091,6 +2156,7 @@ function findAtlasCaseForWho(entry) {
 function prepareWhoCatalog() {
   whoMatches = new Map();
   whoEntries.forEach((entry) => {
+    const linkedCase = findAtlasCaseForWho(entry);
     entry.searchText = normalize([
       entry.nameEn,
       entry.sectionEn,
@@ -2098,17 +2164,37 @@ function prepareWhoCatalog() {
       entry.categoryEn,
       whoVolumeMap.get(entry.volumeId)?.nameVi,
       whoVolumeMap.get(entry.volumeId)?.nameEn,
+      linkedCase?.diagnosis,
+      linkedCase?.english,
+      linkedCase?.icdo?.code,
+      ...(linkedCase?.whoTerms || []),
     ].join(" "));
-    const linkedCase = findAtlasCaseForWho(entry);
     if (linkedCase) whoMatches.set(entry, linkedCase);
   });
 }
 
+function translatedWhoQueryGroups(value) {
+  const query = normalize(value);
+  if (!query) return [];
+  const groups = [];
+  Object.entries(curation.vietnameseWhoQueryMap || {}).forEach(([vietnamese, englishTerms]) => {
+    const key = normalize(vietnamese);
+    if (!query.includes(key)) return;
+    if (key === "ung thu bieu mo tuyen" && query.includes("tuyen giap")) return;
+    groups.push((englishTerms || []).map(normalize));
+  });
+  return groups;
+}
+
 function filteredWhoEntries() {
   const query = normalize(state.whoQuery);
+  const translatedGroups = translatedWhoQueryGroups(state.whoQuery);
   return whoEntries.filter((entry) => {
     const volumeOk = state.whoVolume === "all" || entry.volumeId === state.whoVolume;
-    const queryOk = !query || entry.searchText.includes(query);
+    const directMatch = !query || entry.searchText.includes(query);
+    const translatedMatch = translatedGroups.length > 0
+      && translatedGroups.every((group) => group.some((term) => entry.searchText.includes(term)));
+    const queryOk = directMatch || translatedMatch;
     return volumeOk && queryOk;
   });
 }
@@ -2125,6 +2211,7 @@ function imageFor(item) {
   if (item.imageUrl) return item.imageUrl;
   const override = imageOverrides[item.id];
   if (override?.url) return override.url;
+  if (!item.custom && item.imageVerified !== true) return "";
   if (!item.file) return "";
   return commonsImage(item.file);
 }
@@ -2137,10 +2224,16 @@ function imageSourceFor(item) {
 }
 
 function imageLinkFor(item) {
+  const override = imageOverrides[item.id];
+  if (override?.sourceUrl) return override.sourceUrl;
   if (item.sourceUrl) return item.sourceUrl;
   if (item.imageUrl) return item.imageUrl;
   if (!item.file) return "#";
-  return imageOverrides[item.id]?.sourceUrl || commonsSource(item.file);
+  return commonsSource(item.file);
+}
+
+function imageSearchLinkFor(item) {
+  return `https://commons.wikimedia.org/w/index.php?search=${encodeURIComponent(`${item.english} histopathology`)}&title=Special:MediaSearch&type=image`;
 }
 
 function allText(item) {
@@ -2155,6 +2248,9 @@ function allText(item) {
     item.memory,
     item.pitfall,
     item.markers.join(" "),
+    item.icdo?.code,
+    item.classification?.label,
+    (item.whoTerms || []).join(" "),
   ].join(" "));
 }
 
@@ -2172,11 +2268,23 @@ function safeImageAttrs(item) {
   return `src="${escapeHtml(imageFor(item))}" alt="${escapeHtml(item.diagnosis)}" loading="lazy" onerror="this.style.display='none'; this.parentElement.classList.add('image-missing')"`;
 }
 
+function imageMarkup(item, variant = "card") {
+  if (imageFor(item)) return `<img class="atlas-image ${escapeHtml(variant)}" ${safeImageAttrs(item)} />`;
+  return `
+    <span class="image-placeholder ${escapeHtml(variant)}" role="img" aria-label="Chưa có ảnh đã xác minh cho ${escapeHtml(item.diagnosis)}">
+      <span class="image-placeholder-icon" aria-hidden="true">⌕</span>
+      <strong>Chưa có ảnh đã xác minh</strong>
+      <small>Không dùng ảnh gần giống để tránh học sai</small>
+    </span>
+  `;
+}
+
 function officialLinks(item) {
   const chapter = chapterById(item.chapter);
   const directWhoLink = verifiedWhoLinks[item.id];
+  const chapterStandard = item.classification || curation.chapterStandards?.[item.chapter];
   const links = [
-    { label: directWhoLink ? "WHO/IARC · đúng chẩn đoán" : "WHO/IARC · chương cơ quan", url: directWhoLink || chapter.who },
+    { label: directWhoLink ? "WHO/IARC · đúng chẩn đoán" : "WHO/IARC · quyển/chương", url: directWhoLink || chapterStandard?.url || chapter.who },
     { label: "PathologyOutlines", url: verifiedTopicLinks[item.id] || chapter.po },
   ];
   if (item.report.some((entry) => {
@@ -2268,12 +2376,13 @@ function renderDiagnosisGrid() {
     const chapter = chapterById(item.chapter);
     return `
       <button class="diagnosis-card ${item.id === state.selectedId ? "active" : ""}" type="button" data-case="${escapeHtml(item.id)}">
-        <img ${safeImageAttrs(item)} />
+        ${imageMarkup(item, "card-image")}
         <span class="organ-badge" style="--badge:${escapeHtml(chapter.color)}">${escapeHtml(chapter.name)}</span>
         <strong>${escapeHtml(item.diagnosis)}</strong>
         <em>${escapeHtml(item.english)}</em>
         <p>${escapeHtml(item.micro.slice(0, 2).join(" · "))}</p>
         <small>${escapeHtml(item.pattern.slice(0, 3).map(patternLabel).join(" / "))}</small>
+        ${item.icdo?.code ? `<span class="icdo-chip">ICD-O-4 ${escapeHtml(item.icdo.code)}</span>` : ""}
       </button>
     `;
   }).join("");
@@ -2292,38 +2401,86 @@ function renderDetail() {
   state.selectedId = item.id;
   const chapter = chapterById(item.chapter);
   const links = officialLinks(item);
+  const imageUrl = imageFor(item);
+  const imageAvailable = Boolean(imageUrl);
+  const userManagedImage = Boolean(item.imageUrl || imageOverrides[item.id]?.url || item.custom);
+  const imageReviewLabel = userManagedImage
+    ? "Ảnh người dùng thêm"
+    : imageAvailable
+      ? "Đã đối chiếu tên tệp"
+      : "Chưa có ảnh đủ điều kiện";
+  const imageReviewNote = userManagedImage
+    ? "Ảnh tùy chỉnh chưa được atlas kiểm định; cần tự xác nhận chẩn đoán, quyền sử dụng và nguồn."
+    : item.imageNote || "Chỉ nhúng ảnh mở có trang nguồn rõ ràng.";
+  const imageLink = imageAvailable ? imageLinkFor(item) : imageSearchLinkFor(item);
+  const imageAction = imageAvailable ? "Mở trang tệp và giấy phép" : "Tìm ảnh mở theo đúng chẩn đoán";
+  const icdo = item.icdo || {
+    code: "Chưa đối chiếu",
+    version: "ICD-O-4",
+    note: "Không suy đoán mã. Mục này sẽ chỉ hiện mã sau khi đối chiếu bảng ICD-O-4 chính thức.",
+  };
+  const standard = item.classification || curation.chapterStandards?.[item.chapter];
 
-  document.documentElement.style.setProperty("--hero-image", `url("${imageFor(item)}")`);
+  if (imageUrl) document.documentElement.style.setProperty("--hero-image", `url("${imageUrl}")`);
 
   els.caseDetail.innerHTML = `
-    <div class="detail-image">
-      <img ${safeImageAttrs(item)} />
-      <div class="image-credit">Ảnh: ${escapeHtml(imageSourceFor(item))}</div>
+    <div class="detail-image ${imageAvailable ? "verified" : "unverified"}">
+      ${imageMarkup(item, "detail-figure")}
+      <div class="image-credit">
+        <strong>${escapeHtml(item.imageKind || (imageAvailable ? "Ảnh minh họa" : "Chưa có ảnh"))}</strong>
+        <span>${escapeHtml(imageAvailable ? imageSourceFor(item) : "Ảnh cũ không phù hợp đã được ẩn")}</span>
+      </div>
     </div>
     <div class="detail-copy">
       <span class="eyebrow">${escapeHtml(chapter.name)} · ${escapeHtml(item.pattern.map(patternLabel).join(" / "))}</span>
       <h2>${escapeHtml(item.diagnosis)}</h2>
       <p class="english">${escapeHtml(item.english)}</p>
+      <div class="classification-strip">
+        <div>
+          <span>Phân loại / Classification</span>
+          <strong>${escapeHtml(standard ? `${standard.label} · ${standard.edition}${standard.year ? ` (${standard.year})` : ""}` : "Chưa gắn phân loại")}</strong>
+        </div>
+        <div>
+          <span>Mã hình thái / Morphology code</span>
+          <strong>${escapeHtml(`${icdo.version || "ICD-O-4"} · ${icdo.code}`)}</strong>
+          <small>${escapeHtml(icdo.note || "Mã vị trí giải phẫu (topography) phụ thuộc chính xác vào vị trí bệnh phẩm.")}</small>
+        </div>
+        <div>
+          <span>Kiểm định ảnh / Image review</span>
+          <strong>${escapeHtml(imageReviewLabel)}</strong>
+          <small>${escapeHtml(imageReviewNote)}</small>
+        </div>
+      </div>
+      ${(item.systems || []).map((system) => `
+        <a class="system-note" href="${escapeHtml(system.url)}" target="_blank" rel="noreferrer">
+          <strong>${escapeHtml(system.label)}</strong>
+          <span>${escapeHtml(system.note)}</span>
+        </a>
+      `).join("")}
       <div class="detail-grid">
         <section>
-          <h3>Vi thể cần nhìn</h3>
+          <h3>Đặc điểm vi thể <span>/ Microscopic features</span></h3>
           <ul>${item.micro.map((entry) => `<li>${escapeHtml(entry)}</li>`).join("")}</ul>
         </section>
         <section>
-          <h3>Gợi ý báo cáo</h3>
+          <h3>Gợi ý báo cáo <span>/ Reporting checklist</span></h3>
           <ul>${item.report.map((entry) => `<li>${escapeHtml(entry)}</li>`).join("")}</ul>
         </section>
         <section>
-          <h3>Điểm ghi nhớ</h3>
+          <h3>Điểm ghi nhớ <span>/ Memory point</span></h3>
           <p>${escapeHtml(item.memory)}</p>
-          <p><strong>Dễ nhầm:</strong> ${escapeHtml(item.pitfall)}</p>
+          <p><strong>Dễ nhầm / Pitfall:</strong> ${escapeHtml(item.pitfall)}</p>
         </section>
+      </div>
+      <div class="marker-heading">
+        <strong>HMMD định hướng / Suggested IHC</strong>
+        <span>Chọn panel theo hình thái và chẩn đoán phân biệt; không diễn giải một marker đơn độc.</span>
       </div>
       <div class="tag-row">
         ${item.markers.map((marker) => `<span>${escapeHtml(marker)}</span>`).join("")}
       </div>
       <div class="link-row">
-        <a href="${escapeHtml(imageLinkFor(item))}" target="_blank" rel="noreferrer"><span>Nguồn ảnh</span>${escapeHtml(imageSourceFor(item))} ↗</a>
+        <a href="${escapeHtml(imageLink)}" target="_blank" rel="noreferrer"><span>Nguồn ảnh / Image source</span>${escapeHtml(imageAction)} ↗</a>
         ${links.map((link) => `<a href="${escapeHtml(link.url)}" target="_blank" rel="noreferrer"><span>Đọc nguồn</span>${escapeHtml(link.label)} ↗</a>`).join("")}
         <button class="btn" type="button" data-edit-image="${escapeHtml(item.id)}">Đổi ảnh này</button>
         ${item.custom ? `<button class="btn danger" type="button" data-delete-custom="${escapeHtml(item.id)}">Xóa thẻ tự thêm</button>` : ""}
@@ -2352,7 +2509,7 @@ function renderPoster() {
   els.memoryPoster.innerHTML = pool.map((item, index) => {
     return `
       <article class="memory-card" style="--poster-color:${escapeHtml(chapterById(item.chapter).color)}">
-        <img ${safeImageAttrs(item)} />
+        ${imageMarkup(item, "poster-image")}
         <div class="memory-body">
           <span class="number">${index + 1}</span>
           <h3>${escapeHtml(item.diagnosis)}</h3>
@@ -2380,7 +2537,7 @@ function renderGallery() {
     return `
       <article class="gallery-card" data-case="${escapeHtml(item.id)}">
         <div class="gallery-image">
-          <img ${safeImageAttrs(item)} />
+          ${imageMarkup(item, "gallery-figure")}
           <span class="organ-badge" style="--badge:${escapeHtml(chapterItem.color)}">${escapeHtml(chapterItem.name)}</span>
         </div>
         <div class="gallery-body">
@@ -2435,7 +2592,7 @@ function renderWhoLibrary() {
 
   els.whoResultSummary.textContent = filtered.length
     ? `${filtered.length.toLocaleString("vi-VN")} mục phù hợp · đang hiển thị ${visible.length.toLocaleString("vi-VN")}`
-    : "Không tìm thấy danh pháp phù hợp. Hãy thử tên tiếng Anh hoặc chọn quyển khác.";
+    : "Không tìm thấy danh pháp phù hợp. Có thể nhập tiếng Việt hoặc tiếng Anh; hãy thử từ khóa ngắn hơn hoặc chọn quyển khác.";
 
   if (!visible.length) {
     els.whoCatalogGrid.innerHTML = `<div class="empty-state">Không có kết quả trong danh mục WHO với bộ lọc hiện tại.</div>`;
@@ -2451,10 +2608,11 @@ function renderWhoLibrary() {
         <article class="who-entry-card">
           <div class="who-entry-meta">
             <span>${escapeHtml(volume.nameVi || entry.volumeId)}</span>
-            <em>${linkedCase ? "Có thẻ Việt" : escapeHtml(volume.short || "WHO")}</em>
+            <em>${linkedCase ? "Song ngữ đã liên kết" : escapeHtml(volume.short || "WHO")}</em>
           </div>
           ${linkedCase ? `<p class="who-entry-vi">${escapeHtml(linkedCase.diagnosis)}</p>` : ""}
           <h3>${escapeHtml(entry.nameEn)}</h3>
+          ${linkedCase?.icdo?.code ? `<span class="who-icdo">ICD-O-4 ${escapeHtml(linkedCase.icdo.code)}</span>` : ""}
           <p class="who-entry-path">${escapeHtml(path || volume.nameEn || "WHO Classification of Tumours")}</p>
           <div class="who-entry-actions">
             <a href="${escapeHtml(volume.sourceUrl || whoCatalog.source)}" target="_blank" rel="noreferrer">Mở cấu trúc WHO ↗</a>
