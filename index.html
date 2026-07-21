@@ -30,6 +30,11 @@
           <input id="searchInput" type="search" placeholder="VD: tuyến giáp, PTC, polyp, TTF-1..." autocomplete="off" />
         </label>
 
+        <a class="side-library-link" href="#whoLibrary">
+          <span>Danh mục WHO</span>
+          <strong id="sideWhoCount">0</strong>
+        </a>
+
         <nav class="side-nav" aria-label="Danh sách cơ quan">
           <div class="side-title">Cơ quan</div>
           <div id="organNav"></div>
@@ -54,6 +59,7 @@
             </p>
             <div class="hero-actions">
               <a class="btn primary" href="#atlasBoard">Mở atlas</a>
+              <a class="btn ghost" href="#whoLibrary">Tra danh mục WHO</a>
               <button class="btn ghost" id="openCaseStudio" type="button">Thêm thẻ atlas</button>
               <button class="btn ghost" id="openImageManager" type="button">Quản lý ảnh</button>
             </div>
@@ -61,8 +67,49 @@
           <div class="hero-stats">
             <div><strong id="statOrgans">0</strong><span>cơ quan</span></div>
             <div><strong id="statDx">0</strong><span>chẩn đoán</span></div>
+            <div><strong id="statWho">0</strong><span>mục WHO</span></div>
             <div><strong id="statSources">0</strong><span>nguồn chính</span></div>
           </div>
+        </section>
+
+        <section id="whoLibrary" class="who-library" aria-labelledby="whoLibraryTitle">
+          <div class="who-library-heading">
+            <div>
+              <span class="eyebrow">Bản đồ phân loại WHO/IARC</span>
+              <h2 id="whoLibraryTitle">Tra cứu toàn bộ cấu trúc công khai</h2>
+              <p>
+                Danh mục giữ nguyên tên tiếng Anh chính thức để tránh sai danh pháp. Giao diện, hướng dẫn và
+                các thẻ học chuyên sâu được biên soạn bằng tiếng Việt.
+              </p>
+            </div>
+            <div class="who-library-metrics">
+              <div><strong id="whoVolumeCount">0</strong><span>quyển</span></div>
+              <div><strong id="whoEntryCount">0</strong><span>mục phân loại</span></div>
+              <div><strong id="whoLinkedCount">0</strong><span>thẻ tiếng Việt</span></div>
+            </div>
+          </div>
+
+          <div class="who-catalog-controls">
+            <label for="whoSearchInput">
+              Tìm danh pháp WHO
+              <input id="whoSearchInput" type="search" placeholder="VD: papillary thyroid carcinoma, glioblastoma, lymphoma..." autocomplete="off" />
+            </label>
+            <button class="btn" id="whoResetFilters" type="button">Xóa bộ lọc</button>
+          </div>
+
+          <div id="whoVolumeFilters" class="who-volume-filters" aria-label="Lọc theo quyển WHO"></div>
+          <div class="who-result-bar">
+            <p id="whoResultSummary">Đang nạp danh mục WHO...</p>
+            <a href="https://whobluebooks.iarc.fr/structures/" target="_blank" rel="noreferrer">Kiểm tra cấu trúc gốc ↗</a>
+          </div>
+          <div id="whoCatalogGrid" class="who-catalog-grid"></div>
+          <div class="who-load-row">
+            <button class="btn" id="whoLoadMore" type="button">Hiện thêm kết quả</button>
+          </div>
+          <p class="who-rights-note">
+            Phạm vi dữ liệu: cấu trúc phân loại và tên thực thể công khai. Atlas không sao chép mô tả,
+            bảng, tiêu chuẩn chẩn đoán hoặc hình ảnh có bản quyền của WHO/IARC.
+          </p>
         </section>
 
         <section class="toolbar" aria-label="Bộ lọc atlas">
@@ -232,6 +279,7 @@
       </main>
     </div>
 
+    <script src="./who-catalog.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>

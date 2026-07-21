@@ -1887,6 +1887,12 @@ const sourceCards = [
     url: `${IARC}/home`,
   },
   {
+    title: "WHO Classification Structure",
+    kind: "Danh mục phân loại công khai",
+    note: "Cung cấp cấu trúc 14 quyển và tên thực thể chính thức dùng cho thư viện tra cứu lớn của atlas.",
+    url: "https://whobluebooks.iarc.fr/structures/",
+  },
+  {
     title: "PathologyOutlines",
     kind: "Vi thể và HMMD/IHC",
     note: "Dùng để đọc thêm đặc điểm vi thể, chẩn đoán phân biệt và các dấu ấn hóa mô miễn dịch. Trang có thể hạn chế truy cập tự động nhưng mở được trên trình duyệt.",
@@ -1912,11 +1918,45 @@ const sourceCards = [
   },
 ];
 
+const whoCatalog = window.WHO_ATLAS_CATALOG || { volumes: [], entries: [] };
+const whoVolumes = Array.isArray(whoCatalog.volumes) ? whoCatalog.volumes : [];
+const whoEntries = Array.isArray(whoCatalog.entries) ? whoCatalog.entries : [];
+const whoVolumeMap = new Map(whoVolumes.map((volume) => [volume.id, volume]));
+const whoVolumeChapters = {
+  digestive: ["colon", "hpb", "soft"],
+  breast: ["breast"],
+  thoracic: ["lung"],
+  "female-genital": ["gyn"],
+  urinary: ["gu"],
+  "head-neck": ["headneck"],
+  endocrine: ["thyroid"],
+  skin: ["skin"],
+  haematolymphoid: ["heme"],
+  cns: ["cns"],
+  "soft-tissue-bone": ["soft"],
+  eye: [],
+  paediatric: [],
+  genetic: [],
+};
+const whoEntryAliases = {
+  "digestive|focal nodular hyperplasia of the liver": "hpb-fnh",
+  "digestive|pancreatic intraductal papillary mucinous neoplasm": "hpb-ipmn",
+  "breast|lobular carcinoma in situ": "breast-lcis",
+  "thoracic|adenocarcinoma in situ of the lung": "lung-ais",
+  "thoracic|invasive mucinous adenocarcinoma of the lung": "lung-mucinous",
+  "thoracic|large cell neuroendocrine carcinoma of the lung": "lung-large-cell-ne",
+  "female-genital|high grade serous carcinoma of the ovary": "gyn-ovarian-serous",
+  "head-neck|nasopharyngeal carcinoma": "headneck-nasopharyngeal",
+};
+
 let state = {
   chapter: "thyroid",
   pattern: "all",
   query: "",
   selectedId: "thyroid-ptc",
+  whoVolume: "all",
+  whoQuery: "",
+  whoLimit: 36,
 };
 
 let imageOverrides = loadOverrides();
@@ -1942,7 +1982,18 @@ const els = {
   sourceGrid: document.getElementById("sourceGrid"),
   statOrgans: document.getElementById("statOrgans"),
   statDx: document.getElementById("statDx"),
+  statWho: document.getElementById("statWho"),
   statSources: document.getElementById("statSources"),
+  sideWhoCount: document.getElementById("sideWhoCount"),
+  whoVolumeCount: document.getElementById("whoVolumeCount"),
+  whoEntryCount: document.getElementById("whoEntryCount"),
+  whoLinkedCount: document.getElementById("whoLinkedCount"),
+  whoSearchInput: document.getElementById("whoSearchInput"),
+  whoResetFilters: document.getElementById("whoResetFilters"),
+  whoVolumeFilters: document.getElementById("whoVolumeFilters"),
+  whoResultSummary: document.getElementById("whoResultSummary"),
+  whoCatalogGrid: document.getElementById("whoCatalogGrid"),
+  whoLoadMore: document.getElementById("whoLoadMore"),
   imageDialog: document.getElementById("imageDialog"),
   imageDialogTitle: document.getElementById("imageDialogTitle"),
   imageUrlInput: document.getElementById("imageUrlInput"),
@@ -2012,6 +2063,54 @@ function normalize(value) {
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/đ/g, "d")
     .replace(/Đ/g, "d");
+}
+
+function normalizeWhoName(value) {
+  return normalize(value)
+    .replace(/\b(nos|nst)\b/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+let whoMatches = new Map();
+
+function findAtlasCaseForWho(entry) {
+  const target = normalizeWhoName(entry.nameEn);
+  if (!target) return null;
+  const aliasId = whoEntryAliases[`${entry.volumeId}|${target}`];
+  if (aliasId) return cases.find((item) => item.id === aliasId) || null;
+
+  const allowedChapters = whoVolumeChapters[entry.volumeId] || [];
+  return cases.find((item) => (
+    allowedChapters.includes(item.chapter)
+    && normalizeWhoName(item.english) === target
+  )) || null;
+}
+
+function prepareWhoCatalog() {
+  whoMatches = new Map();
+  whoEntries.forEach((entry) => {
+    entry.searchText = normalize([
+      entry.nameEn,
+      entry.sectionEn,
+      entry.groupEn,
+      entry.categoryEn,
+      whoVolumeMap.get(entry.volumeId)?.nameVi,
+      whoVolumeMap.get(entry.volumeId)?.nameEn,
+    ].join(" "));
+    const linkedCase = findAtlasCaseForWho(entry);
+    if (linkedCase) whoMatches.set(entry, linkedCase);
+  });
+}
+
+function filteredWhoEntries() {
+  const query = normalize(state.whoQuery);
+  return whoEntries.filter((entry) => {
+    const volumeOk = state.whoVolume === "all" || entry.volumeId === state.whoVolume;
+    const queryOk = !query || entry.searchText.includes(query);
+    return volumeOk && queryOk;
+  });
 }
 
 function chapterById(id) {
@@ -2297,6 +2396,88 @@ function renderGallery() {
   bindCaseCards(els.galleryGrid);
 }
 
+function openAtlasCaseFromWho(id) {
+  const item = cases.find((entry) => entry.id === id);
+  if (!item) return;
+  state.chapter = item.chapter;
+  state.pattern = "all";
+  state.query = "";
+  state.selectedId = item.id;
+  els.searchInput.value = "";
+  renderAll();
+  els.caseDetail.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function renderWhoLibrary() {
+  const filtered = filteredWhoEntries();
+  const visible = filtered.slice(0, state.whoLimit);
+  const linkedCount = new Set([...whoMatches.values()].map((item) => item.id)).size;
+
+  els.whoVolumeCount.textContent = String(whoVolumes.length);
+  els.whoEntryCount.textContent = whoEntries.length.toLocaleString("vi-VN");
+  els.whoLinkedCount.textContent = linkedCount.toLocaleString("vi-VN");
+
+  const allButton = `
+    <button class="who-volume-button ${state.whoVolume === "all" ? "active" : ""}" type="button" data-who-volume="all">
+      <i>ALL</i>
+      <strong>Tất cả 14 quyển</strong>
+      <em>${whoEntries.length.toLocaleString("vi-VN")}</em>
+    </button>
+  `;
+  const volumeButtons = whoVolumes.map((volume) => `
+    <button class="who-volume-button ${state.whoVolume === volume.id ? "active" : ""}" type="button" data-who-volume="${escapeHtml(volume.id)}" title="${escapeHtml(volume.nameEn)}">
+      <i>${escapeHtml(volume.short)}</i>
+      <strong>${escapeHtml(volume.nameVi)}</strong>
+      <em>${Number(volume.entryCount).toLocaleString("vi-VN")}</em>
+    </button>
+  `).join("");
+  els.whoVolumeFilters.innerHTML = allButton + volumeButtons;
+
+  els.whoResultSummary.textContent = filtered.length
+    ? `${filtered.length.toLocaleString("vi-VN")} mục phù hợp · đang hiển thị ${visible.length.toLocaleString("vi-VN")}`
+    : "Không tìm thấy danh pháp phù hợp. Hãy thử tên tiếng Anh hoặc chọn quyển khác.";
+
+  if (!visible.length) {
+    els.whoCatalogGrid.innerHTML = `<div class="empty-state">Không có kết quả trong danh mục WHO với bộ lọc hiện tại.</div>`;
+  } else {
+    els.whoCatalogGrid.innerHTML = visible.map((entry) => {
+      const volume = whoVolumeMap.get(entry.volumeId) || {};
+      const linkedCase = whoMatches.get(entry);
+      const path = [entry.sectionEn, entry.groupEn, entry.categoryEn]
+        .filter(Boolean)
+        .filter((value, index, values) => values.indexOf(value) === index)
+        .join(" › ");
+      return `
+        <article class="who-entry-card">
+          <div class="who-entry-meta">
+            <span>${escapeHtml(volume.nameVi || entry.volumeId)}</span>
+            <em>${linkedCase ? "Có thẻ Việt" : escapeHtml(volume.short || "WHO")}</em>
+          </div>
+          ${linkedCase ? `<p class="who-entry-vi">${escapeHtml(linkedCase.diagnosis)}</p>` : ""}
+          <h3>${escapeHtml(entry.nameEn)}</h3>
+          <p class="who-entry-path">${escapeHtml(path || volume.nameEn || "WHO Classification of Tumours")}</p>
+          <div class="who-entry-actions">
+            <a href="${escapeHtml(volume.sourceUrl || whoCatalog.source)}" target="_blank" rel="noreferrer">Mở cấu trúc WHO ↗</a>
+            ${linkedCase ? `<button type="button" data-who-case="${escapeHtml(linkedCase.id)}">Mở thẻ học tiếng Việt</button>` : ""}
+          </div>
+        </article>
+      `;
+    }).join("");
+  }
+
+  els.whoLoadMore.hidden = visible.length >= filtered.length;
+  els.whoVolumeFilters.querySelectorAll("[data-who-volume]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.whoVolume = button.dataset.whoVolume;
+      state.whoLimit = 36;
+      renderWhoLibrary();
+    });
+  });
+  els.whoCatalogGrid.querySelectorAll("[data-who-case]").forEach((button) => {
+    button.addEventListener("click", () => openAtlasCaseFromWho(button.dataset.whoCase));
+  });
+}
+
 function renderSources() {
   els.sourceGrid.innerHTML = sourceCards.map((card) => `
     <article class="source-card">
@@ -2440,6 +2621,8 @@ function saveCustomCaseFromForm() {
   updateCustomCount();
   els.caseDialog.close();
   updateStats();
+  prepareWhoCatalog();
+  renderWhoLibrary();
   renderAll();
   els.caseDetail.scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -2451,6 +2634,8 @@ function deleteCustomCase(id) {
   saveCustomCases();
   state.selectedId = filteredCases()[0]?.id || cases[0].id;
   updateStats();
+  prepareWhoCatalog();
+  renderWhoLibrary();
   renderAll();
 }
 
@@ -2481,6 +2666,8 @@ function importCustomCases() {
     saveCustomCases();
     updateCustomCount();
     updateStats();
+    prepareWhoCatalog();
+    renderWhoLibrary();
     renderAll();
     els.customJsonBox.value = `Đã nhập ${cleaned.length} thẻ tự thêm.`;
   } catch (error) {
@@ -2496,6 +2683,8 @@ function clearCustomCases() {
   saveCustomCases();
   updateCustomCount();
   updateStats();
+  prepareWhoCatalog();
+  renderWhoLibrary();
   state.selectedId = filteredCases()[0]?.id || cases[0].id;
   renderAll();
 }
@@ -2510,9 +2699,34 @@ function bindEvents() {
   });
 
   els.resetFilters.addEventListener("click", () => {
-    state = { chapter: "thyroid", pattern: "all", query: "", selectedId: "thyroid-ptc" };
+    state = {
+      ...state,
+      chapter: "thyroid",
+      pattern: "all",
+      query: "",
+      selectedId: "thyroid-ptc",
+    };
     els.searchInput.value = "";
     renderAll();
+  });
+
+  els.whoSearchInput.addEventListener("input", () => {
+    state.whoQuery = els.whoSearchInput.value;
+    state.whoLimit = 36;
+    renderWhoLibrary();
+  });
+
+  els.whoResetFilters.addEventListener("click", () => {
+    state.whoVolume = "all";
+    state.whoQuery = "";
+    state.whoLimit = 36;
+    els.whoSearchInput.value = "";
+    renderWhoLibrary();
+  });
+
+  els.whoLoadMore.addEventListener("click", () => {
+    state.whoLimit += 36;
+    renderWhoLibrary();
   });
 
   els.openImageManager.addEventListener("click", () => openImageDialog(state.selectedId));
@@ -2548,7 +2762,9 @@ function bindEvents() {
 function updateStats() {
   els.statOrgans.textContent = String(chapters.length - 1);
   els.statDx.textContent = String(cases.length);
+  els.statWho.textContent = whoEntries.length.toLocaleString("vi-VN");
   els.statSources.textContent = String(sourceCards.length);
+  els.sideWhoCount.textContent = whoEntries.length.toLocaleString("vi-VN");
 }
 
 function renderAll() {
@@ -2566,10 +2782,12 @@ function renderAll() {
 }
 
 function init() {
+  prepareWhoCatalog();
   updateStats();
   populateCustomChapterOptions();
   updateCustomCount();
   renderSources();
+  renderWhoLibrary();
   renderAll();
   bindEvents();
 }
