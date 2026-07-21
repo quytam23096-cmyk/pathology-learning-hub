@@ -5,8 +5,10 @@ Website tĩnh tiếng Việt dạng atlas giải phẫu bệnh: chia theo cơ qu
 ## Điểm chính
 
 - 13 nhóm cơ quan, 97 thẻ chẩn đoán mẫu.
+- Cả 97 thẻ có nội dung học song ngữ Việt - Anh: đặc điểm vi thể/tế bào, gợi ý báo cáo, điểm ghi nhớ và bẫy chẩn đoán.
 - 70 thẻ có ảnh mở đã đối chiếu tên tệp và giấy phép; 27 thẻ còn lại hiện trạng thái chờ thay vì dùng ảnh gần giống hoặc sai thực thể.
 - Thư viện danh mục WHO/IARC gồm 14 quyển và 2.674 mục phân loại/thực thể lấy từ cấu trúc công khai chính thức.
+- WHO Online hiện có bản beta ấn bản 6 cho hệ tiêu hóa và vú; atlas ghi chú riêng trạng thái này, còn liên kết thực thể đã kiểm tra thuộc ấn bản 5 vẫn được dán nhãn ấn bản 5 để tránh nhập nhằng.
 - Có tìm kiếm song ngữ toàn danh mục WHO, lọc theo quyển và mở thẻ học tiếng Việt khi atlas đã có nội dung tương ứng.
 - Các thực thể đã đối chiếu hiển thị mã hình thái ICD-O-4; tổn thương không tân sinh ghi rõ không áp dụng, còn mã phụ thuộc cấp độ/xâm nhập được giải thích riêng.
 - Có bộ lọc theo cơ quan, kiểu cấu trúc và tìm kiếm tiếng Việt/tiếng Anh.
@@ -15,6 +17,7 @@ Website tĩnh tiếng Việt dạng atlas giải phẫu bệnh: chia theo cơ qu
 - Có trình tạo thẻ atlas để tự thêm: cơ quan, chẩn đoán, URL ảnh, vi thể cần nhìn, gợi ý báo cáo, điểm ghi nhớ, bẫy chẩn đoán và dấu ấn.
 - Có xuất/nhập JSON cho các thẻ tự thêm để sao lưu hoặc đưa vào mã nguồn công khai.
 - Ảnh nhúng ưu tiên nguồn mở có liên kết tệp gốc; WHO/IARC, PathologyOutlines, CAP và tài liệu Bộ Y tế được dùng để đối chiếu phân loại, vi thể, báo cáo và thuật ngữ tiếng Việt.
+- WebPathology được mở bằng liên kết gallery hoặc tìm kiếm đúng tên chẩn đoán. Atlas không sao chép hay nhúng hình ảnh WebPathology vì nội dung này có bản quyền.
 
 ## Chuẩn hóa thuật ngữ
 
@@ -45,6 +48,8 @@ Bộ sinh chỉ thu thập cấu trúc phân loại và tên thực thể. Nó k
 ## Dữ liệu kiểm định
 
 Tệp `atlas-curation.js` là lớp dữ liệu kiểm định của atlas: liên kết chủ đề PathologyOutlines, quyển và năm WHO, mã ICD-O-4, hệ thống Bethesda/FIGO khi phù hợp, tên tệp ảnh mở và trạng thái xác minh. Không thêm mã hoặc ảnh bằng suy đoán. Ảnh thay thế phải có trang tệp nguồn, giấy phép và mô tả khớp thực thể.
+
+Tệp `atlas-bilingual.js` chứa phần diễn giải học tập tiếng Anh tương ứng với toàn bộ 97 thẻ. Nội dung này được biên soạn độc lập để hiển thị cạnh bản tiếng Việt, không sao chép nguyên văn từ nguồn có bản quyền.
 
 ## Deploy miễn phí
 

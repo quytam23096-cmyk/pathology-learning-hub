@@ -1,9 +1,11 @@
 const PO = "https://www.pathologyoutlines.com";
+const PO_SEARCH = "https://www.google.com/cse?cx=partner-pub-3521518608648020%3A8640627894&q=";
 const WCT = "https://whobluebooks.iarc.fr/structures";
 const IARC = "https://tumourclassification.iarc.who.int";
 const CAP = "https://www.cap.org/protocols-and-guidelines/cancer-protocols/current-cancer-protocols/";
 const COMMONS_CATEGORY = "https://commons.wikimedia.org/wiki/Category:Histopathology";
 const curation = window.ATLAS_CURATION || {};
+const bilingualAtlas = window.ATLAS_BILINGUAL || {};
 
 function commonsImage(file) {
   return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=1100`;
@@ -1888,7 +1890,18 @@ function applyVerifiedCuration(item) {
   const replacement = curation.imageReplacements?.[item.id];
 
   Object.assign(item, metadata);
+  item.learningEn = bilingualAtlas[item.id] || null;
   item.classification = curation.chapterStandards?.[item.chapter] || null;
+  if (["colon", "hpb", "breast"].includes(item.chapter)) {
+    item.systems = [
+      ...(item.systems || []),
+      {
+        label: "WHO 6th edition · Beta",
+        note: "Bản beta trực tuyến hiện đã có cho hệ tiêu hóa và vú. Thẻ này vẫn ghi rõ ấn bản của trang thực thể đã đối chiếu; không tự xem nội dung ấn bản 5 là tương đương ấn bản 6.",
+        url: `${IARC}/home`,
+      },
+    ];
+  }
   if (item.chapter === "thyroid" && !item.systems) {
     item.systems = [{
       label: "Bethesda 2023",
@@ -1924,7 +1937,7 @@ const sourceCards = [
   {
     title: "WHO/IARC Blue Books",
     kind: "Phân loại chuẩn",
-    note: "Nguồn phân loại chính thức theo cơ quan và chẩn đoán. Một số trang nội dung cần đăng nhập bằng tài khoản WHO/IARC của chính người đọc.",
+    note: "Nguồn phân loại chính thức theo cơ quan và chẩn đoán. WHO Online hiện có bản beta ấn bản 6 cho hệ tiêu hóa và vú; các liên kết thực thể ấn bản 5 trong atlas được ghi nhãn riêng. Một số trang cần người đọc đăng nhập.",
     url: `${IARC}/home`,
   },
   {
@@ -1956,6 +1969,12 @@ const sourceCards = [
     kind: "Ảnh mở minh họa",
     note: "Ảnh nhúng trong atlas có liên kết đến tệp gốc để kiểm tra tác giả và giấy phép. Có thể thay ảnh bằng nguồn của bạn.",
     url: COMMONS_CATEGORY,
+  },
+  {
+    title: "WebPathology",
+    kind: "Thư viện ảnh tham khảo",
+    note: "Liên kết mở WebPathology ở cửa sổ riêng theo đúng tên chẩn đoán. Không sao chép hoặc nhúng ảnh vì nội dung WebPathology có bản quyền và cần xin phép trước khi đăng lại.",
+    url: "https://www.webpathology.com/",
   },
   {
     title: "ICD-O-4",
@@ -2236,6 +2255,19 @@ function imageSearchLinkFor(item) {
   return `https://commons.wikimedia.org/w/index.php?search=${encodeURIComponent(`${item.english} histopathology`)}&title=Special:MediaSearch&type=image`;
 }
 
+function webPathologyUrlFor(item) {
+  if (item.webPathologyUrl) return item.webPathologyUrl;
+  return `https://www.webpathology.com/search-result?query=${encodeURIComponent(item.english)}`;
+}
+
+function pathologyOutlinesSearchUrl(term) {
+  return `${PO_SEARCH}${encodeURIComponent(term)}`;
+}
+
+function webPathologyEntryUrl(entry) {
+  return `https://www.webpathology.com/search-result?query=${encodeURIComponent(entry.nameEn)}`;
+}
+
 function allText(item) {
   const chapter = chapterById(item.chapter);
   return normalize([
@@ -2279,13 +2311,47 @@ function imageMarkup(item, variant = "card") {
   `;
 }
 
+function bilingualList(vietnamese, english) {
+  const englishItems = Array.isArray(english) && english.length
+    ? english
+    : ["English learning summary is pending specialist review; use the linked primary references."];
+  return `
+    <div class="language-block" lang="vi">
+      <span>VI</span>
+      <ul>${vietnamese.map((entry) => `<li>${escapeHtml(entry)}</li>`).join("")}</ul>
+    </div>
+    <div class="language-block english-block" lang="en">
+      <span>EN</span>
+      <ul>${englishItems.map((entry) => `<li>${escapeHtml(entry)}</li>`).join("")}</ul>
+    </div>
+  `;
+}
+
+function bilingualMemory(item) {
+  const english = item.learningEn || {};
+  return `
+    <div class="language-block" lang="vi">
+      <span>VI</span>
+      <p>${escapeHtml(item.memory)}</p>
+      <p><strong>Dễ nhầm:</strong> ${escapeHtml(item.pitfall)}</p>
+    </div>
+    <div class="language-block english-block" lang="en">
+      <span>EN</span>
+      <p>${escapeHtml(english.memory || "English memory point pending specialist review.")}</p>
+      <p><strong>Pitfall:</strong> ${escapeHtml(english.pitfall || "Use the linked primary references for the complete differential diagnosis.")}</p>
+    </div>
+  `;
+}
+
 function officialLinks(item) {
   const chapter = chapterById(item.chapter);
   const directWhoLink = verifiedWhoLinks[item.id];
   const chapterStandard = item.classification || curation.chapterStandards?.[item.chapter];
+  const exactPathologyOutlines = verifiedTopicLinks[item.id];
   const links = [
-    { label: directWhoLink ? "WHO/IARC · đúng chẩn đoán" : "WHO/IARC · quyển/chương", url: directWhoLink || chapterStandard?.url || chapter.who },
-    { label: "PathologyOutlines", url: verifiedTopicLinks[item.id] || chapter.po },
+    { label: directWhoLink ? "WHO/IARC 5th ed · trang đúng thực thể" : "WHO/IARC · danh mục quyển (không phải trang thực thể)", url: directWhoLink || chapterStandard?.url || chapter.who },
+    { label: exactPathologyOutlines ? "PathologyOutlines · đúng chủ đề" : "PathologyOutlines · tìm đúng tên chẩn đoán", url: exactPathologyOutlines || pathologyOutlinesSearchUrl(item.english) },
+    { label: item.webPathologyUrl ? "WebPathology · gallery đúng chủ đề" : "WebPathology · tìm đúng tên chẩn đoán", url: webPathologyUrlFor(item) },
   ];
   if (item.report.some((entry) => {
     const text = normalize(entry);
@@ -2381,6 +2447,7 @@ function renderDiagnosisGrid() {
         <strong>${escapeHtml(item.diagnosis)}</strong>
         <em>${escapeHtml(item.english)}</em>
         <p>${escapeHtml(item.micro.slice(0, 2).join(" · "))}</p>
+        ${item.learningEn?.micro?.[0] ? `<p class="card-feature-en" lang="en">${escapeHtml(item.learningEn.micro[0])}</p>` : ""}
         <small>${escapeHtml(item.pattern.slice(0, 3).map(patternLabel).join(" / "))}</small>
         ${item.icdo?.code ? `<span class="icdo-chip">ICD-O-4 ${escapeHtml(item.icdo.code)}</span>` : ""}
       </button>
@@ -2460,16 +2527,15 @@ function renderDetail() {
       <div class="detail-grid">
         <section>
           <h3>Đặc điểm vi thể <span>/ Microscopic features</span></h3>
-          <ul>${item.micro.map((entry) => `<li>${escapeHtml(entry)}</li>`).join("")}</ul>
+          ${bilingualList(item.micro, item.learningEn?.micro)}
         </section>
         <section>
           <h3>Gợi ý báo cáo <span>/ Reporting checklist</span></h3>
-          <ul>${item.report.map((entry) => `<li>${escapeHtml(entry)}</li>`).join("")}</ul>
+          ${bilingualList(item.report, item.learningEn?.report)}
         </section>
         <section>
           <h3>Điểm ghi nhớ <span>/ Memory point</span></h3>
-          <p>${escapeHtml(item.memory)}</p>
-          <p><strong>Dễ nhầm / Pitfall:</strong> ${escapeHtml(item.pitfall)}</p>
+          ${bilingualMemory(item)}
         </section>
       </div>
       <div class="marker-heading">
@@ -2600,6 +2666,9 @@ function renderWhoLibrary() {
     els.whoCatalogGrid.innerHTML = visible.map((entry) => {
       const volume = whoVolumeMap.get(entry.volumeId) || {};
       const linkedCase = whoMatches.get(entry);
+      const exactWhoUrl = linkedCase ? verifiedWhoLinks[linkedCase.id] : "";
+      const exactPoUrl = linkedCase ? verifiedTopicLinks[linkedCase.id] : "";
+      const exactWebPathologyUrl = linkedCase?.webPathologyUrl || "";
       const path = [entry.sectionEn, entry.groupEn, entry.categoryEn]
         .filter(Boolean)
         .filter((value, index, values) => values.indexOf(value) === index)
@@ -2615,8 +2684,10 @@ function renderWhoLibrary() {
           ${linkedCase?.icdo?.code ? `<span class="who-icdo">ICD-O-4 ${escapeHtml(linkedCase.icdo.code)}</span>` : ""}
           <p class="who-entry-path">${escapeHtml(path || volume.nameEn || "WHO Classification of Tumours")}</p>
           <div class="who-entry-actions">
-            <a href="${escapeHtml(volume.sourceUrl || whoCatalog.source)}" target="_blank" rel="noreferrer">Mở cấu trúc WHO ↗</a>
-            ${linkedCase ? `<button type="button" data-who-case="${escapeHtml(linkedCase.id)}">Mở thẻ học tiếng Việt</button>` : ""}
+            <a href="${escapeHtml(exactWhoUrl || volume.sourceUrl || whoCatalog.source)}" target="_blank" rel="noreferrer">${exactWhoUrl ? "WHO 5th ed · đúng thực thể" : "Danh mục quyển WHO"} ↗</a>
+            <a href="${escapeHtml(exactPoUrl || pathologyOutlinesSearchUrl(entry.nameEn))}" target="_blank" rel="noreferrer">${exactPoUrl ? "PathologyOutlines đúng chủ đề" : "Tìm trên PathologyOutlines"} ↗</a>
+            <a href="${escapeHtml(linkedCase ? webPathologyUrlFor(linkedCase) : webPathologyEntryUrl(entry))}" target="_blank" rel="noreferrer">${exactWebPathologyUrl ? "WebPathology: gallery trực tiếp" : "WebPathology: tìm đúng tên"} ↗</a>
+            ${linkedCase ? `<button type="button" data-who-case="${escapeHtml(linkedCase.id)}">Mở thẻ học song ngữ</button>` : ""}
           </div>
         </article>
       `;

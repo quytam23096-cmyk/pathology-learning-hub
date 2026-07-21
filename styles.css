@@ -791,7 +791,7 @@ h1 {
 
 .diagnosis-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 12px;
 }
 
@@ -856,6 +856,13 @@ h1 {
   font-size: 0.82rem;
   line-height: 1.38;
   overflow-wrap: anywhere;
+}
+
+.diagnosis-card .card-feature-en {
+  margin-top: 4px;
+  color: #54716f;
+  font-size: 0.74rem;
+  font-style: italic;
 }
 
 .diagnosis-card small {
@@ -981,6 +988,7 @@ h1 {
 }
 
 .detail-copy {
+  container-type: inline-size;
   padding: clamp(18px, 3vw, 32px);
   display: grid;
   gap: 15px;
@@ -1039,6 +1047,17 @@ h1 {
   line-height: 1.35;
 }
 
+@container (max-width: 680px) {
+  .classification-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .classification-strip > div + div {
+    border-top: 1px solid #cfe2de;
+    border-left: 0;
+  }
+}
+
 .system-note {
   border-left: 3px solid var(--teal);
   padding: 8px 10px;
@@ -1055,7 +1074,7 @@ h1 {
 
 .detail-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 10px;
 }
 
@@ -1063,10 +1082,14 @@ h1 {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 16px;
   background: #f8fbfa;
 }
 
 .detail-grid h3 {
+  grid-column: 1 / -1;
   margin: 0 0 8px;
   font-size: 0.94rem;
 }
@@ -1093,6 +1116,33 @@ h1 {
   color: var(--muted);
   line-height: 1.46;
   font-size: 0.9rem;
+}
+
+.language-block {
+  min-width: 0;
+  border-left: 3px solid #8ebbb4;
+  padding-left: 10px;
+}
+
+.language-block.english-block {
+  border-left-color: #4d67b1;
+  background: rgba(77, 103, 177, 0.035);
+}
+
+.language-block > span {
+  display: block;
+  margin-bottom: 6px;
+  color: #386c67;
+  font-size: 0.68rem;
+  font-weight: 950;
+}
+
+.language-block.english-block > span {
+  color: #4d67b1;
+}
+
+.language-block p + p {
+  margin-top: 8px;
 }
 
 .marker-heading {
@@ -1395,7 +1445,6 @@ textarea:focus {
 }
 
 @media (max-width: 1320px) {
-  .diagnosis-grid,
   .gallery-grid,
   .source-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1518,6 +1567,10 @@ textarea:focus {
 
   .marker-heading span {
     text-align: left;
+  }
+
+  .detail-grid section {
+    grid-template-columns: 1fr;
   }
 
   h1 {

@@ -359,6 +359,13 @@
     caseMetadata[id] = { ...(caseMetadata[id] || {}), whoTerms: terms };
   });
 
+  const webPathologyLinks = {
+    "thyroid-ptc": "https://www.webpathology.com/images/endocrine/thyroid/papillary-carcinoma",
+  };
+  Object.entries(webPathologyLinks).forEach(([id, url]) => {
+    caseMetadata[id] = { ...(caseMetadata[id] || {}), webPathologyUrl: url };
+  });
+
   const systemNotes = {
     "thyroid-normal": [{ label: "Bethesda 2023", note: "Chỉ áp dụng cho tế bào học FNA tuyến giáp; không dùng để phân loại tiêu bản mô học.", url: "https://journals.sagepub.com/doi/10.1089/thy.2023.0141" }],
     "thyroid-nodular": [{ label: "Bethesda 2023", note: "Chỉ áp dụng khi đây là mẫu FNA tuyến giáp; phân nhóm phải dựa trên toàn bộ tiêu bản tế bào học.", url: "https://journals.sagepub.com/doi/10.1089/thy.2023.0141" }],
