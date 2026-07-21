@@ -4,6 +4,7 @@ Website tĩnh tiếng Việt dạng atlas giải phẫu bệnh: chia theo cơ qu
 
 ## Điểm chính
 
+- Có trang `interface-demos.html` để thử trực tiếp ba hướng giao diện mới: Clinical Light, Digital Scope và Atlas Workspace. Mỗi mẫu dùng chung dữ liệu GPB mẫu, hỗ trợ tìm kiếm, lọc cơ quan, chọn ca, đổi tab nội dung và phóng đại ảnh.
 - 13 nhóm cơ quan, 97 thẻ chẩn đoán mẫu.
 - Cả 97 thẻ có nội dung học song ngữ Việt - Anh: đặc điểm vi thể/tế bào, gợi ý báo cáo, điểm ghi nhớ và bẫy chẩn đoán.
 - 70 thẻ có ảnh mở đã đối chiếu tên tệp và giấy phép; 27 thẻ còn lại hiện trạng thái chờ thay vì dùng ảnh gần giống hoặc sai thực thể.
@@ -36,6 +37,8 @@ python -m http.server 8765 --bind 127.0.0.1
 ```
 
 Sau đó mở `http://127.0.0.1:8765/`.
+
+Mở `http://127.0.0.1:8765/interface-demos.html` để so sánh ba giao diện. Có thể mở thẳng từng mẫu bằng tham số `?theme=clinical`, `?theme=scope` hoặc `?theme=workspace`.
 
 ## Cập nhật danh mục WHO
 

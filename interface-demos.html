@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="vi" data-theme="clinical">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Atlas GPB - Demo giao diện</title>
+    <meta name="description" content="Ba giao diện tương tác để so sánh hướng thiết kế mới cho Atlas GPB." />
+    <link rel="stylesheet" href="./interface-demos.css" />
+  </head>
+  <body>
+    <header class="demo-header">
+      <a class="demo-brand" href="./index.html" aria-label="Về Atlas GPB">
+        <span class="demo-mark">A</span>
+        <span><strong>Atlas GPB</strong><small>So sánh giao diện</small></span>
+      </a>
+
+      <div class="theme-switcher" role="group" aria-label="Chọn mẫu giao diện">
+        <button class="theme-button active" type="button" data-theme-choice="clinical">
+          <span>01</span> Clinical Light
+        </button>
+        <button class="theme-button" type="button" data-theme-choice="scope">
+          <span>02</span> Digital Scope
+        </button>
+        <button class="theme-button" type="button" data-theme-choice="workspace">
+          <span>03</span> Atlas Workspace
+        </button>
+      </div>
+
+      <a class="back-link" href="./index.html">Atlas hiện tại <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <main class="demo-app">
+      <aside class="organ-rail">
+        <div class="rail-heading">
+          <span>Hệ cơ quan</span>
+          <strong id="organCount">0</strong>
+        </div>
+        <nav id="organList" aria-label="Chọn cơ quan"></nav>
+        <div class="rail-source">
+          <span>Đối chiếu</span>
+          <strong>WHO · PO · ICD-O</strong>
+          <small>Dữ liệu mẫu từ atlas hiện tại</small>
+        </div>
+      </aside>
+
+      <section class="case-browser" aria-labelledby="caseListTitle">
+        <div class="browser-heading">
+          <div>
+            <span class="overline">Danh sách ca</span>
+            <h1 id="caseListTitle">Chẩn đoán</h1>
+          </div>
+          <strong id="caseCount">0</strong>
+        </div>
+        <label class="demo-search" for="demoSearch">
+          <span class="search-symbol" aria-hidden="true">⌕</span>
+          <input id="demoSearch" type="search" aria-label="Tìm chẩn đoán" placeholder="Tìm chẩn đoán, cơ quan, marker..." autocomplete="off" />
+          <kbd>/</kbd>
+        </label>
+        <div id="caseList" class="case-list"></div>
+      </section>
+
+      <section class="slide-workspace" aria-labelledby="viewerTitle">
+        <div class="viewer-toolbar">
+          <div>
+            <span id="viewerOrgan" class="viewer-organ">Tuyến giáp</span>
+            <h2 id="viewerTitle">Đang tải...</h2>
+            <p id="viewerEnglish" lang="en"></p>
+          </div>
+          <div class="viewer-actions" aria-label="Điều khiển ảnh">
+            <button type="button" id="zoomOut" class="icon-button" aria-label="Thu nhỏ" title="Thu nhỏ">−</button>
+            <output id="zoomValue" aria-label="Độ phóng đại">100%</output>
+            <button type="button" id="zoomIn" class="icon-button" aria-label="Phóng to" title="Phóng to">+</button>
+            <button type="button" id="zoomReset" class="icon-button" aria-label="Đặt lại độ phóng đại" title="Đặt lại">↺</button>
+          </div>
+        </div>
+
+        <figure class="slide-stage">
+          <div class="slide-image-wrap">
+            <img id="slideImage" alt="" />
+            <div class="slide-scale"><span>Ảnh nguồn mở</span></div>
+            <span class="stain-label">H&amp;E</span>
+          </div>
+          <figcaption>
+            <span id="imageCaption">Vi thể H&amp;E</span>
+            <a id="imageSource" href="#" target="_blank" rel="noreferrer">Nguồn ảnh ↗</a>
+          </figcaption>
+        </figure>
+
+        <div class="mobile-case-strip" id="mobileCaseStrip" aria-label="Chọn nhanh ca bệnh"></div>
+      </section>
+
+      <aside class="learning-panel">
+        <div class="case-code-row">
+          <div><span>ICD-O</span><strong id="icdoCode">—</strong></div>
+          <div><span>WHO</span><strong id="whoEdition">5th ed.</strong></div>
+        </div>
+
+        <div class="detail-tabs" role="tablist" aria-label="Nội dung học">
+          <button class="detail-tab active" type="button" role="tab" aria-selected="true" data-detail-tab="micro">Vi thể</button>
+          <button class="detail-tab" type="button" role="tab" aria-selected="false" data-detail-tab="markers">HMMD</button>
+          <button class="detail-tab" type="button" role="tab" aria-selected="false" data-detail-tab="sources">Nguồn</button>
+        </div>
+
+        <section id="detailContent" class="detail-content" aria-live="polite"></section>
+
+        <div class="memory-block">
+          <span>Điểm neo trí nhớ</span>
+          <p id="memoryText"></p>
+        </div>
+
+        <div class="mode-note">
+          <span id="modeNumber">Mẫu 01</span>
+          <strong id="modeTitle">Clinical Light</strong>
+          <p id="modeDescription">Ưu tiên tốc độ đọc và độ tương phản trong môi trường làm việc sáng.</p>
+        </div>
+      </aside>
+    </main>
+
+    <script src="./interface-demos.js"></script>
+  </body>
+</html>
