@@ -56,16 +56,15 @@
       <main id="top" class="content">
         <section class="hero">
           <div class="hero-copy">
-            <span class="eyebrow">Atlas giải phẫu bệnh</span>
-            <h1>Nhìn ảnh trước, nhớ chẩn đoán sau.</h1>
+            <span class="eyebrow">Workspace 03 · Tra cứu vi thể</span>
+            <h1>Atlas giải phẫu bệnh</h1>
             <p>
-              Mỗi cơ quan được chia thành các chẩn đoán song ngữ. Thẻ học kết hợp ảnh đã xác minh, dấu hiệu vi thể,
-              HMMD định hướng, ICD-O-4 và liên kết WHO/IARC, PathologyOutlines để đối chiếu.
+              Nhìn ảnh trước, đối chiếu đặc điểm sau. Mỗi ca kết hợp chẩn đoán song ngữ, vi thể cần nhìn,
+              HMMD định hướng, ICD-O-4 và liên kết nguồn để học theo một luồng duy nhất.
             </p>
             <div class="hero-actions">
               <a class="btn primary" href="#atlasBoard">Mở atlas</a>
               <a class="btn ghost" href="#whoLibrary">Tra danh mục WHO</a>
-              <a class="btn ghost" href="./interface-demos.html">Xem 3 giao diện demo</a>
               <button class="btn ghost" id="openCaseStudio" type="button">Thêm thẻ atlas</button>
               <button class="btn ghost" id="openImageManager" type="button">Quản lý ảnh</button>
             </div>
@@ -77,6 +76,44 @@
             <div><strong id="statSources">0</strong><span>nguồn chính</span></div>
           </div>
         </section>
+
+        <div class="workspace-deck">
+          <div class="workspace-deck-heading">
+            <div>
+              <span class="eyebrow">Bàn atlas</span>
+              <h2>Chọn cơ quan, quét ca, đọc chi tiết</h2>
+            </div>
+            <div class="workspace-legend" aria-label="Luồng sử dụng">
+              <span><i>1</i>Lọc</span>
+              <span><i>2</i>Chọn ca</span>
+              <span><i>3</i>Đối chiếu</span>
+            </div>
+          </div>
+
+          <section class="toolbar" aria-label="Bộ lọc atlas">
+            <div>
+              <span class="eyebrow">Kiểu cấu trúc</span>
+              <div id="patternFilters" class="chip-row"></div>
+            </div>
+            <button class="btn" id="resetFilters" type="button">Hiện tất cả</button>
+          </section>
+
+          <section id="atlasBoard" class="atlas-board">
+            <div id="chapterPanel" class="chapter-panel"></div>
+            <div class="diagnosis-panel">
+              <div class="panel-heading">
+                <div>
+                  <span class="eyebrow">Chẩn đoán</span>
+                  <h2 id="diagnosisHeading">Đang tải atlas...</h2>
+                </div>
+                <p id="diagnosisCount"></p>
+              </div>
+              <div id="diagnosisGrid" class="diagnosis-grid"></div>
+            </div>
+          </section>
+
+          <section id="caseDetail" class="case-detail" aria-live="polite"></section>
+        </div>
 
         <section id="whoLibrary" class="who-library" aria-labelledby="whoLibraryTitle">
           <div class="who-library-heading">
@@ -119,30 +156,6 @@
             kết đúng chủ đề ở PathologyOutlines hoặc tìm đúng tên trên WebPathology.
           </p>
         </section>
-
-        <section class="toolbar" aria-label="Bộ lọc atlas">
-          <div>
-            <span class="eyebrow">Kiểu cấu trúc</span>
-            <div id="patternFilters" class="chip-row"></div>
-          </div>
-          <button class="btn" id="resetFilters" type="button">Hiện tất cả</button>
-        </section>
-
-        <section id="atlasBoard" class="atlas-board">
-          <div id="chapterPanel" class="chapter-panel"></div>
-          <div class="diagnosis-panel">
-            <div class="panel-heading">
-              <div>
-                <span class="eyebrow">Chẩn đoán</span>
-                <h2 id="diagnosisHeading">Đang tải atlas...</h2>
-              </div>
-              <p id="diagnosisCount"></p>
-            </div>
-            <div id="diagnosisGrid" class="diagnosis-grid"></div>
-          </div>
-        </section>
-
-        <section id="caseDetail" class="case-detail" aria-live="polite"></section>
 
         <section class="section">
           <div class="section-heading">

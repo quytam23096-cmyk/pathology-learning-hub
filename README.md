@@ -4,6 +4,7 @@ Website tĩnh tiếng Việt dạng atlas giải phẫu bệnh: chia theo cơ qu
 
 ## Điểm chính
 
+- Giao diện chính dùng bố cục Atlas Workspace: thanh cơ quan cố định, danh sách ca cuộn ngang, ảnh vi thể lớn và nội dung học song ngữ đặt cạnh nhau.
 - Có trang `interface-demos.html` để thử trực tiếp ba hướng giao diện mới: Clinical Light, Digital Scope và Atlas Workspace. Mỗi mẫu dùng chung dữ liệu GPB mẫu, hỗ trợ tìm kiếm, lọc cơ quan, chọn ca, đổi tab nội dung và phóng đại ảnh.
 - 13 nhóm cơ quan, 97 thẻ chẩn đoán mẫu.
 - Cả 97 thẻ có nội dung học song ngữ Việt - Anh: đặc điểm vi thể/tế bào, gợi ý báo cáo, điểm ghi nhớ và bẫy chẩn đoán.
