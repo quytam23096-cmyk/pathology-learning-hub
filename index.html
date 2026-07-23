@@ -13,7 +13,7 @@
       content="Atlas giải phẫu bệnh tiếng Việt theo cơ quan, chẩn đoán, hình ảnh vi thể, điểm ghi nhớ và nguồn chính thống."
     />
     <link rel="stylesheet" href="./tailwind.css" />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css?v=20260723-who-online-2" />
   </head>
   <body>
     <header class="top-navbar sticky top-0 z-50 border-b border-slate-700 bg-[#102a33] text-white">
@@ -160,17 +160,17 @@
         <section id="whoLibrary" class="who-library" aria-labelledby="whoLibraryTitle">
           <div class="who-library-heading">
             <div>
-              <span class="eyebrow">Bản đồ phân loại WHO/IARC</span>
-              <h2 id="whoLibraryTitle">Tra cứu toàn bộ cấu trúc công khai</h2>
+              <span class="eyebrow">Mục lục WHO Classification Online</span>
+              <h2 id="whoLibraryTitle">Tra cứu đúng quyển, đúng mục, đúng liên kết</h2>
               <p>
-                Danh mục giữ nguyên tên tiếng Anh chính thức, đồng thời liên kết tên tiếng Việt và ICD-O-4 ở
-                các thực thể đã đối chiếu. Tìm kiếm hỗ trợ cả tiếng Việt lẫn tiếng Anh.
+                Danh mục phản ánh 20 quyển đang hiển thị trên WHO Online, giữ nguyên tên tiếng Anh chính thức
+                và gắn URL trực tiếp cho từng mục. Tìm kiếm hỗ trợ cả tiếng Việt lẫn tiếng Anh.
               </p>
             </div>
             <div class="who-library-metrics">
               <div><strong id="whoVolumeCount">0</strong><span>quyển</span></div>
-              <div><strong id="whoEntryCount">0</strong><span>mục phân loại</span></div>
-              <div><strong id="whoLinkedCount">0</strong><span>thẻ tiếng Việt</span></div>
+              <div><strong id="whoEntryCount">0</strong><span>mục có link trực tiếp</span></div>
+              <div><strong id="whoLinkedCount">0</strong><span>thẻ học đã liên kết</span></div>
             </div>
           </div>
 
@@ -182,20 +182,24 @@
             <button class="btn" id="whoResetFilters" type="button">Xóa bộ lọc</button>
           </div>
 
+          <label class="who-scope-toggle" for="whoShowAllContent">
+            <input id="whoShowAllContent" type="checkbox" />
+            <span>Hiện toàn bộ mục lục, gồm phần giới thiệu và nội dung hỗ trợ</span>
+          </label>
+          <div id="whoSeriesFilters" class="who-series-filters" aria-label="Lọc theo bộ sách WHO"></div>
           <div id="whoVolumeFilters" class="who-volume-filters" aria-label="Lọc theo quyển WHO"></div>
           <div class="who-result-bar">
             <p id="whoResultSummary">Đang nạp danh mục WHO...</p>
-            <a href="https://whobluebooks.iarc.fr/structures/" target="_blank" rel="noreferrer">Kiểm tra cấu trúc gốc ↗</a>
+            <a href="https://tumourclassification.iarc.who.int/home" target="_blank" rel="noreferrer">Mở WHO Classification Online ↗</a>
           </div>
           <div id="whoCatalogGrid" class="who-catalog-grid"></div>
           <div class="who-load-row">
             <button class="btn" id="whoLoadMore" type="button">Hiện thêm kết quả</button>
           </div>
           <p class="who-rights-note">
-            Phạm vi dữ liệu: cấu trúc phân loại và tên thực thể công khai. Atlas không sao chép mô tả,
-            bảng, tiêu chuẩn chẩn đoán hoặc hình ảnh có bản quyền của WHO/IARC. Nút nguồn phân biệt rõ
-            trang đúng thực thể với danh mục quyển; khi chưa có liên kết WHO trực tiếp, atlas ưu tiên liên
-            kết đúng chủ đề ở PathologyOutlines hoặc tìm đúng tên trên WebPathology.
+            Phạm vi dữ liệu: tên quyển, tiêu đề mục, vị trí trong mục lục và URL chính thức. Atlas không sao
+            chép nội dung bài, bảng, tiêu chuẩn chẩn đoán hoặc hình ảnh có bản quyền của WHO/IARC. Một số
+            liên kết yêu cầu người học đăng nhập hoặc có quyền truy cập WHO Online.
           </p>
         </section>
 
@@ -395,12 +399,12 @@
       </main>
     </div>
 
-    <script src="./who-catalog.js"></script>
+    <script src="./who-catalog.js?v=20260723-who-online-2"></script>
     <script src="./who-diagnosis-links.js"></script>
     <script src="./webpathology-catalog.js"></script>
     <script src="./atlas-curation.js"></script>
     <script src="./atlas-bilingual.js"></script>
-    <script src="./app.js"></script>
+    <script src="./app.js?v=20260723-who-online-2"></script>
     <script src="./ui.js"></script>
   </body>
 </html>

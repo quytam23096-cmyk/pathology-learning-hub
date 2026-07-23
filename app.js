@@ -1928,13 +1928,13 @@ const sourceCards = [
   {
     title: "WHO/IARC Blue Books",
     kind: "Phân loại chuẩn",
-    note: "Nguồn phân loại chính thức theo cơ quan và chẩn đoán. WHO Online hiện có bản beta ấn bản 6 cho hệ tiêu hóa và vú; các liên kết thực thể ấn bản 5 trong atlas được ghi nhãn riêng. Một số trang cần người đọc đăng nhập.",
+    note: "Nguồn phân loại chính thức. Thư viện atlas phản ánh 20 quyển đang có trên WHO Online và dẫn thẳng tới từng mục bằng Book ID/Chapter ID. Một số trang cần đăng nhập và quyền truy cập phù hợp.",
     url: `${IARC}/home`,
   },
   {
     title: "WHO Classification Structure",
     kind: "Danh mục phân loại công khai",
-    note: "Cung cấp cấu trúc 14 quyển và tên thực thể chính thức dùng cho thư viện tra cứu lớn của atlas.",
+    note: "Nguồn cấu trúc công khai của 14 quyển WHO được giữ để đối chiếu danh pháp và làm phương án dự phòng; thư viện chính dùng mục lục WHO Online có liên kết trực tiếp.",
     url: "https://whobluebooks.iarc.fr/structures/",
   },
   {
@@ -1991,6 +1991,10 @@ const whoCatalog = window.WHO_ATLAS_CATALOG || { volumes: [], entries: [] };
 const whoVolumes = Array.isArray(whoCatalog.volumes) ? whoCatalog.volumes : [];
 const whoEntries = Array.isArray(whoCatalog.entries) ? whoCatalog.entries : [];
 const whoVolumeMap = new Map(whoVolumes.map((volume) => [volume.id, volume]));
+const whoSeries = [...new Map(whoVolumes.map((volume) => [String(volume.seriesId), {
+  id: String(volume.seriesId),
+  name: volume.series,
+}])).values()];
 const webPathologyCatalog = window.WEBPATHOLOGY_CATALOG || { organs: [], entries: [] };
 const webPathologyOrgans = Array.isArray(webPathologyCatalog.organs) ? webPathologyCatalog.organs : [];
 const webPathologyEntries = Array.isArray(webPathologyCatalog.entries) ? webPathologyCatalog.entries : [];
@@ -2028,6 +2032,8 @@ let state = {
   query: "",
   selectedId: "thyroid-ptc",
   whoVolume: "all",
+  whoSeries: "all",
+  whoShowAllContent: false,
   whoQuery: "",
   whoLimit: 36,
   webPathOrgan: "all",
@@ -2067,6 +2073,8 @@ const els = {
   whoLinkedCount: document.getElementById("whoLinkedCount"),
   whoSearchInput: document.getElementById("whoSearchInput"),
   whoResetFilters: document.getElementById("whoResetFilters"),
+  whoShowAllContent: document.getElementById("whoShowAllContent"),
+  whoSeriesFilters: document.getElementById("whoSeriesFilters"),
   whoVolumeFilters: document.getElementById("whoVolumeFilters"),
   whoResultSummary: document.getElementById("whoResultSummary"),
   whoCatalogGrid: document.getElementById("whoCatalogGrid"),
@@ -2163,7 +2171,8 @@ let whoMatches = new Map();
 function findAtlasCaseForWho(entry) {
   const target = normalizeWhoName(entry.nameEn);
   if (!target) return null;
-  const aliasId = whoEntryAliases[`${entry.volumeId}|${target}`];
+  const volumeKey = whoVolumeMap.get(entry.volumeId)?.atlasGroup || entry.volumeId;
+  const aliasId = whoEntryAliases[`${volumeKey}|${target}`];
   if (aliasId) return cases.find((item) => item.id === aliasId) || null;
 
   const curatedAlias = cases.find((item) => (
@@ -2172,7 +2181,7 @@ function findAtlasCaseForWho(entry) {
   ));
   if (curatedAlias) return curatedAlias;
 
-  const allowedChapters = whoVolumeChapters[entry.volumeId] || [];
+  const allowedChapters = whoVolumeChapters[volumeKey] || [];
   return cases.find((item) => (
     allowedChapters.includes(item.chapter)
     && normalizeWhoName(item.english) === target
@@ -2216,13 +2225,23 @@ function filteredWhoEntries() {
   const query = normalize(state.whoQuery);
   const translatedGroups = translatedWhoQueryGroups(state.whoQuery);
   return whoEntries.filter((entry) => {
+    const volume = whoVolumeMap.get(entry.volumeId) || {};
+    const scopeOk = state.whoShowAllContent || entry.entryType === "diagnosis";
+    const seriesOk = state.whoSeries === "all" || String(volume.seriesId) === state.whoSeries;
     const volumeOk = state.whoVolume === "all" || entry.volumeId === state.whoVolume;
     const directMatch = !query || entry.searchText.includes(query);
     const translatedMatch = translatedGroups.length > 0
       && translatedGroups.every((group) => group.some((term) => entry.searchText.includes(term)));
     const queryOk = directMatch || translatedMatch;
-    return volumeOk && queryOk;
+    return scopeOk && seriesOk && volumeOk && queryOk;
   });
+}
+
+function whoSeriesLabel(series) {
+  if (series === "1st Edition") return "Tế bào học";
+  if (series === "6th Edition") return "Ấn bản 6";
+  if (series === "5th Edition") return "Ấn bản 5";
+  return series || "WHO Online";
 }
 
 const webPathologyChapterOrgans = {
@@ -2733,18 +2752,33 @@ function renderWhoLibrary() {
   els.whoEntryCount.textContent = whoEntries.length.toLocaleString("vi-VN");
   els.whoLinkedCount.textContent = linkedCount.toLocaleString("vi-VN");
 
+  els.whoSeriesFilters.innerHTML = `
+    <button class="who-series-button ${state.whoSeries === "all" ? "active" : ""}" type="button" data-who-series="all">
+      Tất cả bộ sách <em>${whoVolumes.length}</em>
+    </button>
+    ${whoSeries.map((series) => `
+      <button class="who-series-button ${state.whoSeries === series.id ? "active" : ""}" type="button" data-who-series="${escapeHtml(series.id)}">
+        ${escapeHtml(whoSeriesLabel(series.name))}
+        <em>${whoVolumes.filter((volume) => String(volume.seriesId) === series.id).length}</em>
+      </button>
+    `).join("")}
+  `;
+
+  const volumesInSeries = whoVolumes.filter((volume) => (
+    state.whoSeries === "all" || String(volume.seriesId) === state.whoSeries
+  ));
   const allButton = `
     <button class="who-volume-button ${state.whoVolume === "all" ? "active" : ""}" type="button" data-who-volume="all">
       <i>ALL</i>
-      <strong>Tất cả 14 quyển</strong>
-      <em>${whoEntries.length.toLocaleString("vi-VN")}</em>
+      <strong>Tất cả ${volumesInSeries.length} quyển</strong>
+      <em>${volumesInSeries.reduce((sum, volume) => sum + Number(volume.entryCount || 0), 0).toLocaleString("vi-VN")}</em>
     </button>
   `;
-  const volumeButtons = whoVolumes.map((volume) => `
+  const volumeButtons = volumesInSeries.map((volume) => `
     <button class="who-volume-button ${state.whoVolume === volume.id ? "active" : ""}" type="button" data-who-volume="${escapeHtml(volume.id)}" title="${escapeHtml(volume.nameEn)}">
       <i>${escapeHtml(volume.short)}</i>
       <strong>${escapeHtml(volume.nameVi)}</strong>
-      <em>${Number(volume.entryCount).toLocaleString("vi-VN")}</em>
+      <em>${escapeHtml(whoSeriesLabel(volume.series))} · ${Number(volume.entryCount).toLocaleString("vi-VN")}</em>
     </button>
   `).join("");
   els.whoVolumeFilters.innerHTML = allButton + volumeButtons;
@@ -2759,8 +2793,7 @@ function renderWhoLibrary() {
     els.whoCatalogGrid.innerHTML = visible.map((entry) => {
       const volume = whoVolumeMap.get(entry.volumeId) || {};
       const linkedCase = whoMatches.get(entry);
-      const whoMetadata = linkedCase ? verifiedWhoMetadata[linkedCase.id] : null;
-      const exactWhoUrl = whoMetadata?.url || "";
+      const exactWhoUrl = entry.url || "";
       const exactPoUrl = linkedCase ? verifiedTopicLinks[linkedCase.id] : "";
       const exactWebPathologyUrl = linkedCase
         ? linkedCase.webPathologyUrl || exactWebPathologyEntryFor(linkedCase)?.url || ""
@@ -2773,14 +2806,15 @@ function renderWhoLibrary() {
         <article class="who-entry-card">
           <div class="who-entry-meta">
             <span>${escapeHtml(volume.nameVi || entry.volumeId)}</span>
-            <em>${linkedCase ? "Song ngữ đã liên kết" : escapeHtml(volume.short || "WHO")}</em>
+            <em>${linkedCase ? "Đã liên kết thẻ học" : escapeHtml(whoSeriesLabel(volume.series))}</em>
           </div>
           ${linkedCase ? `<p class="who-entry-vi">${escapeHtml(linkedCase.diagnosis)}</p>` : ""}
           <h3>${escapeHtml(entry.nameEn)}</h3>
           ${linkedCase?.icdo?.code ? `<span class="who-icdo">ICD-O-4 ${escapeHtml(linkedCase.icdo.code)}</span>` : ""}
           <p class="who-entry-path">${escapeHtml(path || volume.nameEn || "WHO Classification of Tumours")}</p>
+          <p class="who-entry-citation">WHO Online · Book ${escapeHtml(entry.bookId)} · Chapter ${escapeHtml(entry.chapterId)}</p>
           <div class="who-entry-actions">
-            <a href="${escapeHtml(exactWhoUrl || volume.sourceUrl || whoCatalog.source)}" target="_blank" rel="noreferrer">${exactWhoUrl ? escapeHtml(whoLinkLabel(whoMetadata)) : "Danh mục quyển WHO"} ↗</a>
+            <a href="${escapeHtml(exactWhoUrl || volume.sourceUrl || whoCatalog.source)}" target="_blank" rel="noreferrer">${exactWhoUrl ? "Mở đúng mục WHO" : "Mở mục lục quyển WHO"} ↗</a>
             <a href="${escapeHtml(exactPoUrl || pathologyOutlinesSearchUrl(entry.nameEn))}" target="_blank" rel="noreferrer">${exactPoUrl ? "PathologyOutlines đúng chủ đề" : "Tìm trên PathologyOutlines"} ↗</a>
             <a href="${escapeHtml(exactWebPathologyUrl || (linkedCase ? webPathologyUrlFor(linkedCase) : webPathologyEntryUrl(entry)))}" target="_blank" rel="noreferrer">${exactWebPathologyUrl ? "WebPathology: gallery đúng tên" : "WebPathology: tìm đúng tên"} ↗</a>
             ${linkedCase ? `<button type="button" data-who-case="${escapeHtml(linkedCase.id)}">Mở thẻ học song ngữ</button>` : ""}
@@ -2791,6 +2825,14 @@ function renderWhoLibrary() {
   }
 
   els.whoLoadMore.hidden = visible.length >= filtered.length;
+  els.whoSeriesFilters.querySelectorAll("[data-who-series]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.whoSeries = button.dataset.whoSeries;
+      state.whoVolume = "all";
+      state.whoLimit = 36;
+      renderWhoLibrary();
+    });
+  });
   els.whoVolumeFilters.querySelectorAll("[data-who-volume]").forEach((button) => {
     button.addEventListener("click", () => {
       state.whoVolume = button.dataset.whoVolume;
@@ -3094,10 +3136,19 @@ function bindEvents() {
   });
 
   els.whoResetFilters.addEventListener("click", () => {
+    state.whoSeries = "all";
     state.whoVolume = "all";
+    state.whoShowAllContent = false;
     state.whoQuery = "";
     state.whoLimit = 36;
     els.whoSearchInput.value = "";
+    els.whoShowAllContent.checked = false;
+    renderWhoLibrary();
+  });
+
+  els.whoShowAllContent.addEventListener("change", () => {
+    state.whoShowAllContent = els.whoShowAllContent.checked;
+    state.whoLimit = 36;
     renderWhoLibrary();
   });
 
