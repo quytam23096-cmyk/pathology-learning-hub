@@ -134,6 +134,24 @@ const chapters = [
     po: `${PO}/softtissue.html`,
   },
   {
+    id: "uppergi",
+    name: "Thực quản - dạ dày",
+    short: "UGI",
+    color: "#0f766e",
+    intro: "Đọc chuyển sản và loạn sản Barrett, kiểu biệt hóa vảy ở thực quản, sau đó đánh giá cấu trúc tuyến, tế bào rời và xâm nhập ở dạ dày.",
+    who: `${IARC}/chapters/72`,
+    po: `${PO}/gastrointestinal.html`,
+  },
+  {
+    id: "eye",
+    name: "Mắt - hốc mắt",
+    short: "EYE",
+    color: "#0369a1",
+    intro: "Gắn hình thái với đúng cấu trúc giải phẫu của mắt; ở u võng mạc chú ý hoa hồng, còn u hắc tố nội nhãn cần đánh giá kiểu tế bào và dữ liệu phân tử tiên lượng.",
+    who: `${IARC}/chapters/65`,
+    po: `${PO}/`,
+  },
+  {
     id: "inflammation",
     name: "Viêm - nhiễm",
     short: "INF",
@@ -1872,7 +1890,80 @@ const studioBoosterCases = [
   },
 ];
 
-cases.push(...studioBoosterCases);
+const sourceExpansionCases = [
+  {
+    id: "uppergi-barrett-dysplasia",
+    chapter: "uppergi",
+    diagnosis: "Loạn sản trên nền thực quản Barrett",
+    english: "Barrett dysplasia",
+    file: "Barrett's mucosa, low-grade dysplasia, H&E.jpg",
+    pattern: ["precursor", "glandular"],
+    source: "Wikimedia Commons",
+    micro: ["Niêm mạc trụ chuyển sản ruột với tế bào hình đài", "Loạn sản biểu hiện bằng tuyến chen chúc, nhân dài tăng sắc và mất trưởng thành bề mặt", "Phải phân độ thấp/cao và loại trừ ung thư biểu mô tuyến xâm nhập"],
+    report: ["Mức độ loạn sản", "Có/không ung thư biểu mô tuyến xâm nhập", "Tương quan vị trí và nội soi"],
+    memory: "Barrett có loạn sản: chuyển sản ruột là nền; mất trưởng thành bề mặt và bất thường nhân là chìa khóa.",
+    pitfall: "Viêm và tái tạo có thể giả loạn sản; ca khó nên được hội chẩn chuyên gia tiêu hóa.",
+    markers: ["p53 hỗ trợ trong ca chọn lọc", "Ki-67 hỗ trợ đánh giá phân bố tăng sinh"],
+  },
+  {
+    id: "uppergi-esophagus-scc",
+    chapter: "uppergi",
+    diagnosis: "Ung thư biểu mô tế bào vảy thực quản",
+    english: "Oesophageal squamous cell carcinoma",
+    file: "Esophageal squamous cell carcinoma -- high mag.jpg",
+    pattern: ["carcinoma", "squamous"],
+    source: "Wikimedia Commons",
+    micro: ["Đám hoặc bè tế bào vảy ác tính xâm nhập mô đệm", "Sừng hóa, cầu nối gian bào hoặc loạn sừng tùy mức biệt hóa", "Đánh giá độ sâu xâm nhập, xâm nhập mạch bạch huyết/mạch máu (LVI) và xâm nhập quanh thần kinh (PNI) trên bệnh phẩm cắt"],
+    report: ["Vị trí, kích thước và độ xâm nhập", "Biệt hóa, LVI/PNI", "Diện cắt và hạch vùng"],
+    memory: "Không tạo tuyến; cầu nối gian bào và sừng hóa trong các đám xâm nhập hướng tới ung thư biểu mô tế bào vảy.",
+    pitfall: "Sinh thiết nông có thể chỉ thấy loạn sản; cần bằng chứng xâm nhập để chẩn đoán ung thư biểu mô xâm nhập.",
+    markers: ["p40", "p63", "CK5/6"],
+  },
+  {
+    id: "uppergi-gastric-adeno",
+    chapter: "uppergi",
+    diagnosis: "Ung thư biểu mô tuyến dạ dày",
+    english: "Gastric adenocarcinoma",
+    file: "Gastric adenocarcinoma.jpg",
+    pattern: ["carcinoma", "glandular", "ihc"],
+    source: "Wikimedia Commons",
+    micro: ["Tuyến bất thường xâm nhập trong mô đệm xơ hoặc tế bào u rời rạc", "Phân loại hình thái theo WHO và có thể ghi kiểu Lauren khi phù hợp", "Tìm thành phần nhầy, tế bào nhẫn, LVI và PNI"],
+    report: ["Típ mô học và độ biệt hóa", "Độ sâu xâm nhập, diện cắt và hạch", "HER2, PD-L1, MMR/MSI và CLDN18.2 theo chỉ định lâm sàng"],
+    memory: "Ung thư biểu mô dạ dày cần kết hợp kiểu hình thái, độ xâm nhập và các dấu ấn dự báo điều trị.",
+    pitfall: "Tế bào nhẫn dạ dày có thể rất thưa và bị bỏ sót trong sinh thiết viêm/xơ.",
+    markers: ["Pan-CK", "HER2", "MMR", "PD-L1", "CLDN18.2"],
+  },
+  {
+    id: "eye-retinoblastoma",
+    chapter: "eye",
+    diagnosis: "U nguyên bào võng mạc",
+    english: "Retinoblastoma",
+    file: "Retinoblastoma rosette.jpg",
+    pattern: ["ihc"],
+    source: "Wikimedia Commons",
+    micro: ["U tế bào tròn nhỏ màu xanh của võng mạc", "Hoa hồng Flexner-Wintersteiner gợi biệt hóa quang thụ thể", "Có thể có hoại tử, vôi hóa và gieo rắc dịch kính"],
+    report: ["Xâm nhập thần kinh thị giác và hắc mạc", "Xâm nhập tiền phòng, củng mạc hoặc ngoài nhãn cầu", "Diện cắt thần kinh thị giác"],
+    memory: "Trẻ nhỏ + u võng mạc tế bào tròn xanh + hoa hồng Flexner-Wintersteiner.",
+    pitfall: "Phải phân biệt các u tế bào tròn nhỏ khác và không bỏ sót xâm nhập thần kinh thị giác sau lá sàng.",
+    markers: ["Synaptophysin", "CRX", "Ki-67", "RB1 (xét nghiệm phân tử/di truyền khi có chỉ định)"],
+  },
+  {
+    id: "eye-iris-melanoma",
+    chapter: "eye",
+    diagnosis: "U hắc tố ác tính mống mắt",
+    english: "Iris melanoma",
+    file: "Iris melanoma.jpg",
+    pattern: ["ihc"],
+    source: "Wikimedia Commons",
+    micro: ["Tế bào thoi và/hoặc dạng biểu mô có thể chứa melanin", "Đánh giá phân bào, xâm nhập góc tiền phòng và thể mi", "Phân tử và vị trí giải phẫu có ý nghĩa tiên lượng"],
+    report: ["Kích thước và mức xâm lấn", "Kiểu tế bào và phân bào", "Tình trạng diện cắt và dữ liệu phân tử nếu có"],
+    memory: "U hắc tố mống mắt phải được định vị đúng; sắc tố hỗ trợ nhưng không bắt buộc.",
+    pitfall: "Nốt ruồi mống mắt và melanocytoma có thể bắt chước; ảnh atlas hiện là ảnh lâm sàng, không thay thế vi thể.",
+    markers: ["SOX10", "S100", "Melan-A", "HMB45", "BAP1 theo bối cảnh"],
+  },
+];
+
+cases.push(...studioBoosterCases, ...sourceExpansionCases);
 cases.forEach(standardizeBuiltinCase);
 
 function applyVerifiedCuration(item) {
@@ -2000,7 +2091,7 @@ const webPathologyOrgans = Array.isArray(webPathologyCatalog.organs) ? webPathol
 const webPathologyEntries = Array.isArray(webPathologyCatalog.entries) ? webPathologyCatalog.entries : [];
 const webPathologyOrganMap = new Map(webPathologyOrgans.map((organ) => [organ.id, organ]));
 const whoVolumeChapters = {
-  digestive: ["colon", "hpb", "soft"],
+  digestive: ["colon", "hpb", "soft", "uppergi"],
   breast: ["breast"],
   thoracic: ["lung"],
   "female-genital": ["gyn"],
@@ -2011,7 +2102,7 @@ const whoVolumeChapters = {
   haematolymphoid: ["heme"],
   cns: ["cns"],
   "soft-tissue-bone": ["soft"],
-  eye: [],
+  eye: ["eye"],
   paediatric: [],
   genetic: [],
 };
@@ -2024,6 +2115,11 @@ const whoEntryAliases = {
   "thoracic|large cell neuroendocrine carcinoma of the lung": "lung-large-cell-ne",
   "female-genital|high grade serous carcinoma of the ovary": "gyn-ovarian-serous",
   "head-neck|nasopharyngeal carcinoma": "headneck-nasopharyngeal",
+  "digestive|barrett dysplasia": "uppergi-barrett-dysplasia",
+  "digestive|oesophageal squamous cell carcinoma": "uppergi-esophagus-scc",
+  "digestive|gastric adenocarcinoma": "uppergi-gastric-adeno",
+  "eye|retinoblastoma": "eye-retinoblastoma",
+  "eye|iris melanoma": "eye-iris-melanoma",
 };
 
 let state = {
@@ -2257,6 +2353,8 @@ const webPathologyChapterOrgans = {
   cns: ["neuropath"],
   headneck: ["head-and-neck"],
   soft: ["soft-tissue", "orthopedic"],
+  uppergi: ["gastrointestinal"],
+  eye: [],
   inflammation: ["infectious-disease"],
 };
 

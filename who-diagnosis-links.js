@@ -1,7 +1,7 @@
 // Curated from WHO Classification of Tumours Online heading search results.
 // The file contains identifiers and links only; it does not reproduce WHO content.
 window.WHO_DIAGNOSIS_LINKS = {
-  verifiedAt: "2026-07-21",
+  verifiedAt: "2026-07-23",
   source: "https://tumourclassification.iarc.who.int/search-new",
   links: {
     "thyroid-follicular-adenoma": { bookId: 53, chapterId: 38, edition: "5th ed.", entityEn: "Follicular thyroid adenoma", relation: "exact" },
@@ -74,6 +74,7 @@ window.WHO_DIAGNOSIS_LINKS = {
     "skin-bcc": { bookId: 64, chapterId: 22, edition: "5th ed.", entityEn: "Basal cell carcinomas", relation: "exact" },
     "skin-scc": { bookId: 64, chapterId: 35, edition: "5th ed.", entityEn: "Squamous cell carcinomas", relation: "exact" },
     "skin-actinic-keratosis": { bookId: 64, chapterId: 6, edition: "5th ed.", entityEn: "Actinic keratosis", relation: "exact" },
+    "skin-sebk": { bookId: 64, chapterId: 14, edition: "5th ed.", entityEn: "Seborrhoeic keratosis", relation: "exact" },
     "skin-dermatofibroma": { bookId: 64, chapterId: 233, edition: "5th ed.", entityEn: "Dermatofibroma (fibrous histiocytoma)", relation: "exact" },
 
     "heme-follicular": { bookId: 63, chapterId: 130, edition: "5th ed.", entityEn: "Follicular lymphoma", relation: "exact" },
@@ -83,7 +84,7 @@ window.WHO_DIAGNOSIS_LINKS = {
     "heme-mantle-cell": { bookId: 63, chapterId: 135, edition: "5th ed.", entityEn: "Mantle cell lymphoma", relation: "exact" },
     "heme-marginal-zone": { bookId: 63, chapterId: 125, edition: "5th ed.", entityEn: "Marginal zone lymphoma", relation: "parent" },
 
-    "cns-meningioma": { bookId: 45, chapterId: 89, edition: "5th ed.", entityEn: "Meningioma", relation: "exact" },
+    "cns-meningioma": { bookId: 45, chapterId: 91, edition: "5th ed.", entityEn: "Meningioma", relation: "exact" },
     "cns-glioblastoma": { bookId: 45, chapterId: 7, edition: "5th ed.", entityEn: "Glioblastoma, IDH-wildtype", relation: "exact" },
     "cns-schwannoma": { bookId: 45, chapterId: 83, edition: "5th ed.", entityEn: "Schwannoma", relation: "exact" },
 
@@ -94,7 +95,14 @@ window.WHO_DIAGNOSIS_LINKS = {
 
     "soft-neurofibroma": { bookId: 33, chapterId: 83, edition: "5th ed.", entityEn: "Neurofibroma", relation: "exact" },
     "soft-gist": { bookId: 33, chapterId: 59, edition: "5th ed.", entityEn: "Gastrointestinal stromal tumour", relation: "exact" },
-    "soft-lipoma": { bookId: 33, chapterId: 4, edition: "5th ed.", entityEn: "Lipoma", relation: "exact" }
+    "soft-lipoma": { bookId: 33, chapterId: 4, edition: "5th ed.", entityEn: "Lipoma", relation: "exact" },
+
+    "uppergi-barrett-dysplasia": { bookId: 72, chapterId: 7, edition: "6th ed. beta", entityEn: "Barrett dysplasia", relation: "exact" },
+    "uppergi-esophagus-scc": { bookId: 72, chapterId: 13, edition: "6th ed. beta", entityEn: "Oesophageal squamous cell carcinoma", relation: "exact" },
+    "uppergi-gastric-adeno": { bookId: 72, chapterId: 27, edition: "6th ed. beta", entityEn: "Gastric adenocarcinoma", relation: "exact" },
+
+    "eye-retinoblastoma": { bookId: 65, chapterId: 101, edition: "5th ed.", entityEn: "Retinoblastoma", relation: "exact" },
+    "eye-iris-melanoma": { bookId: 65, chapterId: 84, edition: "5th ed.", entityEn: "Iris melanoma", relation: "exact" }
   }
 };
 

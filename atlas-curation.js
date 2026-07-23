@@ -89,6 +89,8 @@
     cns: { label: "WHO Classification of Tumours of the Central Nervous System", edition: "5th edition", year: "2021", url: "https://whobluebooks.iarc.fr/structures/central-nervous-system-tumours/" },
     headneck: { label: "WHO Classification of Head and Neck Tumours", edition: "5th edition", year: "2024", url: "https://whobluebooks.iarc.fr/structures/head-and-neck-tumours/" },
     soft: { label: "WHO Classification of Soft Tissue and Bone Tumours", edition: "5th edition", year: "2020", url: "https://whobluebooks.iarc.fr/structures/soft-tissue-and-bone-tumours/" },
+    uppergi: { label: "WHO Classification of Digestive System Tumours", edition: "6th edition beta", year: "2026", url: `${IARC}/chapters/72` },
+    eye: { label: "WHO Classification of Eye and Orbit Tumours", edition: "5th edition", year: "2022", url: `${IARC}/chapters/65` },
     inflammation: { label: "Không phải nhóm phân loại u WHO", edition: "Not applicable", year: "", url: "https://www.pathologyoutlines.com/infectiousdisease.html" },
   };
 
@@ -122,12 +124,26 @@
   };
 
   const replacementFiles = {
+    "thyroid-nodular": ["Histopathology of nodular hyperplasia of the thyroid.png", "Vi thể H&E"],
+    "thyroid-subacute": ["Subacute thyroiditis - high mag.jpg", "Vi thể H&E"],
+    "thyroid-graves": ["Histopathology of Graves' disease - medium mag.jpg", "Vi thể H&E"],
+    "thyroid-tall-cell-ptc": ["Histopathology of tall cell and hobnail variants of papillary thyroid carcinoma.jpg", "Vi thể H&E", "Tệp ghép nhiều biến thể PTC; vùng tế bào cao phải được đọc theo chú thích của tệp gốc."],
     "thyroid-niftp": ["Histopathology of NIFTP.png", "Vi thể H&E"],
     "thyroid-ftc": ["Histopathology of follicular thyroid carcinoma.png", "Vi thể H&E"],
+    "lung-small-cell": ["Histopathology of small cell carcinoma, annotated.png", "Vi thể H&E", "Ảnh tổn thương di căn thành ngực từ ung thư tế bào nhỏ nguyên phát ở phổi; giữ đúng bối cảnh của tệp gốc."],
+    "lung-ais": ["Adenocarcinoma in situ, non-mucinous (9280005090).jpg", "Vi thể H&E"],
+    "lung-acinar-pattern": ["Histopathology of lung adenocarcinoma with acinar pattern.png", "Vi thể H&E"],
+    "lung-papillary-pattern": ["Papillary adenocarcinoma of the lung -- high mag.jpg", "Vi thể H&E"],
+    "lung-large-cell-ne": ["Large cell neuroendocrine carcinoma (5020526910).jpg", "Vi thể H&E", "Ảnh từ Atlas of Pulmonary Pathology của Yale Rosen; mô tả tế bào lớn, nhiễm sắc thô và hạch nhân rõ."],
+    "lung-metastatic-colon": ["Core biopsy - Metastatic colonic adenocarcinoma with invasion of bronchial mucosa Case 245 (8193433549).jpg", "Vi thể", "Ung thư biểu mô tuyến đại tràng di căn xâm nhập niêm mạc phế quản; ảnh nguồn lưu ý tổn thương có thể giả ung thư biểu mô tại chỗ của phế quản."],
     "lung-mucinous": ["Invasive mucinous adenocarcinoma (8207250938).jpg", "Vi thể H&E"],
     "lung-carcinoid": ["Typical carcinoid tumor (5020216730).jpg", "Vi thể H&E"],
     "colon-hyperplastic": ["Histopathology of hyperplastic polyp, tangential section.jpg", "Vi thể H&E"],
     "colon-ssl": ["Histopathology of heterogenous sessile serrated adenoma.jpg", "Vi thể H&E"],
+    "colon-adenoma": ["Tubular adenoma of the colon.jpg", "Vi thể H&E"],
+    "colon-villous": ["Micrograph of villous adenoma with high-grade dysplasia.jpg", "Vi thể H&E", "Ảnh u tuyến nhung mao có loạn sản độ cao; không đại diện cho mọi u tuyến nhung mao."],
+    "colon-high-grade-dysplasia": ["Micrograph of villous adenoma with high-grade dysplasia.jpg", "Vi thể H&E"],
+    "colon-mucinous-adeno": ["Mucinous colorectal adenocarcinoma, high mag.jpg", "Vi thể H&E"],
     "colon-tsa": ["Histopathology of traditional serrated adenoma, low magnification.jpg", "Vi thể H&E"],
     "colon-inflammatory-polyp": ["Inflammatory polyp -- intermed mag.jpg", "Vi thể H&E"],
     "colon-signet-ring": ["Signet Ring Cells (4435095173).jpg", "Vi thể H&E"],
@@ -136,17 +152,25 @@
     "breast-phyllodes": ["Phyllodes tumour.jpg", "Vi thể H&E"],
     "breast-lcis": ["Histopathology of lobular carcinoma in situ.jpg", "Vi thể H&E"],
     "breast-metaplastic": ["Breast metaplastic carcinoma.jpg", "Vi thể H&E"],
+    "breast-adh": ["Atypical ductal hyperplasia - high mag.jpg", "Vi thể H&E"],
     "breast-radial-scar": ["Histopathology of a radial scar of the breast.jpg", "Vi thể H&E"],
+    "hpb-cholangiocarcinoma": ["4 cholangio 2 680x512px.tif", "Vi thể H&E", "Ung thư biểu mô đường mật trong gan, típ ống nhỏ theo mô tả của tệp gốc."],
     "hpb-pdac": ["Histopathology of pancreatic ductal adenocarcinoma.jpg", "Vi thể H&E"],
+    "hpb-hepatocellular-adenoma": ["Histopathology of inflammatory hepatocellular adenoma.jpg", "Vi thể H&E", "Ảnh típ u tuyến tế bào gan viêm; không đại diện cho toàn bộ các phân nhóm HCA."],
+    "hpb-fnh": ["Focal nodular hyperplasia - low mag.jpg", "Vi thể H&E"],
     "hpb-cirrhosis": ["Histopathology of chronic alcoholic cirrhosis.jpg", "Vi thể H&E", "Ảnh minh họa xơ gan do rượu; không đại diện cho mọi căn nguyên xơ gan."],
     "gyn-ovarian-serous": ["Histopathology of a high-grade serous carcinoma arising from a serous borderline tumor.jpg", "Vi thể H&E", "Ảnh HGSC phát sinh trên nền u thanh dịch giáp biên; đọc đúng bối cảnh của tệp gốc."],
     "gyn-leiomyoma": ["Histopathology of uterine leiomyoma.jpg", "Vi thể H&E"],
     "gyn-leiomyosarcoma": ["Uterine leiomyosarcoma (1).jpg", "Vi thể H&E"],
     "gyn-endometrial-serous": ["Histopathology of papillary serous carcinoma of the endometrium.jpg", "Vi thể H&E"],
+    "gyn-ein": ["Histopathology of endometrial intraepithelial neoplasia (EIN).jpg", "Vi thể H&E"],
+    "gyn-ovary-mucinous": ["Mucinous borderline tumor of ovary (1) histopatholgy.jpg", "Vi thể H&E"],
     "gyn-mature-teratoma": ["Mature Cystic Teratoma of the Ovary (3776273154).jpg", "Vi thể H&E"],
     "gu-bph": ["Benign prostate hyperplasia.jpg", "Vi thể H&E"],
     "gu-hgpin": ["Histopathology of high-grade prostatic intraepithelial neoplasia (HGPIN), original.jpg", "Vi thể H&E"],
     "gu-seminoma": ["Histopathology of seminoma, intermediate magnification.jpg", "Vi thể H&E"],
+    "gu-urothelial-low": ["Papillary urothelial carcinoma (low-grade), low mag.jpg", "Vi thể H&E"],
+    "gu-urothelial-high": ["Histopathology of high grade urothelial carcinoma.jpg", "Vi thể H&E"],
     "kidney-clear-cell": ["Histopathology of clear cell renal cell carcinoma, grade 1, intermediate magnification.jpg", "Vi thể H&E"],
     "kidney-chromophobe": ["Histopathology of classic chromophobe renal cell carcinoma with pale cells.jpg", "Vi thể H&E"],
     "skin-actinic-keratosis": ["Histopathology of actinic keratosis.jpg", "Vi thể H&E"],
@@ -154,18 +178,27 @@
     "skin-bcc": ["Basal cell carcinoma - high mag.jpg", "Vi thể H&E"],
     "skin-scc": ["Micrograph of invasive squamous cell carcinoma - 150x.jpg", "Vi thể H&E", "Ảnh ung thư biểu mô tế bào vảy xâm nhập nông của da."],
     "skin-melanoma": ["Histopathology of invasive melanoma, high magnification.jpg", "Vi thể H&E"],
+    "skin-nevus": ["Histopathology of melanocytic nevus.jpg", "Vi thể H&E"],
     "skin-dermatofibroma": ["Histopathology of dermatofibroma.jpg", "Vi thể H&E"],
     "heme-follicular": ["Follicular lymphoma -- intermed mag.jpg", "Vi thể H&E"],
     "heme-dlbcl": ["Diffuse large B-cell lymphoma (DLBCL), intermed. mag.jpg", "Vi thể H&E"],
     "heme-cll-sll": ["Chronic lymphocytic leukemia - intermed mag.jpg", "Vi thể H&E"],
     "heme-mantle-cell": ["Mantle cell lymphoma - intermed mag.jpg", "Vi thể H&E"],
     "heme-marginal-zone": ["Marginal zone lymphoma - kidney -- intermed mag.jpg", "Vi thể H&E", "Ảnh u lympho vùng rìa tại thận; vị trí của ảnh không đại diện cho mọi ca."],
+    "heme-hodgkin": ["Hodgkin lymphoma cytology large.jpg", "Tế bào học chọc hút hạch", "Ảnh nhuộm Field trên mẫu FNA hạch, có tế bào Reed-Sternberg và nền viêm hỗn hợp; không phải tiêu bản H&E mô học."],
     "cns-glioblastoma": ["AFIP-00405564-Glioblastoma-Micro.jpg", "Vi thể H&E"],
     "cns-schwannoma": ["Schwannoma with Antoni A and Antoni B areas.jpg", "Vi thể H&E"],
     "headneck-warthin": ["Warthin tumor (0).jpg", "Vi thể H&E"],
     "headneck-nasopharyngeal": ["Nasopharyngeal carcinoma -- high mag.jpg", "Vi thể H&E"],
     "soft-gist": ["Gastrointestinal stromal tumor (GIST), intermed. mag.1.jpg", "Vi thể H&E"],
     "soft-lipoma": ["Histopathology of lipoma.jpg", "Vi thể H&E"],
+    "infection-tb": ["Pulmonary tuberculosis - Necrotizing granuloma (6545184743).jpg", "Vi thể H&E", "U hạt hoại tử trong lao phổi; hình thái không thay thế việc chứng minh tác nhân bằng nhuộm, nuôi cấy hoặc xét nghiệm phân tử."],
+    "infection-fungal-granuloma": ["Histopathology of Histoplasma capsulatum, GMS stain.jpg", "Vi thể GMS", "Ví dụ u hạt ruột non do Histoplasma capsulatum, nhuộm GMS cho thấy nấm men nảy chồi hẹp."],
+    "uppergi-barrett-dysplasia": ["Barrett's mucosa, low-grade dysplasia, H&E.jpg", "Vi thể H&E"],
+    "uppergi-esophagus-scc": ["Esophageal squamous cell carcinoma -- high mag.jpg", "Vi thể H&E"],
+    "uppergi-gastric-adeno": ["Gastric adenocarcinoma.jpg", "Vi thể H&E"],
+    "eye-retinoblastoma": ["Retinoblastoma rosette.jpg", "Vi thể H&E"],
+    "eye-iris-melanoma": ["Iris melanoma.jpg", "Ảnh lâm sàng", "Ảnh lâm sàng u hắc tố mống mắt, không phải ảnh vi thể; dùng để định vị tổn thương."],
   };
 
   const imageReplacements = Object.fromEntries(Object.entries(replacementFiles).map(([id, value]) => {
@@ -254,6 +287,10 @@
     "soft-neurofibroma": "95400/0",
     "soft-gist": "89360/3",
     "soft-lipoma": "88500/0",
+    "uppergi-esophagus-scc": "80700/3",
+    "uppergi-gastric-adeno": "81400/3",
+    "eye-retinoblastoma": "95100/3",
+    "eye-iris-melanoma": "87200/3",
   };
 
   const notApplicableIcdo = new Set([
@@ -354,6 +391,11 @@
     "skin-dermatofibroma": ["Dermatofibroma (fibrous histiocytoma) and variants"],
     "cns-glioblastoma": ["Glioblastoma, IDH-wildtype"],
     "headneck-nasopharyngeal": ["Nasopharyngeal carcinoma"],
+    "uppergi-barrett-dysplasia": ["Barrett dysplasia"],
+    "uppergi-esophagus-scc": ["Oesophageal squamous cell carcinoma"],
+    "uppergi-gastric-adeno": ["Gastric adenocarcinoma"],
+    "eye-retinoblastoma": ["Retinoblastoma"],
+    "eye-iris-melanoma": ["Iris melanoma"],
   };
   Object.entries(whoAliases).forEach(([id, terms]) => {
     caseMetadata[id] = { ...(caseMetadata[id] || {}), whoTerms: terms };
@@ -361,6 +403,9 @@
 
   const webPathologyLinks = {
     "thyroid-ptc": "https://www.webpathology.com/images/endocrine/thyroid/papillary-carcinoma",
+    "uppergi-barrett-dysplasia": "https://www.webpathology.com/images/gastrointestinal/esophagus/barrett-esophagus",
+    "uppergi-esophagus-scc": "https://www.webpathology.com/images/gastrointestinal/esophagus/squamous-cell-carcinoma-of-esophagus",
+    "uppergi-gastric-adeno": "https://www.webpathology.com/images/gastrointestinal/stomach/gastric-carcinomas",
   };
   Object.entries(webPathologyLinks).forEach(([id, url]) => {
     caseMetadata[id] = { ...(caseMetadata[id] || {}), webPathologyUrl: url };

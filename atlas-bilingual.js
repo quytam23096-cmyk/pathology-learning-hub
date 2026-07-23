@@ -580,6 +580,37 @@
       "Atypical lipomatous tumour may be under-sampled in a small biopsy."
     ),
 
+    "uppergi-barrett-dysplasia": d(
+      ["Intestinalized columnar mucosa with goblet cells", "Gland crowding, nuclear elongation and hyperchromasia with impaired surface maturation", "Grade the dysplasia and exclude invasive adenocarcinoma"],
+      ["Report dysplasia grade, the presence or absence of invasive adenocarcinoma, and the endoscopic level sampled."],
+      "Barrett mucosa is the background; loss of surface maturation and cytologic atypia identify dysplasia.",
+      "Inflammation and regeneration can mimic dysplasia, so difficult cases benefit from expert gastrointestinal pathology review."
+    ),
+    "uppergi-esophagus-scc": d(
+      ["Invasive nests or cords of malignant squamous cells", "Keratinization, dyskeratosis or intercellular bridges may be present", "Assess depth, lymphovascular invasion and perineural invasion in resection specimens"],
+      ["Report site, size, depth of invasion, differentiation, LVI/PNI, margins and regional nodes."],
+      "Keratinization and intercellular bridges in invasive nests support squamous cell carcinoma.",
+      "A superficial biopsy may sample only squamous dysplasia and miss the invasive front."
+    ),
+    "uppergi-gastric-adeno": d(
+      ["Infiltrative atypical glands or discohesive malignant cells", "Desmoplasia supports stromal invasion", "Document mucinous or signet-ring-cell morphology when present"],
+      ["Report histologic type, differentiation, depth, margins and nodes; add predictive biomarkers according to the clinical setting."],
+      "Gastric carcinoma diagnosis combines growth pattern, stromal invasion and treatment-relevant biomarkers.",
+      "Scattered signet-ring cells may be sparse and easily missed in inflamed or fibrotic biopsies."
+    ),
+    "eye-retinoblastoma": d(
+      ["Small round blue cell tumour of the retina", "Flexner-Wintersteiner rosettes indicate photoreceptor differentiation", "Necrosis, calcification and vitreous seeding may occur"],
+      ["Report optic nerve and choroidal invasion, extraocular extension and the optic nerve margin."],
+      "A retinal small round blue cell tumour with Flexner-Wintersteiner rosettes is the classic pattern.",
+      "Do not miss post-laminar optic nerve invasion, an important high-risk feature."
+    ),
+    "eye-iris-melanoma": d(
+      ["Spindle and/or epithelioid melanocytic cells", "Melanin may be abundant, sparse or absent", "Assess mitotic activity and extension into the angle or ciliary body"],
+      ["Report size, anatomic extent, cell type, mitotic activity, margins and available prognostic molecular findings."],
+      "Correct anatomic localization is essential; pigment supports melanocytic differentiation but is not required.",
+      "Iris naevus and melanocytoma may mimic melanoma, and the current atlas image is clinical rather than microscopic."
+    ),
+
     "inflammation-granuloma": d(
       ["Aggregates of epithelioid histiocytes", "Multinucleated giant cells may be present", "Necrosis may be absent or present depending on cause"],
       ["Describe granuloma type and select organism stains, cultures or molecular tests according to the clinical setting."],
