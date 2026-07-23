@@ -13,7 +13,7 @@
       content="Atlas giải phẫu bệnh tiếng Việt theo cơ quan, chẩn đoán, hình ảnh vi thể, điểm ghi nhớ và nguồn chính thống."
     />
     <link rel="stylesheet" href="./tailwind.css" />
-    <link rel="stylesheet" href="./styles.css?v=20260723-who-online-2" />
+    <link rel="stylesheet" href="./styles.css?v=20260723-bilingual-1" />
   </head>
   <body>
     <header class="top-navbar sticky top-0 z-50 border-b border-slate-700 bg-[#102a33] text-white">
@@ -92,7 +92,7 @@
       <aside class="sidebar">
         <label class="search-box" for="searchInput">
           <span>Tìm nhanh</span>
-          <input id="searchInput" type="search" placeholder="VD: tuyến giáp, thyroid, PTC, TTF-1..." autocomplete="off" />
+          <input id="searchInput" type="search" placeholder="VD: dạ dày, stomach, tuyến giáp, thyroid..." autocomplete="off" />
         </label>
 
         <a class="side-library-link" href="#whoLibrary">
@@ -166,8 +166,8 @@
               <span class="eyebrow">Mục lục WHO Classification Online</span>
               <h2 id="whoLibraryTitle">Tra cứu đúng quyển, đúng mục, đúng liên kết</h2>
               <p>
-                Danh mục phản ánh 20 quyển đang hiển thị trên WHO Online, giữ nguyên tên tiếng Anh chính thức
-                và gắn URL trực tiếp cho từng mục. Tìm kiếm hỗ trợ cả tiếng Việt lẫn tiếng Anh.
+                Danh mục phản ánh 20 quyển đang hiển thị trên WHO Online. Mỗi mục giữ nguyên tên tiếng Anh chính thức,
+                bổ sung bản dịch thuật ngữ y khoa tiếng Việt và URL trực tiếp. Có thể tìm bằng cả hai ngôn ngữ.
               </p>
             </div>
             <div class="who-library-metrics">
@@ -202,7 +202,8 @@
           <p class="who-rights-note">
             Phạm vi dữ liệu: tên quyển, tiêu đề mục, vị trí trong mục lục và URL chính thức. Atlas không sao
             chép nội dung bài, bảng, tiêu chuẩn chẩn đoán hoặc hình ảnh có bản quyền của WHO/IARC. Một số
-            liên kết yêu cầu người học đăng nhập hoặc có quyền truy cập WHO Online.
+            liên kết yêu cầu người học đăng nhập hoặc có quyền truy cập WHO Online. Tên tiếng Anh được giữ làm
+            danh pháp nguồn; tên gene, tên người và một số thuật ngữ quốc tế không dịch được giữ nguyên trong dòng tiếng Việt.
           </p>
         </section>
 
@@ -237,8 +238,8 @@
               <span class="eyebrow">Kho liên kết ảnh WebPathology</span>
               <h2 id="webPathologyTitle">Mở gallery đúng chủ đề trên nguồn gốc</h2>
               <p>
-                Chỉ mục được tạo từ sitemap công khai của WebPathology. Mỗi kết quả mở trang gallery toàn màn hình trên
-                WebPathology; atlas không sao chép, tải lại hoặc nhúng hình ảnh có bản quyền.
+                Chỉ mục được tạo từ sitemap công khai của WebPathology. Tiêu đề và đường dẫn phân cấp được hiển thị song ngữ;
+                mỗi kết quả mở gallery gốc. Atlas không sao chép, tải lại hoặc nhúng hình ảnh có bản quyền.
               </p>
             </div>
             <div class="webpath-metrics">
@@ -250,7 +251,7 @@
           <div class="webpath-controls">
             <label for="webPathSearchInput">
               Tìm tiếng Việt hoặc tiếng Anh
-              <input id="webPathSearchInput" type="search" placeholder="VD: tuyến giáp, thyroid, papillary carcinoma, lymphoma..." autocomplete="off" />
+              <input id="webPathSearchInput" type="search" placeholder="VD: dạ dày, stomach, ung thư biểu mô tuyến, adenocarcinoma..." autocomplete="off" />
             </label>
             <button class="btn" id="webPathResetFilters" type="button">Xóa bộ lọc</button>
           </div>
@@ -265,7 +266,8 @@
           </div>
           <p class="who-rights-note">
             WebPathology giữ bản quyền nội dung và hình ảnh. Kho này chỉ lưu URL công khai do sitemap cung cấp và luôn
-            mở trang nguồn độc lập; không có tệp ảnh WebPathology nào được lưu trong mã nguồn của Atlas GPB.
+            mở trang nguồn độc lập; không có tệp ảnh WebPathology nào được lưu trong mã nguồn của Atlas GPB. Bản dịch
+            tiếng Việt hỗ trợ tra cứu, còn tiêu đề tiếng Anh bên dưới là tên nguyên bản để đối chiếu nguồn.
           </p>
         </section>
 
@@ -410,7 +412,8 @@
     <script src="./webpathology-catalog.js"></script>
     <script src="./atlas-curation.js"></script>
     <script src="./atlas-bilingual.js"></script>
-    <script src="./app.js?v=20260723-who-online-2"></script>
+    <script src="./medical-vi.js?v=20260723-bilingual-1"></script>
+    <script src="./app.js?v=20260723-bilingual-1"></script>
     <script src="./ui.js"></script>
   </body>
 </html>

@@ -2090,6 +2090,11 @@ const webPathologyCatalog = window.WEBPATHOLOGY_CATALOG || { organs: [], entries
 const webPathologyOrgans = Array.isArray(webPathologyCatalog.organs) ? webPathologyCatalog.organs : [];
 const webPathologyEntries = Array.isArray(webPathologyCatalog.entries) ? webPathologyCatalog.entries : [];
 const webPathologyOrganMap = new Map(webPathologyOrgans.map((organ) => [organ.id, organ]));
+const medicalVi = window.MEDICAL_VI || {
+  translate: (value) => String(value || ""),
+  translateTrail: (values) => values || [],
+  sourceNote: "",
+};
 const whoVolumeChapters = {
   digestive: ["colon", "hpb", "soft", "uppergi"],
   breast: ["breast"],
@@ -2252,7 +2257,80 @@ function normalize(value) {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/đ/g, "d")
-    .replace(/Đ/g, "d");
+    .replace(/Đ/g, "d")
+    .replace(/[^a-z0-9+.-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function searchFields(values) {
+  const output = [];
+  const visit = (value) => {
+    if (Array.isArray(value)) {
+      value.forEach(visit);
+      return;
+    }
+    const normalized = normalize(value);
+    if (normalized && !output.includes(normalized)) output.push(normalized);
+  };
+  visit(values);
+  return output;
+}
+
+function fieldMatchesQuery(fields, value) {
+  const query = normalize(value);
+  if (!query) return true;
+  const queryTokens = query.split(" ").filter(Boolean);
+  return fields.some((field) => {
+    if (field.includes(query)) return true;
+    if (queryTokens.length > 1) return false;
+    const fieldTokens = field.split(" ").filter(Boolean);
+    const token = queryTokens[0];
+    return Boolean(token) && (
+      fieldTokens.includes(token)
+      || (token.length >= 5 && fieldTokens.some((candidate) => candidate.startsWith(token)))
+    );
+  });
+}
+
+const bilingualSearchGroups = [
+  ["dạ dày", "stomach", "gastric"],
+  ["thực quản", "oesophagus", "esophagus", "oesophageal", "esophageal"],
+  ["tuyến giáp", "thyroid"],
+  ["phổi", "lung", "pulmonary"],
+  ["đại trực tràng", "colorectal"],
+  ["đại tràng", "colon", "colonic"],
+  ["trực tràng", "rectum", "rectal"],
+  ["vú", "breast", "mammary"],
+  ["gan", "liver", "hepatic"],
+  ["tụy", "pancreas", "pancreatic"],
+  ["đường mật", "biliary", "bile duct"],
+  ["túi mật", "gallbladder"],
+  ["thận", "kidney", "renal"],
+  ["bàng quang", "bladder"],
+  ["tuyến tiền liệt", "prostate", "prostatic"],
+  ["tinh hoàn", "testis", "testicular"],
+  ["buồng trứng", "ovary", "ovarian"],
+  ["cổ tử cung", "cervix", "cervical"],
+  ["nội mạc tử cung", "endometrium", "endometrial"],
+  ["tử cung", "uterus", "uterine"],
+  ["âm đạo", "vagina", "vaginal"],
+  ["âm hộ", "vulva", "vulvar", "vulval"],
+  ["da", "skin", "cutaneous", "dermpath"],
+  ["não", "brain", "cerebral"],
+  ["mô mềm", "soft tissue"],
+  ["xương", "bone"],
+  ["u lympho", "lymphoma"],
+  ["ung thư biểu mô tuyến", "adenocarcinoma"],
+  ["ung thư biểu mô tế bào vảy", "squamous cell carcinoma"],
+  ["u hắc tố", "melanoma"],
+];
+
+function expandBilingualQueries(value) {
+  const query = normalize(value);
+  if (!query) return [];
+  const matched = bilingualSearchGroups.find((group) => group.some((term) => normalize(term) === query));
+  return matched ? [...new Set(matched.map(normalize))] : [query];
 }
 
 function normalizeWhoName(value) {
@@ -2289,18 +2367,27 @@ function prepareWhoCatalog() {
   whoMatches = new Map();
   whoEntries.forEach((entry) => {
     const linkedCase = findAtlasCaseForWho(entry);
-    entry.searchText = normalize([
+    entry.nameVi = linkedCase?.diagnosis || medicalVi.translate(entry.nameEn);
+    entry.sectionVi = medicalVi.translate(entry.sectionEn);
+    entry.groupVi = medicalVi.translate(entry.groupEn);
+    entry.categoryVi = medicalVi.translate(entry.categoryEn);
+    entry.searchFields = searchFields([
       entry.nameEn,
+      entry.nameVi,
       entry.sectionEn,
+      entry.sectionVi,
       entry.groupEn,
+      entry.groupVi,
       entry.categoryEn,
+      entry.categoryVi,
       whoVolumeMap.get(entry.volumeId)?.nameVi,
       whoVolumeMap.get(entry.volumeId)?.nameEn,
       linkedCase?.diagnosis,
       linkedCase?.english,
       linkedCase?.icdo?.code,
       ...(linkedCase?.whoTerms || []),
-    ].join(" "));
+    ]);
+    entry.searchText = entry.searchFields.join(" ");
     if (linkedCase) whoMatches.set(entry, linkedCase);
   });
 }
@@ -2308,10 +2395,13 @@ function prepareWhoCatalog() {
 function translatedWhoQueryGroups(value) {
   const query = normalize(value);
   if (!query) return [];
+  const boundedQuery = ` ${query} `;
   const groups = [];
   Object.entries(curation.vietnameseWhoQueryMap || {}).forEach(([vietnamese, englishTerms]) => {
     const key = normalize(vietnamese);
-    if (!query.includes(key)) return;
+    if (!boundedQuery.includes(` ${key} `)) return;
+    if (key === "da" && boundedQuery.includes(" da day ")) return;
+    if (key === "than" && boundedQuery.includes(" than kinh ")) return;
     if (key === "ung thu bieu mo tuyen" && query.includes("tuyen giap")) return;
     groups.push((englishTerms || []).map(normalize));
   });
@@ -2320,15 +2410,16 @@ function translatedWhoQueryGroups(value) {
 
 function filteredWhoEntries() {
   const query = normalize(state.whoQuery);
+  const queryVariants = expandBilingualQueries(state.whoQuery);
   const translatedGroups = translatedWhoQueryGroups(state.whoQuery);
   return whoEntries.filter((entry) => {
     const volume = whoVolumeMap.get(entry.volumeId) || {};
     const scopeOk = state.whoShowAllContent || entry.entryType === "diagnosis";
     const seriesOk = state.whoSeries === "all" || String(volume.seriesId) === state.whoSeries;
     const volumeOk = state.whoVolume === "all" || entry.volumeId === state.whoVolume;
-    const directMatch = !query || entry.searchText.includes(query);
+    const directMatch = !query || queryVariants.some((variant) => fieldMatchesQuery(entry.searchFields, variant));
     const translatedMatch = translatedGroups.length > 0
-      && translatedGroups.every((group) => group.some((term) => entry.searchText.includes(term)));
+      && translatedGroups.every((group) => group.some((term) => fieldMatchesQuery(entry.searchFields, term)));
     const queryOk = directMatch || translatedMatch;
     return scopeOk && seriesOk && volumeOk && queryOk;
   });
@@ -2362,20 +2453,24 @@ const webPathologyChapterOrgans = {
 function prepareWebPathologyCatalog() {
   webPathologyEntries.forEach((entry) => {
     const organ = webPathologyOrganMap.get(entry.organ) || {};
-    entry.searchText = normalize([
+    entry.titleVi = medicalVi.translate(entry.titleEn);
+    entry.trailVi = medicalVi.translateTrail(entry.trailEn || []);
+    entry.searchFields = searchFields([
       entry.titleEn,
+      entry.titleVi,
       ...(entry.trailEn || []),
+      ...(entry.trailVi || []),
       organ.nameEn,
       organ.nameVi,
-      ...(organ.aliases || []),
-    ].join(" "));
+    ]);
+    entry.searchText = entry.searchFields.join(" ");
   });
 }
 
 function expandedWebPathologyQueries(value) {
   const query = normalize(value);
   if (!query) return [];
-  const expanded = new Set([query]);
+  const expanded = new Set(expandBilingualQueries(value));
   cases.forEach((item) => {
     const bilingualTerms = [item.diagnosis, item.english, ...(item.whoTerms || [])].map(normalize);
     if (bilingualTerms.includes(query)) {
@@ -2385,21 +2480,15 @@ function expandedWebPathologyQueries(value) {
   return [...expanded];
 }
 
-function webPathologyQueryMatches(searchText, query) {
-  if (query.includes(" ") && searchText.includes(query)) return true;
-  const tokens = query.split(" ").filter((token) => token.length > 1);
-  const searchTokens = searchText.split(" ").filter(Boolean);
-  return tokens.length > 0 && tokens.every((token) => (
-    searchTokens.includes(token)
-    || (token.length >= 5 && searchTokens.some((candidate) => candidate.startsWith(token)))
-  ));
+function webPathologyQueryMatches(entry, query) {
+  return fieldMatchesQuery(entry.searchFields || [], query);
 }
 
 function filteredWebPathologyEntries() {
   const queries = expandedWebPathologyQueries(state.webPathQuery);
   return webPathologyEntries.filter((entry) => {
     const organOk = state.webPathOrgan === "all" || entry.organ === state.webPathOrgan;
-    const queryOk = queries.length === 0 || queries.some((query) => webPathologyQueryMatches(entry.searchText, query));
+    const queryOk = queries.length === 0 || queries.some((query) => webPathologyQueryMatches(entry, query));
     return organOk && queryOk;
   });
 }
@@ -2477,32 +2566,32 @@ function webPathologyEntryUrl(entry) {
   return `https://www.webpathology.com/search-result?query=${encodeURIComponent(entry.nameEn)}`;
 }
 
-function allText(item) {
-  const chapter = chapterById(item.chapter);
-  return normalize([
-    chapter.name,
+function caseSearchFields(item) {
+  return searchFields([
     item.diagnosis,
     item.english,
-    item.pattern.join(" "),
-    item.micro.join(" "),
-    item.report.join(" "),
-    item.memory,
-    item.pitfall,
-    item.markers.join(" "),
+    item.pattern,
+    item.markers,
     item.icdo?.code,
     item.classification?.label,
-    (item.whoTerms || []).join(" "),
-  ].join(" "));
+    item.whoTerms || [],
+  ]);
 }
 
 function filteredCases() {
   const query = normalize(state.query);
-  return cases.filter((item) => {
+  const candidates = cases.filter((item) => {
     const chapterOk = state.chapter === "all" || item.chapter === state.chapter;
     const patternOk = state.pattern === "all" || item.pattern.includes(state.pattern);
-    const queryOk = !query || allText(item).includes(query);
-    return chapterOk && patternOk && queryOk;
+    return chapterOk && patternOk;
   });
+  if (!query) return candidates;
+  const queryVariants = expandBilingualQueries(state.query);
+  const directMatches = candidates.filter((item) => queryVariants.some((variant) => fieldMatchesQuery(caseSearchFields(item), variant)));
+  if (directMatches.length) return directMatches;
+  return candidates.filter((item) => queryVariants.some((variant) => fieldMatchesQuery([
+    normalize(chapterById(item.chapter).name),
+  ], variant)));
 }
 
 function safeImageAttrs(item) {
@@ -2911,7 +3000,11 @@ function renderWhoLibrary() {
       const exactWebPathologyUrl = linkedCase
         ? linkedCase.webPathologyUrl || exactWebPathologyEntryFor(linkedCase)?.url || ""
         : "";
-      const path = [entry.sectionEn, entry.groupEn, entry.categoryEn]
+      const pathEn = [entry.sectionEn, entry.groupEn, entry.categoryEn]
+        .filter(Boolean)
+        .filter((value, index, values) => values.indexOf(value) === index)
+        .join(" › ");
+      const pathVi = [entry.sectionVi, entry.groupVi, entry.categoryVi]
         .filter(Boolean)
         .filter((value, index, values) => values.indexOf(value) === index)
         .join(" › ");
@@ -2921,10 +3014,11 @@ function renderWhoLibrary() {
             <span>${escapeHtml(volume.nameVi || entry.volumeId)}</span>
             <em>${linkedCase ? "Đã liên kết thẻ học" : escapeHtml(whoSeriesLabel(volume.series))}</em>
           </div>
-          ${linkedCase ? `<p class="who-entry-vi">${escapeHtml(linkedCase.diagnosis)}</p>` : ""}
-          <h3>${escapeHtml(entry.nameEn)}</h3>
+          <p class="who-entry-vi" lang="vi">${escapeHtml(entry.nameVi || entry.nameEn)}</p>
+          <h3 class="who-entry-en" lang="en">${escapeHtml(entry.nameEn)}</h3>
           ${linkedCase?.icdo?.code ? `<span class="who-icdo">ICD-O-4 ${escapeHtml(linkedCase.icdo.code)}</span>` : ""}
-          <p class="who-entry-path">${escapeHtml(path || volume.nameEn || "WHO Classification of Tumours")}</p>
+          <p class="who-entry-path who-entry-path-vi" lang="vi">${escapeHtml(pathVi || volume.nameVi || "Phân loại U của WHO")}</p>
+          <p class="who-entry-path who-entry-path-en" lang="en">${escapeHtml(pathEn || volume.nameEn || "WHO Classification of Tumours")}</p>
           <p class="who-entry-citation">WHO Online · Book ${escapeHtml(entry.bookId)} · Chapter ${escapeHtml(entry.chapterId)}</p>
           <div class="who-entry-actions">
             <a href="${escapeHtml(exactWhoUrl || volume.sourceUrl || whoCatalog.source)}" target="_blank" rel="noreferrer">${exactWhoUrl ? "Mở đúng mục WHO" : "Mở mục lục quyển WHO"} ↗</a>
@@ -2985,15 +3079,18 @@ function renderWebPathologyLibrary() {
   } else {
     els.webPathologyGrid.innerHTML = visible.map((entry) => {
       const organ = webPathologyOrganMap.get(entry.organ) || {};
-      const trail = (entry.trailEn || []).slice(0, -1).join(" › ");
+      const trailEn = (entry.trailEn || []).slice(0, -1).join(" › ");
+      const trailVi = (entry.trailVi || []).slice(0, -1).join(" › ");
       return `
         <article class="webpath-card">
           <div class="webpath-card-meta">
             <span>${escapeHtml(organ.nameVi || entry.organ)}</span>
             <span>${escapeHtml(organ.nameEn || "WebPathology")}</span>
           </div>
-          <h3 lang="en">${escapeHtml(entry.titleEn)}</h3>
-          <p lang="en">${escapeHtml(trail || organ.nameEn || "Image gallery")}</p>
+          <h3 class="webpath-title-vi" lang="vi">${escapeHtml(entry.titleVi || entry.titleEn)}</h3>
+          <p class="webpath-title-en" lang="en">${escapeHtml(entry.titleEn)}</p>
+          <p class="webpath-trail-vi" lang="vi">${escapeHtml(trailVi || organ.nameVi || "Kho ảnh")}</p>
+          <p class="webpath-trail-en" lang="en">${escapeHtml(trailEn || organ.nameEn || "Image gallery")}</p>
           <a href="${escapeHtml(entry.url)}" target="_blank" rel="noreferrer">Mở gallery trên WebPathology ↗</a>
         </article>
       `;
