@@ -4,6 +4,7 @@ Website tĩnh tiếng Việt dạng atlas giải phẫu bệnh: chia theo cơ qu
 
 ## Điểm chính
 
+- Thanh điều hướng cố định, hero H&E toàn chiều rộng với CTA rõ ràng, khu làm việc atlas và footer nguồn học được thiết kế lại theo hướng hiện đại, tương lai và responsive.
 - Giao diện chính dùng bố cục Atlas Workspace: thanh cơ quan cố định, danh sách ca cuộn ngang, ảnh vi thể lớn và nội dung học song ngữ đặt cạnh nhau.
 - Có trang `interface-demos.html` để thử trực tiếp ba hướng giao diện mới: Clinical Light, Digital Scope và Atlas Workspace. Mỗi mẫu dùng chung dữ liệu GPB mẫu, hỗ trợ tìm kiếm, lọc cơ quan, chọn ca, đổi tab nội dung và phóng đại ảnh.
 - 13 nhóm cơ quan, 97 thẻ chẩn đoán mẫu.
@@ -40,6 +41,17 @@ python -m http.server 8765 --bind 127.0.0.1
 Sau đó mở `http://127.0.0.1:8765/`.
 
 Mở `http://127.0.0.1:8765/interface-demos.html` để so sánh ba giao diện. Có thể mở thẳng từng mẫu bằng tham số `?theme=clinical`, `?theme=scope` hoặc `?theme=workspace`.
+
+## Biên dịch Tailwind CSS
+
+Tệp `tailwind.css` đã được biên dịch và đưa vào repo nên bản deploy tĩnh có thể chạy ngay. Sau khi sửa các utility class Tailwind trong HTML, cài dependency và biên dịch lại:
+
+```powershell
+npm install
+npm run build:css
+```
+
+Các quy tắc giao diện riêng của atlas vẫn nằm trong `styles.css`; hành vi của menu responsive nằm trong `ui.js`.
 
 ## Cập nhật danh mục WHO
 

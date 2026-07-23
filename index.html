@@ -12,19 +12,84 @@
       name="description"
       content="Atlas giải phẫu bệnh tiếng Việt theo cơ quan, chẩn đoán, hình ảnh vi thể, điểm ghi nhớ và nguồn chính thống."
     />
+    <link rel="stylesheet" href="./tailwind.css" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <div class="app-shell">
-      <aside class="sidebar">
-        <a class="brand" href="#top" aria-label="Atlas GPB">
-          <span class="brand-mark">A</span>
-          <span>
-            <strong>Atlas GPB</strong>
-            <small>Cơ quan · Chẩn đoán · Vi thể</small>
+    <header class="top-navbar sticky top-0 z-50 border-b border-slate-700 bg-[#102a33] text-white">
+      <nav class="mx-auto flex min-h-16 max-w-[1900px] flex-wrap items-center justify-between gap-3 px-4 py-2 lg:px-7" aria-label="Điều hướng chính">
+        <a class="flex min-w-0 items-center gap-3 no-underline" href="#top" aria-label="Về đầu trang Atlas GPB">
+          <span class="grid size-10 shrink-0 place-items-center rounded bg-amber-300 text-lg font-black text-slate-900">A</span>
+          <span class="min-w-0">
+            <strong class="block truncate text-sm font-black text-white">Atlas GPB</strong>
+            <small class="block truncate text-xs text-cyan-100/70">Pathology learning workspace</small>
           </span>
         </a>
 
+        <div class="hidden items-center gap-1 lg:flex" aria-label="Liên kết nhanh">
+          <a class="nav-link" href="#atlasBoard">Atlas</a>
+          <a class="nav-link" href="#whoLibrary">Danh mục WHO</a>
+          <a class="nav-link" href="#webPathologyLibrary">Kho ảnh</a>
+          <a class="nav-link" href="#sources">Nguồn học</a>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <a class="hidden min-h-9 items-center rounded border border-cyan-300/40 bg-cyan-300 px-4 text-xs font-black text-slate-950 no-underline transition hover:bg-cyan-200 sm:inline-flex" href="#atlasBoard">
+            Khám phá atlas <span class="ml-2" aria-hidden="true">→</span>
+          </a>
+          <button class="mobile-menu-button grid size-10 place-items-center rounded border border-white/20 bg-white/5 lg:hidden" id="mobileMenuButton" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Mở menu">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </button>
+        </div>
+
+        <div class="hidden w-full border-t border-white/10 pt-2 lg:hidden" id="mobileMenu">
+          <div class="grid grid-cols-2 gap-2 text-sm">
+            <a class="mobile-nav-link" href="#atlasBoard">Atlas</a>
+            <a class="mobile-nav-link" href="#whoLibrary">Danh mục WHO</a>
+            <a class="mobile-nav-link" href="#webPathologyLibrary">Kho ảnh</a>
+            <a class="mobile-nav-link" href="#sources">Nguồn học</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <section id="top" class="hero">
+      <img
+        class="hero-backdrop"
+        src="https://commons.wikimedia.org/wiki/Special:FilePath/Thyroid%20papillary%20carcinoma%20histopathology%20%282%29.jpg?width=1800"
+        alt="Vi thể H&E ung thư biểu mô tuyến giáp thể nhú"
+        fetchpriority="high"
+      />
+      <div class="hero-shade" aria-hidden="true"></div>
+      <div class="hero-content">
+        <div class="hero-copy">
+          <span class="eyebrow">Atlas y khoa · Tra cứu song ngữ</span>
+          <h1>Atlas giải phẫu bệnh</h1>
+          <p>
+            Nhìn ảnh trước, đối chiếu đặc điểm sau. Mỗi ca kết hợp chẩn đoán song ngữ, vi thể cần nhìn,
+            HMMD định hướng, ICD-O-4 và liên kết nguồn trong một luồng học tập trực quan.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#atlasBoard">Bắt đầu tra cứu <span aria-hidden="true">→</span></a>
+            <a class="btn ghost" href="#whoLibrary">Mở danh mục WHO</a>
+            <button class="btn ghost" id="openCaseStudio" type="button">Thêm thẻ atlas</button>
+            <button class="btn ghost" id="openImageManager" type="button">Quản lý ảnh</button>
+          </div>
+        </div>
+        <div class="hero-stats" aria-label="Thống kê atlas">
+          <div><strong id="statOrgans">0</strong><span>cơ quan</span></div>
+          <div><strong id="statDx">0</strong><span>chẩn đoán</span></div>
+          <div><strong id="statWho">0</strong><span>mục WHO</span></div>
+          <div><strong id="statSources">0</strong><span>nguồn chính</span></div>
+        </div>
+      </div>
+      <a class="hero-image-source" href="https://commons.wikimedia.org/wiki/File:Thyroid_papillary_carcinoma_histopathology_(2).jpg" target="_blank" rel="noreferrer">H&amp;E · Wikimedia Commons ↗</a>
+    </section>
+
+    <div class="app-shell">
+      <aside class="sidebar">
         <label class="search-box" for="searchInput">
           <span>Tìm nhanh</span>
           <input id="searchInput" type="search" placeholder="VD: tuyến giáp, thyroid, PTC, TTF-1..." autocomplete="off" />
@@ -53,30 +118,7 @@
         </div>
       </aside>
 
-      <main id="top" class="content">
-        <section class="hero">
-          <div class="hero-copy">
-            <span class="eyebrow">Workspace 03 · Tra cứu vi thể</span>
-            <h1>Atlas giải phẫu bệnh</h1>
-            <p>
-              Nhìn ảnh trước, đối chiếu đặc điểm sau. Mỗi ca kết hợp chẩn đoán song ngữ, vi thể cần nhìn,
-              HMMD định hướng, ICD-O-4 và liên kết nguồn để học theo một luồng duy nhất.
-            </p>
-            <div class="hero-actions">
-              <a class="btn primary" href="#atlasBoard">Mở atlas</a>
-              <a class="btn ghost" href="#whoLibrary">Tra danh mục WHO</a>
-              <button class="btn ghost" id="openCaseStudio" type="button">Thêm thẻ atlas</button>
-              <button class="btn ghost" id="openImageManager" type="button">Quản lý ảnh</button>
-            </div>
-          </div>
-          <div class="hero-stats">
-            <div><strong id="statOrgans">0</strong><span>cơ quan</span></div>
-            <div><strong id="statDx">0</strong><span>chẩn đoán</span></div>
-            <div><strong id="statWho">0</strong><span>mục WHO</span></div>
-            <div><strong id="statSources">0</strong><span>nguồn chính</span></div>
-          </div>
-        </section>
-
+      <main class="content">
         <div class="workspace-deck">
           <div class="workspace-deck-heading">
             <div>
@@ -331,9 +373,24 @@
           </form>
         </dialog>
 
-        <footer class="site-footer">
-          <strong>Atlas GPB</strong>
-          <span>Trang học tập, không thay thế chẩn đoán của bác sĩ giải phẫu bệnh.</span>
+        <footer class="site-footer" aria-label="Chân trang">
+          <div class="footer-brand">
+            <span class="footer-mark">A</span>
+            <div>
+              <strong>Atlas GPB</strong>
+              <p>Không gian học giải phẫu bệnh theo cơ quan, hình thái và chẩn đoán.</p>
+            </div>
+          </div>
+          <nav class="footer-links" aria-label="Liên kết chân trang">
+            <a href="#atlasBoard">Atlas</a>
+            <a href="#whoLibrary">WHO/IARC</a>
+            <a href="#webPathologyLibrary">WebPathology</a>
+            <a href="#sources">Nguồn học</a>
+          </nav>
+          <div class="footer-note">
+            <strong>Dành cho học tập</strong>
+            <span>Không thay thế chẩn đoán hoặc tư vấn của bác sĩ giải phẫu bệnh.</span>
+          </div>
         </footer>
       </main>
     </div>
@@ -344,5 +401,6 @@
     <script src="./atlas-curation.js"></script>
     <script src="./atlas-bilingual.js"></script>
     <script src="./app.js"></script>
+    <script src="./ui.js"></script>
   </body>
 </html>
