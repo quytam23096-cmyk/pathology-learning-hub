@@ -3579,3 +3579,339 @@ h1 {
     flex-direction: column;
   }
 }
+
+/* Typography and contrast: optimized for Vietnamese medical reading. */
+:root {
+  --font-ui: "Be Vietnam Pro", "Segoe UI", Arial, sans-serif;
+  --font-reading: "Source Sans 3", "Segoe UI", Arial, sans-serif;
+  --text: #152f38;
+  --muted: #536970;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  letter-spacing: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+strong {
+  letter-spacing: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-ui);
+  font-weight: 700;
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
+input {
+  color: #142d35;
+  font-size: 0.94rem;
+  font-weight: 500;
+}
+
+input::placeholder {
+  color: #71838a;
+  opacity: 1;
+}
+
+.top-navbar strong,
+.brand strong {
+  font-weight: 700;
+}
+
+.top-navbar small,
+.brand small {
+  color: #c2d5db;
+  font-family: var(--font-reading);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.nav-link,
+.mobile-nav-link,
+.nav-pill strong,
+.side-library-link,
+.btn,
+.filter-chip {
+  font-weight: 600;
+}
+
+.nav-link {
+  color: #d8e6ea;
+  font-size: 0.84rem;
+}
+
+.nav-pill strong {
+  font-size: 0.92rem;
+}
+
+.nav-pill em {
+  color: #d1e0e4;
+  font-family: var(--font-reading);
+  font-weight: 600;
+}
+
+.search-box span,
+.side-title,
+label,
+.eyebrow {
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.search-box span,
+.side-title {
+  color: #8de0d8;
+  font-size: 0.78rem;
+}
+
+.hero h1 {
+  font-weight: 700;
+  line-height: 1.12;
+}
+
+.hero-copy p {
+  color: rgba(248, 252, 253, 0.9);
+  font-family: var(--font-reading);
+  font-size: 1.08rem;
+  line-height: 1.65;
+}
+
+.hero-stats strong {
+  font-weight: 700;
+}
+
+.hero-stats span,
+.panel-status span,
+.who-library-heading p,
+.webpath-heading p,
+.section-heading p {
+  font-family: var(--font-reading);
+}
+
+.workspace-deck-heading h2,
+.chapter-panel h2,
+.panel-heading h2,
+.section-heading h2,
+.who-library-heading h2,
+.webpath-heading h2 {
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.panel-status p,
+.who-result-bar p,
+.webpath-result-bar p {
+  font-weight: 600;
+}
+
+.diagnosis-card strong {
+  color: #14333c;
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.diagnosis-card em,
+.gallery-card .english,
+.detail-copy > .english {
+  color: #516870;
+  font-family: var(--font-reading);
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.diagnosis-card em {
+  font-size: 0.84rem;
+}
+
+.diagnosis-card p:first-of-type {
+  color: #536970;
+  font-family: var(--font-reading);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.card-open-hint,
+.memory-action,
+.gallery-action {
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.detail-copy h2 {
+  color: #102f39;
+  font-size: clamp(1.65rem, 2.3vw, 2.15rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.detail-copy > .english {
+  margin-top: -5px;
+  font-size: 1.08rem;
+}
+
+.classification-strip span,
+.classification-strip small,
+.detail-grid li,
+.detail-grid p,
+.system-note span,
+.marker-heading span {
+  font-family: var(--font-reading);
+}
+
+.classification-strip strong,
+.detail-grid h3,
+.marker-heading strong {
+  color: #183740;
+  font-weight: 700;
+}
+
+.detail-grid h3 span {
+  color: #5d7178;
+  font-family: var(--font-reading);
+  font-weight: 500;
+}
+
+.detail-grid li,
+.detail-grid p {
+  color: #344e56;
+  font-size: 0.96rem;
+  line-height: 1.62;
+}
+
+.language-block.english-block {
+  color: #405c65;
+}
+
+.who-entry-meta span,
+.who-entry-meta em,
+.webpath-card-meta {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.who-entry-vi,
+.webpath-card .webpath-title-vi {
+  color: #095e65;
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.who-entry-en,
+.webpath-card .webpath-title-en {
+  color: #2f505a;
+  font-family: var(--font-reading);
+  font-size: 0.92rem !important;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.who-entry-path,
+.webpath-card p {
+  color: #50676f;
+  font-family: var(--font-reading);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.who-entry-path-vi {
+  color: #385b64;
+  font-weight: 600;
+}
+
+.who-entry-path-en,
+.webpath-card .webpath-trail-en {
+  color: #677b82;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.who-entry-citation {
+  color: #46636c;
+  font-family: var(--font-reading);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.who-entry-actions a,
+.who-entry-actions button,
+.webpath-card a {
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.memory-body h3,
+.gallery-body h3 {
+  color: #15343d;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.memory-body p,
+.gallery-body p,
+.gallery-body li {
+  color: #4f666e;
+  font-family: var(--font-reading);
+  line-height: 1.55;
+}
+
+.site-footer {
+  color: #c8d8dd;
+}
+
+.footer-brand p,
+.footer-note,
+.footer-links a {
+  font-family: var(--font-reading);
+  font-size: 0.84rem;
+}
+
+@media (max-width: 560px) {
+  html {
+    font-size: 15px;
+  }
+
+  .hero-copy p {
+    font-size: 1rem;
+  }
+
+  .diagnosis-card strong,
+  .who-entry-vi,
+  .webpath-card .webpath-title-vi {
+    font-size: 1rem;
+  }
+}
