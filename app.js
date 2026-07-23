@@ -2866,6 +2866,20 @@ function renderDetail() {
   editButton?.addEventListener("click", () => openImageDialog(item.id));
   const backButton = els.caseDetail.querySelector("[data-back-atlas]");
   backButton?.addEventListener("click", () => els.atlasBoard.scrollIntoView({ behavior: "smooth", block: "start" }));
+  const detailImage = els.caseDetail.querySelector(".detail-image");
+  const detailCopy = els.caseDetail.querySelector(".detail-copy");
+  detailImage?.addEventListener("wheel", (event) => {
+    const usesReadingDesk = window.matchMedia("(min-width: 1181px) and (min-height: 620px)").matches;
+    if (!usesReadingDesk || !detailCopy || detailCopy.scrollHeight <= detailCopy.clientHeight) return;
+
+    const deltaScale = event.deltaMode === 1
+      ? 20
+      : event.deltaMode === 2
+        ? detailCopy.clientHeight
+        : 1;
+    event.preventDefault();
+    detailCopy.scrollTop += event.deltaY * deltaScale;
+  }, { passive: false });
   const deleteButton = els.caseDetail.querySelector("[data-delete-custom]");
   deleteButton?.addEventListener("click", () => deleteCustomCase(item.id));
 }

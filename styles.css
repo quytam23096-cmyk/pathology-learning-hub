@@ -3915,3 +3915,95 @@ label,
     font-size: 1rem;
   }
 }
+
+/* Desktop reading desk: keep the complete slide visible while notes scroll beside it. */
+@media (min-width: 1181px) and (min-height: 620px) {
+  .workspace-deck .case-detail {
+    height: calc(100dvh - 64px);
+    max-height: calc(100dvh - 64px);
+    grid-template-columns: minmax(430px, 46%) minmax(520px, 54%);
+    grid-template-rows: auto minmax(0, 1fr);
+    align-items: stretch;
+    overflow: hidden;
+    scroll-margin-top: 64px;
+  }
+
+  .workspace-deck .case-detail .detail-toolbar {
+    position: relative;
+    z-index: 3;
+  }
+
+  .workspace-deck .case-detail .detail-image {
+    position: relative;
+    top: auto;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+    aspect-ratio: auto;
+    align-self: stretch;
+    overflow: hidden;
+  }
+
+  .workspace-deck .case-detail .detail-image img,
+  .workspace-deck .case-detail .detail-image .image-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .workspace-deck .case-detail .detail-copy {
+    height: 100%;
+    min-height: 0;
+    padding: clamp(18px, 1.7vw, 28px);
+    padding-bottom: 44px;
+    align-content: start;
+    grid-auto-rows: max-content;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    scrollbar-color: #78919b #e7edef;
+    scrollbar-width: thin;
+  }
+
+  .workspace-deck .case-detail .classification-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .workspace-deck .case-detail .classification-strip > div + div {
+    border-top: 0;
+    border-left: 1px solid #cfe2de;
+  }
+
+  .workspace-deck .case-detail .detail-copy::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .workspace-deck .case-detail .detail-copy::-webkit-scrollbar-track {
+    background: #e7edef;
+  }
+
+  .workspace-deck .case-detail .detail-copy::-webkit-scrollbar-thumb {
+    border: 2px solid #e7edef;
+    border-radius: 8px;
+    background: #78919b;
+  }
+
+  .workspace-deck .case-detail .detail-copy::-webkit-scrollbar-thumb:hover {
+    background: #526f79;
+  }
+}
+
+@media (min-width: 1181px) and (max-width: 1480px) and (min-height: 620px) {
+  .workspace-deck .case-detail {
+    grid-template-columns: minmax(400px, 43%) minmax(500px, 57%);
+  }
+
+  .workspace-deck .case-detail .detail-copy {
+    padding: 18px;
+  }
+}
