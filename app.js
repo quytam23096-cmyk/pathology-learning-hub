@@ -2146,6 +2146,7 @@ const els = {
   searchInput: document.getElementById("searchInput"),
   patternFilters: document.getElementById("patternFilters"),
   resetFilters: document.getElementById("resetFilters"),
+  atlasBoard: document.getElementById("atlasBoard"),
   chapterPanel: document.getElementById("chapterPanel"),
   diagnosisHeading: document.getElementById("diagnosisHeading"),
   diagnosisCount: document.getElementById("diagnosisCount"),
@@ -2587,6 +2588,9 @@ function renderNav() {
   els.organNav.querySelectorAll("[data-chapter]").forEach((button) => {
     button.addEventListener("click", () => {
       state.chapter = button.dataset.chapter;
+      state.pattern = "all";
+      state.query = "";
+      els.searchInput.value = "";
       const first = filteredCases()[0] || cases[0];
       state.selectedId = first.id;
       renderAll();
@@ -2637,8 +2641,8 @@ function renderChapterPanel() {
     </div>
   `;
 
-  els.diagnosisHeading.textContent = state.chapter === "all" ? "Tất cả chẩn đoán" : `Chẩn đoán ${chapter.name}`;
-  els.diagnosisCount.textContent = `${visible.length} thẻ đang hiển thị`;
+  els.diagnosisHeading.textContent = state.chapter === "all" ? "Tất cả chẩn đoán" : `Atlas ảnh: ${chapter.name}`;
+  els.diagnosisCount.textContent = `${visible.length} chẩn đoán đang hiển thị`;
 }
 
 function renderDiagnosisGrid() {
@@ -2651,7 +2655,7 @@ function renderDiagnosisGrid() {
   els.diagnosisGrid.innerHTML = items.map((item) => {
     const chapter = chapterById(item.chapter);
     return `
-      <button class="diagnosis-card ${item.id === state.selectedId ? "active" : ""}" type="button" data-case="${escapeHtml(item.id)}">
+      <button class="diagnosis-card ${item.id === state.selectedId ? "active" : ""}" type="button" data-case="${escapeHtml(item.id)}" aria-pressed="${item.id === state.selectedId}" aria-label="Mở hồ sơ ${escapeHtml(item.diagnosis)}">
         ${imageMarkup(item, "card-image")}
         <span class="organ-badge" style="--badge:${escapeHtml(chapter.color)}">${escapeHtml(chapter.name)}</span>
         <strong>${escapeHtml(item.diagnosis)}</strong>
@@ -2660,6 +2664,7 @@ function renderDiagnosisGrid() {
         ${item.learningEn?.micro?.[0] ? `<p class="card-feature-en" lang="en">${escapeHtml(item.learningEn.micro[0])}</p>` : ""}
         <small>${escapeHtml(item.pattern.slice(0, 3).map(patternLabel).join(" / "))}</small>
         ${item.icdo?.code ? `<span class="icdo-chip">ICD-O-4 ${escapeHtml(item.icdo.code)}</span>` : ""}
+        <span class="card-open-hint">Mở hồ sơ <span aria-hidden="true">→</span></span>
       </button>
     `;
   }).join("");
@@ -2701,6 +2706,10 @@ function renderDetail() {
   if (imageUrl) document.documentElement.style.setProperty("--hero-image", `url("${imageUrl}")`);
 
   els.caseDetail.innerHTML = `
+    <div class="detail-toolbar">
+      <button type="button" data-back-atlas><span aria-hidden="true">←</span> Danh sách chẩn đoán</button>
+      <span>Hồ sơ ${items.indexOf(item) + 1}/${items.length} · ${escapeHtml(chapter.name)}</span>
+    </div>
     <div class="detail-image ${imageAvailable ? "verified" : "unverified"}">
       ${imageMarkup(item, "detail-figure")}
       <div class="image-credit">
@@ -2766,6 +2775,8 @@ function renderDetail() {
 
   const editButton = els.caseDetail.querySelector("[data-edit-image]");
   editButton?.addEventListener("click", () => openImageDialog(item.id));
+  const backButton = els.caseDetail.querySelector("[data-back-atlas]");
+  backButton?.addEventListener("click", () => els.atlasBoard.scrollIntoView({ behavior: "smooth", block: "start" }));
   const deleteButton = els.caseDetail.querySelector("[data-delete-custom]");
   deleteButton?.addEventListener("click", () => deleteCustomCase(item.id));
 }
@@ -2784,17 +2795,20 @@ function renderPoster() {
 
   els.memoryPoster.innerHTML = pool.map((item, index) => {
     return `
-      <article class="memory-card" style="--poster-color:${escapeHtml(chapterById(item.chapter).color)}">
+      <button class="memory-card ${item.id === state.selectedId ? "active" : ""}" type="button" data-case="${escapeHtml(item.id)}" style="--poster-color:${escapeHtml(chapterById(item.chapter).color)}" aria-label="Mở hồ sơ ${escapeHtml(item.diagnosis)}">
         ${imageMarkup(item, "poster-image")}
         <div class="memory-body">
           <span class="number">${index + 1}</span>
           <h3>${escapeHtml(item.diagnosis)}</h3>
           <p>${escapeHtml(item.micro.slice(0, 3).join(" · "))}</p>
           <div class="memory-note">${escapeHtml(item.memory)}</div>
+          <span class="memory-action">Xem hồ sơ đầy đủ <span aria-hidden="true">→</span></span>
         </div>
-      </article>
+      </button>
     `;
   }).join("");
+
+  bindCaseCards(els.memoryPoster);
 }
 
 function renderGallery() {
@@ -2811,7 +2825,7 @@ function renderGallery() {
   els.galleryGrid.innerHTML = items.map((item) => {
     const chapterItem = chapterById(item.chapter);
     return `
-      <article class="gallery-card" data-case="${escapeHtml(item.id)}">
+      <button class="gallery-card ${item.id === state.selectedId ? "active" : ""}" type="button" data-case="${escapeHtml(item.id)}" aria-label="Mở hồ sơ ${escapeHtml(item.diagnosis)}">
         <div class="gallery-image">
           ${imageMarkup(item, "gallery-figure")}
           <span class="organ-badge" style="--badge:${escapeHtml(chapterItem.color)}">${escapeHtml(chapterItem.name)}</span>
@@ -2821,8 +2835,9 @@ function renderGallery() {
           <h3>${escapeHtml(item.diagnosis)}</h3>
           <p class="english">${escapeHtml(item.english)}</p>
           <ul>${item.micro.slice(0, 2).map((entry) => `<li>${escapeHtml(entry)}</li>`).join("")}</ul>
+          <span class="gallery-action">Mở hồ sơ chẩn đoán <span aria-hidden="true">→</span></span>
         </div>
-      </article>
+      </button>
     `;
   }).join("");
 
@@ -3022,6 +3037,9 @@ function bindCaseCards(scope) {
       state.selectedId = card.dataset.case;
       const selected = cases.find((item) => item.id === state.selectedId);
       if (selected) state.chapter = selected.chapter;
+      state.pattern = "all";
+      state.query = "";
+      els.searchInput.value = "";
       renderAll();
       els.caseDetail.scrollIntoView({ behavior: "smooth", block: "start" });
     });

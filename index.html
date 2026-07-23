@@ -126,9 +126,9 @@
               <h2>Chọn cơ quan, quét ca, đọc chi tiết</h2>
             </div>
             <div class="workspace-legend" aria-label="Luồng sử dụng">
-              <span><i>1</i>Lọc</span>
-              <span><i>2</i>Chọn ca</span>
-              <span><i>3</i>Đối chiếu</span>
+              <span><i>1</i>Chọn cơ quan</span>
+              <span><i>2</i>Chọn chẩn đoán</span>
+              <span><i>3</i>Đọc hồ sơ</span>
             </div>
           </div>
 
@@ -145,10 +145,13 @@
             <div class="diagnosis-panel">
               <div class="panel-heading">
                 <div>
-                  <span class="eyebrow">Chẩn đoán</span>
+                  <span class="eyebrow">Atlas ảnh theo chẩn đoán</span>
                   <h2 id="diagnosisHeading">Đang tải atlas...</h2>
                 </div>
-                <p id="diagnosisCount"></p>
+                <div class="panel-status">
+                  <p id="diagnosisCount"></p>
+                  <span>Bấm một thẻ để mở ảnh lớn, vi thể, HMMD và nguồn đối chiếu.</span>
+                </div>
               </div>
               <div id="diagnosisGrid" class="diagnosis-grid"></div>
             </div>
@@ -203,10 +206,10 @@
           </p>
         </section>
 
-        <section class="section">
+        <section id="memorySection" class="section atlas-learning-section">
           <div class="section-heading">
             <div>
-              <span class="eyebrow">Poster ghi nhớ</span>
+              <span class="eyebrow">Ôn tập tương tác</span>
               <h2 id="posterTitle">Bảng học nhanh</h2>
             </div>
             <p id="posterNote"></p>
@@ -214,13 +217,16 @@
           <div id="memoryPoster" class="memory-poster"></div>
         </section>
 
-        <section class="section">
+        <section id="atlasGallerySection" class="section atlas-learning-section">
           <div class="section-heading">
             <div>
-              <span class="eyebrow">Thư viện ảnh</span>
+              <span class="eyebrow">Kho ảnh mở rộng</span>
               <h2 id="galleryTitle">Tất cả ảnh atlas</h2>
             </div>
-            <p id="galleryCount"></p>
+            <div class="panel-status">
+              <p id="galleryCount"></p>
+              <span>Bấm ảnh để mở hồ sơ chẩn đoán tương ứng.</span>
+            </div>
           </div>
           <div id="galleryGrid" class="gallery-grid"></div>
         </section>
