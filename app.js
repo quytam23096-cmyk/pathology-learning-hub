@@ -1963,7 +1963,11 @@ const sourceExpansionCases = [
   },
 ];
 
-cases.push(...studioBoosterCases, ...sourceExpansionCases);
+const professorExpansionCases = Array.isArray(window.ATLAS_EXPANSION_CASES)
+  ? window.ATLAS_EXPANSION_CASES
+  : [];
+
+cases.push(...studioBoosterCases, ...sourceExpansionCases, ...professorExpansionCases);
 cases.forEach(standardizeBuiltinCase);
 
 function applyVerifiedCuration(item) {
@@ -2318,8 +2322,21 @@ const bilingualSearchGroups = [
   ["âm hộ", "vulva", "vulvar", "vulval"],
   ["da", "skin", "cutaneous", "dermpath"],
   ["não", "brain", "cerebral"],
+  ["thần kinh trung ương", "central nervous system", "cns"],
+  ["u sao bào", "astrocytoma"],
+  ["u tế bào ít nhánh", "oligodendroglioma"],
+  ["tuyến nước bọt", "salivary gland", "salivary"],
+  ["hầu miệng", "oropharynx", "oropharyngeal"],
+  ["mắt", "eye", "ocular"],
+  ["kết mạc", "conjunctiva", "conjunctival"],
+  ["tuyến lệ", "lacrimal gland", "lacrimal"],
   ["mô mềm", "soft tissue"],
   ["xương", "bone"],
+  ["sarcoma mỡ", "liposarcoma"],
+  ["sarcoma hoạt dịch", "synovial sarcoma"],
+  ["sarcoma sụn", "chondrosarcoma"],
+  ["sarcoma xương", "osteosarcoma"],
+  ["thần kinh nội tiết", "neuroendocrine"],
   ["u lympho", "lymphoma"],
   ["ung thư biểu mô tuyến", "adenocarcinoma"],
   ["ung thư biểu mô tế bào vảy", "squamous cell carcinoma"],
@@ -2575,6 +2592,7 @@ function caseSearchFields(item) {
     item.icdo?.code,
     item.classification?.label,
     item.whoTerms || [],
+    item.searchTerms || [],
   ]);
 }
 
