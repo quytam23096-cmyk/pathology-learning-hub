@@ -1,0 +1,103 @@
+.hmmd-launch {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid rgba(103, 232, 249, 0.72);
+  background: #d8f8ff;
+  color: #0c3340;
+  font-weight: 800;
+  box-shadow: 0 12px 30px rgba(4, 28, 42, 0.18);
+}
+
+.hmmd-launch:hover { background: #f0fcff; }
+
+.hmmd-launch-mark,
+.hmmd-dialog-mark {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 6px;
+  background: #0d7890;
+  color: #fff;
+  font-weight: 900;
+}
+
+.hmmd-launch-mark { width: 25px; height: 25px; font-size: 12px; }
+
+.hmmd-search-dialog {
+  width: min(1760px, calc(100vw - 24px));
+  height: calc(100vh - 24px);
+  max-width: none;
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 35px 120px rgba(2, 18, 31, 0.45);
+}
+
+.hmmd-search-dialog::backdrop {
+  background: rgba(3, 18, 29, 0.76);
+  backdrop-filter: blur(5px);
+}
+
+.hmmd-dialog-shell {
+  display: grid;
+  grid-template-rows: 62px minmax(0, 1fr);
+  width: 100%;
+  height: 100%;
+}
+
+.hmmd-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 0 14px 0 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: #102f3b;
+  color: #fff;
+}
+
+.hmmd-dialog-brand,
+.hmmd-dialog-actions { display: flex; align-items: center; gap: 11px; }
+.hmmd-dialog-mark { width: 34px; height: 34px; background: #37cfbf; color: #082e38; }
+.hmmd-dialog-brand strong { display: block; font-size: 13px; line-height: 1.25; }
+.hmmd-dialog-brand small { display: block; margin-top: 2px; color: #b6d4da; font-size: 10px; }
+.hmmd-dialog-actions a {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 7px;
+  color: #e9fbff;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.hmmd-dialog-actions a:hover { background: rgba(255, 255, 255, 0.08); }
+.hmmd-dialog-actions button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 23px;
+  line-height: 1;
+  cursor: pointer;
+}
+.hmmd-dialog-actions button:hover { background: rgba(255, 255, 255, 0.14); }
+.hmmd-search-dialog iframe { width: 100%; height: 100%; border: 0; background: #f4f7fa; }
+body.hmmd-dialog-open { overflow: hidden; }
+
+@media (max-width: 640px) {
+  .hmmd-search-dialog { width: 100vw; height: 100vh; border-radius: 0; }
+  .hmmd-dialog-shell { grid-template-rows: 58px minmax(0, 1fr); }
+  .hmmd-dialog-brand small,
+  .hmmd-dialog-actions a { display: none; }
+}
