@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      if (new URLSearchParams(window.location.search).get("embed") === "1") {
+        document.documentElement.classList.add("embed-mode");
+      }
+    </script>
+    <title>HMMD Search — Demo hỗ trợ tra cứu</title>
+    <meta
+      name="description"
+      content="Bản demo công cụ tra cứu chẩn đoán theo dấu ấn hóa mô miễn dịch dương tính, âm tính và ghi chú."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap"
+    />
+    <link rel="stylesheet" href="./hmmd-search.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Điều hướng HMMD Search">
+        <a class="brand" href="./hmmd-search.html" aria-label="Trang tra cứu HMMD Search">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span><strong>HMMD</strong><small>SEARCH</small></span>
+        </a>
+
+        <nav class="main-nav" aria-label="Chức năng chính">
+          <button class="nav-item active" type="button" data-demo-nav="search"><span>⌕</span>Tra cứu</button>
+          <button class="nav-item" type="button" data-demo-nav="markers"><span>＋</span>Marker</button>
+          <button class="nav-item" type="button" data-demo-nav="diagnoses"><span>◇</span>Chẩn đoán</button>
+          <button class="nav-item" type="button" data-demo-nav="organs"><span>▦</span>Cơ quan</button>
+          <button class="nav-item" type="button" data-demo-nav="reports"><span>▤</span>Báo cáo</button>
+        </nav>
+
+        <div class="sidebar-spacer"></div>
+        <div class="demo-status">
+          <span class="status-dot" aria-hidden="true"></span>
+          <div><strong>Chế độ demo</strong><small>Dữ liệu mô phỏng</small></div>
+        </div>
+        <a class="back-atlas" href="./index.html"><span aria-hidden="true">←</span> Về Atlas GPB</a>
+      </aside>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="mobile-menu" id="mobileMenu" type="button" aria-label="Mở menu" aria-expanded="false">☰</button>
+          <div class="breadcrumb"><span>HMMD Search</span><i>/</i><strong>Tra cứu chẩn đoán</strong></div>
+          <div class="top-actions">
+            <button class="quiet-button" type="button" id="resetQuery">↻ <span>Làm mới</span></button>
+            <button class="add-rule-button" type="button" id="openRuleDialog">＋ Thêm quy tắc</button>
+            <div class="user-badge" aria-label="Tài khoản demo">GPB</div>
+          </div>
+        </header>
+
+        <main class="workspace">
+          <section class="workspace-heading" aria-labelledby="pageTitle">
+            <div>
+              <div class="eyebrow"><span></span> Decision support workspace</div>
+              <h1 id="pageTitle">Tra cứu theo dấu ấn HMMD</h1>
+              <p>Chọn marker đã làm, đối chiếu nhanh các kiểu hình gần nhất và xem dấu ấn nên bổ sung.</p>
+            </div>
+            <div class="dataset-summary" aria-label="Thông tin dữ liệu demo">
+              <div><strong id="diagnosisTotal">8</strong><span>quy tắc</span></div>
+              <div><strong id="markerTotal">30</strong><span>marker</span></div>
+              <div><strong id="lastUpdated">DEMO</strong><span>phiên bản</span></div>
+            </div>
+          </section>
+
+          <div class="notice" role="note">
+            <span aria-hidden="true">i</span>
+            <p><strong>Bản mô phỏng giao diện và thuật toán.</strong> “Độ tương đồng” không phải xác suất chẩn đoán; luôn cần đối chiếu hình thái, lâm sàng và quy trình đã thẩm định.</p>
+            <button type="button" id="dismissNotice" aria-label="Ẩn thông báo">×</button>
+          </div>
+
+          <div class="content-grid">
+            <section class="query-card" aria-labelledby="queryTitle">
+              <div class="card-heading">
+                <div><span class="step-number">01</span><div><h2 id="queryTitle">Nhập kiểu hình</h2><p>Ba trường tra cứu chính</p></div></div>
+                <button class="text-button" type="button" id="loadPreset">Nạp ca mẫu</button>
+              </div>
+
+              <div class="field-grid">
+                <label class="field-label" for="organSelect"><span>Cơ quan / vị trí lấy mẫu</span>
+                  <select id="organSelect">
+                    <option value="all">Tất cả cơ quan</option>
+                    <option value="lung" selected>Phổi</option>
+                    <option value="colorectal">Đại trực tràng</option>
+                    <option value="breast">Vú</option>
+                    <option value="thyroid">Tuyến giáp</option>
+                    <option value="kidney">Thận</option>
+                    <option value="liver">Gan</option>
+                  </select>
+                </label>
+                <label class="field-label" for="caseCode"><span>Mã ca (không bắt buộc)</span>
+                  <input id="caseCode" type="text" value="HMMD-DEMO-042" autocomplete="off" />
+                </label>
+              </div>
+
+              <div class="marker-lane positive-lane">
+                <div class="lane-heading">
+                  <div><span class="lane-icon">＋</span><div><strong>Marker dương tính</strong><small id="positiveCount">0 marker</small></div></div>
+                  <button type="button" data-clear-lane="positive">Xóa hết</button>
+                </div>
+                <div class="marker-entry">
+                  <input id="positiveInput" list="markerSuggestions" placeholder="Gõ tên marker, Enter để thêm…" autocomplete="off" />
+                  <button type="button" data-add-marker="positive" aria-label="Thêm marker dương tính">＋</button>
+                </div>
+                <div class="selected-chips" id="positiveChips" aria-live="polite"></div>
+              </div>
+
+              <div class="marker-lane negative-lane">
+                <div class="lane-heading">
+                  <div><span class="lane-icon">−</span><div><strong>Marker âm tính</strong><small id="negativeCount">0 marker</small></div></div>
+                  <button type="button" data-clear-lane="negative">Xóa hết</button>
+                </div>
+                <div class="marker-entry">
+                  <input id="negativeInput" list="markerSuggestions" placeholder="Gõ tên marker, Enter để thêm…" autocomplete="off" />
+                  <button type="button" data-add-marker="negative" aria-label="Thêm marker âm tính">＋</button>
+                </div>
+                <div class="selected-chips" id="negativeChips" aria-live="polite"></div>
+              </div>
+
+              <datalist id="markerSuggestions"></datalist>
+
+              <label class="notes-field" for="notesInput">
+                <span><i>✦</i><strong>Ghi chú / điều kiện</strong><small>Vị trí, độ mô học, hình thái nổi bật…</small></span>
+                <textarea id="notesInput" rows="3" placeholder="Ví dụ: Grade III, biệt hóa kém, hoại tử…">Grade III, biệt hóa kém</textarea>
+              </label>
+
+              <div class="popular-markers">
+                <div><strong>Marker thường dùng</strong><span>Bấm để thêm dương tính · Shift + bấm để thêm âm tính</span></div>
+                <div id="popularMarkerList"></div>
+              </div>
+
+              <button class="search-button" id="runSearch" type="button"><span>⌕</span><strong>Tra cứu chẩn đoán</strong><kbd>Ctrl ↵</kbd></button>
+            </section>
+
+            <section class="results-card" aria-labelledby="resultsTitle">
+              <div class="results-heading">
+                <div>
+                  <span class="step-number">02</span>
+                  <div><h2 id="resultsTitle">Kết quả đối chiếu</h2><p id="resultSummary" aria-live="polite">Sẵn sàng tra cứu</p></div>
+                </div>
+                <div class="score-legend"><i></i>Độ tương đồng</div>
+              </div>
+              <div class="results-toolbar">
+                <div class="query-signature" id="querySignature"></div>
+                <select id="resultFilter" aria-label="Lọc kết quả">
+                  <option value="all">Tất cả kết quả</option>
+                  <option value="strong">Tương đồng ≥ 75%</option>
+                  <option value="conflict-free">Không có xung đột</option>
+                </select>
+              </div>
+              <div class="results-list" id="resultsList"></div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <dialog id="ruleDialog" class="rule-dialog">
+      <form method="dialog" id="ruleForm">
+        <header>
+          <div><span class="dialog-kicker">Thư viện quy tắc</span><h2>Thêm chẩn đoán mới</h2><p>Lưu cục bộ trên thiết bị này cho mục đích thử nghiệm.</p></div>
+          <button class="dialog-close" value="cancel" type="submit" aria-label="Đóng">×</button>
+        </header>
+        <div class="dialog-body">
+          <label><span>Tên chẩn đoán tiếng Việt *</span><input name="nameVi" required placeholder="Ví dụ: Carcinoma tuyến của phổi" /></label>
+          <label><span>Tên tiếng Anh</span><input name="nameEn" placeholder="Lung adenocarcinoma" /></label>
+          <div class="dialog-grid">
+            <label><span>Cơ quan *</span><select name="organ" required><option value="lung">Phổi</option><option value="colorectal">Đại trực tràng</option><option value="breast">Vú</option><option value="thyroid">Tuyến giáp</option><option value="kidney">Thận</option><option value="liver">Gan</option></select></label>
+            <label><span>ICD-O</span><input name="icdo" placeholder="8140/3" /></label>
+          </div>
+          <label><span>Marker dương tính</span><input name="positive" placeholder="CK7, TTF-1, Napsin A" /></label>
+          <label><span>Marker âm tính</span><input name="negative" placeholder="p40, CK5/6" /></label>
+          <label><span>Gợi ý nhuộm tiếp</span><input name="suggested" placeholder="ALK, ROS1, PD-L1" /></label>
+          <label><span>Ghi chú quy tắc</span><textarea name="notes" rows="3" placeholder="Mô tả ngắn để đối chiếu…"></textarea></label>
+        </div>
+        <footer><button class="secondary-action" value="cancel" type="submit">Hủy</button><button class="primary-action" id="saveRule" value="default" type="submit">Lưu quy tắc</button></footer>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./hmmd-search.js"></script>
+  </body>
+</html>

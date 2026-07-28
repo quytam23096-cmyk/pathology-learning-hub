@@ -20,6 +20,7 @@
     />
     <link rel="stylesheet" href="./tailwind.css" />
     <link rel="stylesheet" href="./styles.css?v=20260723-reading-desk-1" />
+    <link rel="stylesheet" href="./hmmd-integration.css?v=20260728-1" />
   </head>
   <body>
     <header class="top-navbar sticky top-0 z-50 border-b border-slate-700 bg-[#102a33] text-white">
@@ -34,6 +35,7 @@
 
         <div class="hidden items-center gap-1 lg:flex" aria-label="Liên kết nhanh">
           <a class="nav-link" href="#atlasBoard">Atlas</a>
+          <a class="nav-link" href="./hmmd-search.html" data-open-hmmd>HMMD Search</a>
           <a class="nav-link" href="#whoLibrary">Danh mục WHO</a>
           <a class="nav-link" href="#webPathologyLibrary">Kho ảnh</a>
           <a class="nav-link" href="#sources">Nguồn học</a>
@@ -53,6 +55,7 @@
         <div class="hidden w-full border-t border-white/10 pt-2 lg:hidden" id="mobileMenu">
           <div class="grid grid-cols-2 gap-2 text-sm">
             <a class="mobile-nav-link" href="#atlasBoard">Atlas</a>
+            <a class="mobile-nav-link" href="./hmmd-search.html" data-open-hmmd>HMMD Search</a>
             <a class="mobile-nav-link" href="#whoLibrary">Danh mục WHO</a>
             <a class="mobile-nav-link" href="#webPathologyLibrary">Kho ảnh</a>
             <a class="mobile-nav-link" href="#sources">Nguồn học</a>
@@ -78,6 +81,10 @@
             HMMD định hướng, ICD-O-4 và liên kết nguồn trong một luồng học tập trực quan.
           </p>
           <div class="hero-actions">
+            <a class="btn hmmd-launch" href="./hmmd-search.html" data-open-hmmd>
+              <span class="hmmd-launch-mark" aria-hidden="true">H</span>
+              Mở HMMD Search
+            </a>
             <a class="btn primary" href="#atlasBoard">Bắt đầu tra cứu <span aria-hidden="true">→</span></a>
             <a class="btn ghost" href="#whoLibrary">Mở danh mục WHO</a>
             <button class="btn ghost" id="openCaseStudio" type="button">Thêm thẻ atlas</button>
@@ -413,6 +420,30 @@
       </main>
     </div>
 
+    <dialog class="hmmd-search-dialog" id="hmmdSearchDialog" aria-labelledby="hmmdDialogTitle">
+      <div class="hmmd-dialog-shell">
+        <header class="hmmd-dialog-header">
+          <div class="hmmd-dialog-brand">
+            <span class="hmmd-dialog-mark" aria-hidden="true">H</span>
+            <div>
+              <strong id="hmmdDialogTitle">HMMD Search · Atlas GPB</strong>
+              <small>Phân hệ hỗ trợ tra cứu hóa mô miễn dịch</small>
+            </div>
+          </div>
+          <div class="hmmd-dialog-actions">
+            <a href="./hmmd-search.html" target="_blank" rel="noopener">Mở cửa sổ riêng <span aria-hidden="true">↗</span></a>
+            <button id="closeHmmdSearch" type="button" aria-label="Đóng HMMD Search">×</button>
+          </div>
+        </header>
+        <iframe
+          id="hmmdSearchFrame"
+          src="./hmmd-search.html?embed=1"
+          title="HMMD Search"
+          loading="lazy"
+        ></iframe>
+      </div>
+    </dialog>
+
     <script src="./who-catalog.js?v=20260723-who-online-2"></script>
     <script src="./who-diagnosis-links.js"></script>
     <script src="./webpathology-catalog.js"></script>
@@ -422,5 +453,6 @@
     <script src="./medical-vi.js?v=20260723-bilingual-1"></script>
     <script src="./app.js?v=20260724-specialist-expansion-1"></script>
     <script src="./ui.js"></script>
+    <script src="./hmmd-integration.js?v=20260728-1"></script>
   </body>
 </html>
