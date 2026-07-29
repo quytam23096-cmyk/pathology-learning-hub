@@ -19,7 +19,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap"
     />
-    <link rel="stylesheet" href="./hmmd-search.css?v=20260729-6" />
+    <link rel="stylesheet" href="./hmmd-search.css?v=20260729-8" />
   </head>
   <body>
     <div class="app-shell">
@@ -32,7 +32,8 @@
         <nav class="main-nav" aria-label="Chức năng chính">
           <button class="nav-item active" type="button" data-view="search"><span>⌕</span>Tra cứu</button>
           <button class="nav-item" type="button" data-view="markers"><span>＋</span>Marker</button>
-          <button class="nav-item" type="button" data-view="diagnoses"><span>◇</span>Chẩn đoán</button>
+          <button class="nav-item" type="button" data-view="diagnoses"><span>◇</span>Chẩn đoán LS / ICD-10</button>
+          <button class="nav-item" type="button" data-view="results"><span>≣</span>Kết quả HMMD</button>
           <button class="nav-item" type="button" data-view="organs"><span>▦</span>Cơ quan</button>
           <button class="nav-item" type="button" data-view="reports"><span>▤</span>Báo cáo</button>
         </nav>
@@ -65,8 +66,9 @@
             </div>
             <div class="dataset-summary" aria-label="Thống kê kho dữ liệu HMMD">
               <button type="button" data-view="reports"><strong id="caseTotal">—</strong><span>ca HMMD</span></button>
-              <button type="button" data-view="markers"><strong id="markerTotal">—</strong><span>marker</span></button>
-              <button type="button" data-view="diagnoses"><strong id="diagnosisTotal">—</strong><span>chẩn đoán</span></button>
+              <button type="button" data-view="markers"><strong id="markerTotal">—</strong><span>marker chuẩn</span></button>
+              <button type="button" data-view="diagnoses"><strong id="diagnosisTotal">—</strong><span>chẩn đoán LS</span></button>
+              <button type="button" data-view="results"><strong id="resultTotal">—</strong><span>kết quả HMMD</span></button>
               <button type="button" data-view="organs"><strong id="organTotal">—</strong><span>nhóm cơ quan</span></button>
             </div>
           </section>
@@ -173,7 +175,10 @@
             <label><span>Mã ca</span><input name="caseCode" placeholder="Tự tạo nếu để trống" /></label>
             <label><span>Cơ quan *</span><select name="organ" required><option value="lung">Phổi</option><option value="colorectal">Đại trực tràng</option><option value="breast">Vú</option><option value="thyroid">Tuyến giáp</option><option value="kidney">Thận</option><option value="liver">Gan</option><option value="other">Khác / chưa phân nhóm</option></select></label>
           </div>
-          <label><span>Chẩn đoán lâm sàng *</span><input name="diagnosisText" required placeholder="Nhập chẩn đoán lâm sàng" /></label>
+          <div class="dialog-grid">
+            <label><span>Chẩn đoán lâm sàng *</span><input name="diagnosisText" required placeholder="Nhập chẩn đoán lâm sàng" /></label>
+            <label><span>Mã ICD-10</span><input name="icd10" placeholder="Ví dụ: C34.9" /></label>
+          </div>
           <label><span>Kết quả nhuộm hóa mô *</span><textarea name="conclusionText" required rows="3" placeholder="Nhập kết quả nhuộm hóa mô"></textarea></label>
           <div class="dialog-grid">
             <label><span>Marker dương tính</span><input name="positive" placeholder="CK7, TTF-1, Napsin A" /></label>
@@ -193,7 +198,8 @@
         </header>
         <nav class="data-tabs" aria-label="Nhóm dữ liệu">
           <button type="button" data-explorer-tab="markers">Marker</button>
-          <button type="button" data-explorer-tab="diagnoses">Chẩn đoán</button>
+          <button type="button" data-explorer-tab="diagnoses">Chẩn đoán LS / ICD-10</button>
+          <button type="button" data-explorer-tab="results">Kết quả HMMD</button>
           <button type="button" data-explorer-tab="organs">Cơ quan</button>
           <button type="button" data-explorer-tab="reports">Báo cáo</button>
         </nav>
@@ -206,7 +212,8 @@
     </dialog>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="./hmmd-data.js?v=20260729-6"></script>
-    <script src="./hmmd-search.js?v=20260729-6"></script>
+    <script src="./hmmd-data.js?v=20260729-8"></script>
+    <script src="./icd10-tt06-data.js?v=20260729-8"></script>
+    <script src="./hmmd-search.js?v=20260729-8"></script>
   </body>
 </html>
