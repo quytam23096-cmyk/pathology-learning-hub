@@ -39,7 +39,8 @@ Website tĩnh tiếng Việt dạng atlas giải phẫu bệnh: chia theo cơ qu
 ## Tìm kiếm định hướng
 
 - Ô tìm atlas nhận tên chẩn đoán, tên cơ quan, mô tả vi thể và marker bằng tiếng Việt có dấu/không dấu hoặc tiếng Anh.
-- Bộ định hướng `Cơ quan → Hình thái → HMMD` xếp hạng các hồ sơ có sẵn và nêu lý do khớp để hỗ trợ lập chẩn đoán phân biệt; kết quả không thay thế kết luận của bác sĩ giải phẫu bệnh.
+- Bộ định hướng `Cơ quan → Hình thái → HMMD` hiện có 50 vị trí cơ quan và 37 dấu hiệu hình thái thuộc bốn nhóm: kiến trúc, tế bào, chất nền và hành vi.
+- Kết quả ưu tiên hồ sơ atlas đã biên soạn, sau đó mở rộng sang các mục chẩn đoán WHO/IARC và gallery WebPathology có liên kết nguồn trực tiếp. Kết quả nêu rõ cách khớp và không thay thế kết luận của bác sĩ giải phẫu bệnh.
 - `search-assistant.js` giữ logic xếp hạng độc lập để có thể kiểm thử. Chạy `npm run audit:search` trước khi deploy.
 
 ## Chạy tại máy

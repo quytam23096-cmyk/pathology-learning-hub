@@ -45,9 +45,21 @@ const cases = [
     pitfall: "",
     markers: ["p40", "CK5/6"],
   },
+  {
+    id: "ovary-krukenberg",
+    chapter: "gyn",
+    diagnosis: "U Krukenberg (ung thư biểu mô tế bào nhẫn di căn buồng trứng)",
+    english: "Krukenberg tumour",
+    pattern: ["carcinoma", "glandular"],
+    micro: ["Tế bào nhẫn trong mô đệm phản ứng"],
+    report: [],
+    memory: "",
+    pitfall: "",
+    markers: ["CK7", "CK20", "CDX2", "SATB2"],
+  },
 ];
 
-const chapterNames = { lung: "Phổi", breast: "Vú", skin: "Da" };
+const chapterNames = { lung: "Phổi", breast: "Vú", skin: "Da", gyn: "Phụ khoa" };
 const rank = (options) => assistant.rankCases(cases, {
   chapterNameFor: (id) => chapterNames[id],
   ...options,
@@ -58,11 +70,35 @@ const checks = [
   ["Vietnamese clinical wording", rank({ query: "u ac tinh vu" })[0]?.item.id, "breast-idc"],
   ["Morphology phrase", rank({ query: "te bao nho khuon nhan" })[0]?.item.id, "lung-small-cell"],
   ["Noisy novice wording", rank({ query: "khong biet chan doan thay te bao nho khuon nhan" })[0]?.item.id, "lung-small-cell"],
+  ["Accent-sensitive signet-ring wording", rank({ query: "tế bào nhẫn" })[0]?.item.id, "ovary-krukenberg"],
+  ["Accent-sensitive signet-ring result count", rank({ query: "tế bào nhẫn" }).length, 1],
   ["English diagnosis", rank({ query: "small cell carcinoma" })[0]?.item.id, "lung-small-cell"],
   ["Guided clue", rank({ organ: "skin", clueIds: ["squamous"] })[0]?.item.id, "skin-scc"],
   ["IHC marker", rank({ organ: "lung", marker: "INSM1 TTF-1" })[0]?.item.id, "lung-small-cell"],
 ];
 
 const failures = checks.filter(([, actual, expected]) => actual !== expected);
-console.log(JSON.stringify({ checks: checks.length, failures }, null, 2));
-if (failures.length) process.exitCode = 1;
+const coverageFailures = [];
+if (assistant.organOptions.length < 45) coverageFailures.push("Organ coverage below 45 options");
+if (assistant.morphologyClues.length < 35) coverageFailures.push("Morphology coverage below 35 clues");
+if (assistant.morphologyClues.some((clue) => !clue.group || !clue.sourceTerms?.length)) {
+  coverageFailures.push("Morphology clue missing group or source terms");
+}
+if (new Set(assistant.organOptions.map((option) => option.id)).size !== assistant.organOptions.length) {
+  coverageFailures.push("Duplicate organ option id");
+}
+if (new Set(assistant.morphologyClues.map((clue) => clue.id)).size !== assistant.morphologyClues.length) {
+  coverageFailures.push("Duplicate morphology clue id");
+}
+if (assistant.organOptions.some((option) => option.id !== "all" && (!option.label || !option.group || !option.terms?.length))) {
+  coverageFailures.push("Organ option missing label, group, or source terms");
+}
+
+console.log(JSON.stringify({
+  checks: checks.length,
+  organOptions: assistant.organOptions.length,
+  morphologyClues: assistant.morphologyClues.length,
+  failures,
+  coverageFailures,
+}, null, 2));
+if (failures.length || coverageFailures.length) process.exitCode = 1;
