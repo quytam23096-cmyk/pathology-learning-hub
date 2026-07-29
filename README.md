@@ -2,6 +2,13 @@
 
 Website tĩnh tiếng Việt dạng atlas giải phẫu bệnh: chia theo cơ quan, trong từng cơ quan có các chẩn đoán cụ thể, ảnh vi thể, điểm cần nhìn, bẫy dễ nhầm, gợi ý báo cáo và liên kết nguồn chính thống.
 
+## Kiểm soát truy cập
+
+- Atlas và HMMD Search được bảo vệ bằng Routing Middleware trên Vercel.
+- API đăng nhập kiểm tra mật khẩu băm PBKDF2-SHA256; mã nguồn không chứa mật khẩu thuần.
+- Phiên đăng nhập dùng cookie được ký, có cờ `HttpOnly`, `Secure`, `SameSite=Lax` và hết hạn sau 8 giờ.
+- Cấu hình thật nằm trong biến môi trường Vercel; `.env.example` chỉ chứa giá trị mẫu.
+
 ## Điểm chính
 
 - Thanh điều hướng cố định, hero H&E toàn chiều rộng với CTA rõ ràng, khu làm việc atlas và footer nguồn học được thiết kế lại theo hướng hiện đại, tương lai và responsive.

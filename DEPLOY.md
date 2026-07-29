@@ -1,6 +1,16 @@
 # Deploy miễn phí
 
-Source code đã sẵn sàng để đưa lên internet bằng hosting tĩnh miễn phí.
+Source code dùng Vercel Functions và Routing Middleware để yêu cầu đăng nhập trước khi mở Atlas hoặc HMMD Search.
+
+## Cấu hình đăng nhập an toàn
+
+Không ghi email, mật khẩu hoặc khóa phiên thật vào GitHub. Trước khi deploy, tạo ba biến môi trường trong Vercel tại `Project Settings` -> `Environment Variables`:
+
+- `ATLAS_AUTH_EMAIL`: email được phép đăng nhập.
+- `ATLAS_AUTH_PASSWORD_HASH`: chuỗi băm PBKDF2-SHA256 của mật khẩu, không phải mật khẩu thuần.
+- `ATLAS_SESSION_SECRET`: khóa ngẫu nhiên dài ít nhất 32 byte để ký cookie phiên.
+
+Áp dụng biến cho `Production`, `Preview` và `Development` nếu cần. Sau khi thêm hoặc đổi biến môi trường, redeploy dự án để bản triển khai mới nhận cấu hình.
 
 ## Vercel từ GitHub
 
@@ -14,6 +24,8 @@ Source code đã sẵn sàng để đưa lên internet bằng hosting tĩnh mi�
 
 ## GitHub Pages
 
+GitHub Pages chỉ phục vụ tệp tĩnh nên không chạy được lớp đăng nhập phía máy chủ của dự án này. Chỉ dùng GitHub để lưu source code; dùng Vercel để xuất bản website có bảo vệ.
+
 1. Vào repository GitHub.
 2. Mở `Settings` -> `Pages`.
 3. Chọn `Deploy from a branch`.
@@ -22,6 +34,8 @@ Source code đã sẵn sàng để đưa lên internet bằng hosting tĩnh mi�
 
 ## Netlify Drop
 
+Netlify Drop tĩnh không chạy trực tiếp Vercel Functions và Routing Middleware. Muốn chuyển nhà cung cấp cần viết lại lớp xác thực bằng Functions/Middleware tương đương.
+
 1. Mở https://app.netlify.com/drop
 2. Kéo thả thư mục chứa các file tĩnh hoặc file zip deploy.
 3. Netlify tạo URL dạng `https://ten-site.netlify.app`.
@@ -29,7 +43,7 @@ Source code đã sẵn sàng để đưa lên internet bằng hosting tĩnh mi�
 
 ## Ghi chú quan trọng
 
-- Đây là website tĩnh, không cần server/backend.
+- Phần atlas vẫn là tệp tĩnh, nhưng đăng nhập dùng Vercel Function và Routing Middleware phía máy chủ.
 - Tính năng đổi ảnh và Atlas Studio tự thêm thẻ đang lưu trên trình duyệt của người dùng.
 - Muốn ảnh/thẻ tự thêm hiển thị cho mọi người, hãy xuất JSON hoặc đưa dữ liệu vào `app.js` rồi push lại GitHub.
-- Không đưa file dữ liệu nội bộ, tài khoản đăng nhập, hoặc bệnh án lên repository public.
+- Không đưa file dữ liệu nội bộ, tài khoản đăng nhập, mật khẩu, khóa phiên hoặc bệnh án lên repository public.
