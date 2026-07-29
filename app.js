@@ -339,7 +339,7 @@ const medicalTermRules = [
   [/crush artifact/gi, "giả ảnh đè ép"],
   [/core biopsy/gi, "sinh thiết lõi kim"],
   [/dirty necrosis/gi, "hoại tử bẩn"],
-  [/reactive lymphoid hyperplasia/gi, "quá sản lympho phản ứng"],
+  [/reactive lymphoid hyperplasia/gi, "tăng sản lympho phản ứng"],
   [/intercellular bridges/gi, "cầu nối gian bào"],
   [/keratin pearls/gi, "cầu sừng"],
   [/p16 block-positive/gi, "p16 dương tính kiểu khối"],
@@ -539,7 +539,7 @@ const cases = [
   {
     id: "thyroid-nodular",
     chapter: "thyroid",
-    diagnosis: "Bướu giáp nhân / quá sản dạng keo",
+    diagnosis: "Bướu giáp nhân / tăng sản dạng keo",
     english: "Nodular hyperplasia / colloid goiter",
     file: "Normal thyroid cell No.2.jpg",
     pattern: ["benign"],
@@ -2099,6 +2099,17 @@ const medicalVi = window.MEDICAL_VI || {
   translateTrail: (values) => values || [],
   sourceNote: "",
 };
+
+function medicalTranslation(value) {
+  if (typeof medicalVi.translateDetailed === "function") return medicalVi.translateDetailed(value);
+  const original = String(value || "");
+  const text = medicalVi.translate(original);
+  return {
+    original,
+    text: text !== original ? text : "",
+    status: text !== original ? "assisted" : "source-only",
+  };
+}
 const whoVolumeChapters = {
   digestive: ["colon", "hpb", "soft", "uppergi"],
   breast: ["breast"],
@@ -2384,10 +2395,20 @@ function prepareWhoCatalog() {
   whoMatches = new Map();
   whoEntries.forEach((entry) => {
     const linkedCase = findAtlasCaseForWho(entry);
-    entry.nameVi = linkedCase?.diagnosis || medicalVi.translate(entry.nameEn);
-    entry.sectionVi = medicalVi.translate(entry.sectionEn);
-    entry.groupVi = medicalVi.translate(entry.groupEn);
-    entry.categoryVi = medicalVi.translate(entry.categoryEn);
+    const nameTranslation = linkedCase
+      ? { text: linkedCase.diagnosis, status: "reviewed" }
+      : medicalTranslation(entry.nameEn);
+    const sectionTranslation = medicalTranslation(entry.sectionEn);
+    const groupTranslation = medicalTranslation(entry.groupEn);
+    const categoryTranslation = medicalTranslation(entry.categoryEn);
+    entry.nameVi = nameTranslation.text;
+    entry.nameViStatus = nameTranslation.status;
+    entry.sectionVi = sectionTranslation.text;
+    entry.groupVi = groupTranslation.text;
+    entry.categoryVi = categoryTranslation.text;
+    entry.pathViStatus = [sectionTranslation, groupTranslation, categoryTranslation]
+      .filter((item) => item.original)
+      .every((item) => item.status !== "source-only") ? "available" : "partial";
     entry.searchFields = searchFields([
       entry.nameEn,
       entry.nameVi,
@@ -2470,8 +2491,14 @@ const webPathologyChapterOrgans = {
 function prepareWebPathologyCatalog() {
   webPathologyEntries.forEach((entry) => {
     const organ = webPathologyOrganMap.get(entry.organ) || {};
-    entry.titleVi = medicalVi.translate(entry.titleEn);
-    entry.trailVi = medicalVi.translateTrail(entry.trailEn || []);
+    const titleTranslation = medicalTranslation(entry.titleEn);
+    const trailTranslations = (entry.trailEn || []).map(medicalTranslation);
+    entry.titleVi = titleTranslation.text;
+    entry.titleViStatus = titleTranslation.status;
+    entry.trailVi = trailTranslations.map((item) => item.text);
+    entry.trailViStatus = trailTranslations.every((item) => item.status !== "source-only")
+      ? "available"
+      : "partial";
     entry.searchFields = searchFields([
       entry.titleEn,
       entry.titleVi,
@@ -3051,10 +3078,13 @@ function renderWhoLibrary() {
             <span>${escapeHtml(volume.nameVi || entry.volumeId)}</span>
             <em>${linkedCase ? "Đã liên kết thẻ học" : escapeHtml(whoSeriesLabel(volume.series))}</em>
           </div>
-          <p class="who-entry-vi" lang="vi">${escapeHtml(entry.nameVi || entry.nameEn)}</p>
+          ${entry.nameVi
+            ? `<p class="who-entry-vi" lang="vi">${escapeHtml(entry.nameVi)}</p>`
+            : `<p class="translation-pending" lang="vi">Chưa có bản dịch tiếng Việt đã hiệu đính</p>`}
+          ${entry.nameViStatus === "assisted" ? `<span class="translation-status">Dịch hỗ trợ · đối chiếu tên tiếng Anh</span>` : ""}
           <h3 class="who-entry-en" lang="en">${escapeHtml(entry.nameEn)}</h3>
           ${linkedCase?.icdo?.code ? `<span class="who-icdo">ICD-O-4 ${escapeHtml(linkedCase.icdo.code)}</span>` : ""}
-          <p class="who-entry-path who-entry-path-vi" lang="vi">${escapeHtml(pathVi || volume.nameVi || "Phân loại U của WHO")}</p>
+          ${pathVi ? `<p class="who-entry-path who-entry-path-vi" lang="vi">${escapeHtml(pathVi)}</p>` : ""}
           <p class="who-entry-path who-entry-path-en" lang="en">${escapeHtml(pathEn || volume.nameEn || "WHO Classification of Tumours")}</p>
           <p class="who-entry-citation">WHO Online · Book ${escapeHtml(entry.bookId)} · Chapter ${escapeHtml(entry.chapterId)}</p>
           <div class="who-entry-actions">
@@ -3117,16 +3147,19 @@ function renderWebPathologyLibrary() {
     els.webPathologyGrid.innerHTML = visible.map((entry) => {
       const organ = webPathologyOrganMap.get(entry.organ) || {};
       const trailEn = (entry.trailEn || []).slice(0, -1).join(" › ");
-      const trailVi = (entry.trailVi || []).slice(0, -1).join(" › ");
+      const trailVi = (entry.trailVi || []).slice(0, -1).filter(Boolean).join(" › ");
       return `
         <article class="webpath-card">
           <div class="webpath-card-meta">
             <span>${escapeHtml(organ.nameVi || entry.organ)}</span>
             <span>${escapeHtml(organ.nameEn || "WebPathology")}</span>
           </div>
-          <h3 class="webpath-title-vi" lang="vi">${escapeHtml(entry.titleVi || entry.titleEn)}</h3>
+          ${entry.titleVi
+            ? `<h3 class="webpath-title-vi" lang="vi">${escapeHtml(entry.titleVi)}</h3>`
+            : `<p class="translation-pending" lang="vi">Chưa có bản dịch tiếng Việt đã hiệu đính</p>`}
+          ${entry.titleViStatus === "assisted" ? `<span class="translation-status">Dịch hỗ trợ · đối chiếu tên tiếng Anh</span>` : ""}
           <p class="webpath-title-en" lang="en">${escapeHtml(entry.titleEn)}</p>
-          <p class="webpath-trail-vi" lang="vi">${escapeHtml(trailVi || organ.nameVi || "Kho ảnh")}</p>
+          ${trailVi ? `<p class="webpath-trail-vi" lang="vi">${escapeHtml(trailVi)}</p>` : ""}
           <p class="webpath-trail-en" lang="en">${escapeHtml(trailEn || organ.nameEn || "Image gallery")}</p>
           <a href="${escapeHtml(entry.url)}" target="_blank" rel="noreferrer">Mở gallery trên WebPathology ↗</a>
         </article>

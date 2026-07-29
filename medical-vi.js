@@ -51,12 +51,13 @@
     "head and neck": "Đầu và cổ",
     "mediastinum": "Trung thất",
     "peritoneum": "Phúc mạc",
-    "blunt duct adenosis": "Bệnh tuyến ống tận cùn",
-    "ductal hyperplasia": "Quá sản ống tuyến",
-    "atypical ductal hyperplasia": "Quá sản ống tuyến không điển hình",
-    "lobular hyperplasia": "Quá sản tiểu thùy",
+    "blunt duct adenosis": "Bệnh tuyến ống tận cùng",
+    "ductal hyperplasia": "Tăng sản biểu mô ống tuyến",
+    "usual ductal hyperplasia": "Tăng sản biểu mô ống tuyến thông thường",
+    "atypical ductal hyperplasia": "Tăng sản biểu mô ống tuyến không điển hình",
+    "lobular hyperplasia": "Tăng sản tiểu thùy",
     "fibrocystic change": "Biến đổi xơ nang",
-    "intraductal papilloma": "U nhú nội ống",
+    "intraductal papilloma": "U nhú trong ống",
     "microglandular adenosis": "Bệnh tuyến vi nang",
     "sclerosing adenosis": "Bệnh tuyến xơ hóa",
     "radial scar": "Sẹo tỏa tia",
@@ -98,7 +99,22 @@
     "follicular adenoma": "U tuyến thể nang",
     "hashimoto thyroiditis": "Viêm tuyến giáp Hashimoto",
     "subacute granulomatous thyroiditis": "Viêm tuyến giáp bán cấp dạng hạt",
-    "nodular hyperplasia": "Quá sản dạng nốt",
+    "nodular hyperplasia": "Tăng sản dạng nốt",
+    "diagnostic categories and report structure": "Các nhóm chẩn đoán và cấu trúc báo cáo",
+    "acute inflammation": "Viêm cấp",
+    "acute inflammation and suppuration": "Viêm cấp và mưng mủ",
+    "histiocytic, lymphocytic, and eosinophilic inflammatory patterns": "Các kiểu viêm ưu thế mô bào, lympho bào và bạch cầu ái toan",
+    "granulomatous and suppurative granulomatous inflammation": "Viêm dạng hạt và viêm dạng hạt mưng mủ",
+    "mixed lymphoid cell pattern": "Kiểu tế bào lympho hỗn hợp",
+    "predominantly small/intermediate cell pattern": "Kiểu tế bào chủ yếu nhỏ/trung bình",
+    "predominantly intermediate/large/pleomorphic/blastic cell pattern": "Kiểu tế bào chủ yếu trung bình/lớn/đa hình/dạng blast",
+    "single very large atypical cell pattern": "Kiểu tế bào không điển hình rất lớn, đơn độc",
+    "pulmonary hamartoma": "U mô thừa của phổi",
+    "sclerosing pneumocytoma": "U phế bào xơ hóa",
+    "integration of clinical, radiological, and key fnab cytopathological features with ancillary testing in a diagnostic approach": "Tích hợp dữ liệu lâm sàng, chẩn đoán hình ảnh, các đặc điểm tế bào học chính của FNAB và xét nghiệm bổ trợ trong tiếp cận chẩn đoán",
+    "integration of clinical, imaging, and key fnab cytopathological features with ancillary testing in a diagnostic approach": "Tích hợp dữ liệu lâm sàng, chẩn đoán hình ảnh, các đặc điểm tế bào học chính của FNAB và xét nghiệm bổ trợ trong tiếp cận chẩn đoán",
+    "adenosis and sclerosing lesions": "Bệnh tuyến và các tổn thương xơ hóa",
+    "adenosis and sclerosing lesions: introduction": "Bệnh tuyến và các tổn thương xơ hóa: Đại cương",
     "adenocarcinoma in situ of the lung": "Ung thư biểu mô tuyến tại chỗ của phổi",
     "invasive non-mucinous adenocarcinoma of the lung": "Ung thư biểu mô tuyến không nhầy xâm nhập của phổi",
     "invasive mucinous adenocarcinoma of the lung": "Ung thư biểu mô tuyến dạng nhầy xâm nhập của phổi",
@@ -514,7 +530,7 @@
     ["smooth muscle", "cơ trơn"],
     ["skeletal muscle", "cơ vân"],
     ["intraepithelial", "trong biểu mô"],
-    ["intraductal", "nội ống"],
+    ["intraductal", "trong ống"],
     ["intravascular", "nội mạch"],
     ["invasive", "xâm nhập"],
     ["metastatic", "di căn"],
@@ -759,7 +775,7 @@
     ["papillomas", "Các u nhú"],
     ["meningiomas", "Các u màng não"],
     ["neoplasms", "Các tân sinh"],
-    ["hyperplasias", "Các quá sản"],
+    ["hyperplasias", "Các tăng sản"],
     ["dysplasias", "Các loạn sản"],
     ["cysts", "Các nang"],
     ["polyps", "Các polyp"],
@@ -845,7 +861,7 @@
     ["teratoma", "U quái"],
     ["neoplasm", "Tân sinh"],
     ["neoplasia", "Tân sinh"],
-    ["hyperplasia", "Quá sản"],
+    ["hyperplasia", "Tăng sản"],
     ["dysplasia", "Loạn sản"],
     ["polyposis", "Bệnh đa polyp"],
     ["papillomatosis", "Bệnh đa u nhú"],
@@ -931,36 +947,134 @@
     return "";
   }
 
+  const diagnosticCategories = {
+    "insufficient/inadequate/non-diagnostic": "Không đủ/không đạt/không chẩn đoán được",
+    "benign": "Lành tính",
+    "benign / negative for malignancy": "Lành tính / âm tính với ác tính",
+    "atypical": "Không điển hình",
+    "suspicious for malignancy": "Nghi ngờ ác tính",
+    "malignant": "Ác tính",
+    "pancreaticobiliary neoplasm, low-risk/grade": "Tân sinh tụy - mật nguy cơ thấp/độ thấp",
+    "pancreaticobiliary neoplasm, high-risk/grade": "Tân sinh tụy - mật nguy cơ cao/độ cao",
+    "soft tissue neoplasm of uncertain malignant potential (stnump)": "Tân sinh mô mềm chưa xác định tiềm năng ác tính (STNUMP)",
+  };
+
+  const cytopathologySites = {
+    "lung": "phổi",
+    "pancreaticobiliary": "tụy - mật",
+    "lymph node, spleen, and thymus": "hạch lympho, lách và tuyến ức",
+    "soft tissue": "mô mềm",
+    "thyroid": "tuyến giáp",
+    "salivary gland": "tuyến nước bọt",
+    "breast": "vú",
+    "urinary tract": "đường tiết niệu",
+    "kidney": "thận",
+  };
+
+  function structuredTranslation(value) {
+    let match = value.match(/^Chapter\s+(\d+):\s*Diagnostic category:\s*(.+)$/i);
+    if (match) {
+      const category = diagnosticCategories[key(match[2])];
+      return category ? `Chương ${match[1]}: Nhóm chẩn đoán: ${category}` : "";
+    }
+
+    match = value.match(/^Diagnostic category:\s*(.+)$/i);
+    if (match) {
+      const category = diagnosticCategories[key(match[1])];
+      return category ? `Nhóm chẩn đoán: ${category}` : "";
+    }
+
+    match = value.match(/^Category:\s*(.+)$/i);
+    if (match) {
+      const category = diagnosticCategories[key(match[1])];
+      return category ? `Nhóm chẩn đoán: ${category}` : "";
+    }
+
+    match = value.match(/^Sample reports:\s*(.+)$/i);
+    if (match) {
+      const category = diagnosticCategories[key(match[1])];
+      return category ? `Báo cáo mẫu: ${category}` : "";
+    }
+
+    match = value.match(/^Chapter\s+(\d+):\s*Introduction to the WHO Reporting System for (.+) Cytopathology$/i);
+    if (match) {
+      const site = cytopathologySites[key(match[2])];
+      return site ? `Chương ${match[1]}: Giới thiệu Hệ thống báo cáo WHO về tế bào học ${site}` : "";
+    }
+
+    match = value.match(/^Chapter\s+(\d+):\s*(.+) cytopathology techniques$/i);
+    if (match) {
+      const site = cytopathologySites[key(match[2])];
+      return site ? `Chương ${match[1]}: Kỹ thuật tế bào học ${site}` : "";
+    }
+
+    match = value.match(/^Chapter\s+(\d+):\s*(?:Diagnostic management|Management) recommendations for each diagnostic category$/i);
+    if (match) return `Chương ${match[1]}: Khuyến nghị xử trí theo từng nhóm chẩn đoán`;
+
+    match = value.match(/^(?:Diagnostic management|Management) recommendations for each diagnostic category$/i);
+    if (match) return "Khuyến nghị xử trí theo từng nhóm chẩn đoán";
+
+    return "";
+  }
+
+  const unsafeEnglishResidue = /\b(?:and|or|of|with|without|for|each|from|including|chapter|diagnostic|category|pattern|patterns|inflammation|inflammatory|suppuration|histiocytic|lymphocytic|eosinophilic|cytopathology|pancreaticobiliary|management|recommendations|introduction|techniques|report|structure|clinical|radiological|imaging|features|ancillary|testing|approach|benign|malignant|primary|secondary|high|low|grade|type|variant|cell|cells|glandular|squamous|changes|disorders|lesions|tumours|tumors|hyperplasia|adenosis|pneumocytoma)\b/i;
+  const vietnameseDiacritic = /[\u00c0-\u024f\u1e00-\u1eff]/u;
+
+  function hasUnsafeEnglishResidue(value) {
+    return vietnameseDiacritic.test(value) && unsafeEnglishResidue.test(value);
+  }
+
   const translationCache = new Map();
 
-  function translate(value) {
+  function translateDetailed(value) {
     const original = tidy(value);
-    if (!original) return "";
+    if (!original) return { original: "", text: "", status: "source-only" };
     if (translationCache.has(original)) return translationCache.get(original);
+
     const exactMatch = exact[key(original)];
     if (exactMatch) {
-      translationCache.set(original, exactMatch);
-      return exactMatch;
+      const detail = { original, text: exactMatch, status: "reviewed" };
+      translationCache.set(original, detail);
+      return detail;
     }
+
+    const structured = structuredTranslation(original);
+    if (structured) {
+      const detail = { original, text: structured, status: "reviewed" };
+      translationCache.set(original, detail);
+      return detail;
+    }
+
     const headed = translateWithHead(original);
-    if (headed) {
-      translationCache.set(original, headed);
-      return headed;
-    }
-    const sitePass = replaceAllPhrases(original, sites);
-    const translated = replaceAllPhrases(sitePass, phrases);
-    const result = translated || original;
-    translationCache.set(original, result);
-    return result;
+    const sitePass = headed ? "" : replaceAllPhrases(original, sites);
+    const candidate = tidy(headed || replaceAllPhrases(sitePass, phrases));
+    const unsafe = !candidate || candidate === original || hasUnsafeEnglishResidue(candidate);
+    const detail = unsafe
+      ? { original, text: "", status: "source-only" }
+      : { original, text: candidate, status: "assisted" };
+    translationCache.set(original, detail);
+    return detail;
+  }
+
+  function translate(value) {
+    const detail = translateDetailed(value);
+    return detail.text || detail.original;
   }
 
   function translateTrail(values) {
     return (values || []).map(translate).filter(Boolean);
   }
 
+  function translateTrailDetailed(values) {
+    return (values || []).map(translateDetailed);
+  }
+
   window.MEDICAL_VI = {
     translate,
+    translateDetailed,
     translateTrail,
+    translateTrailDetailed,
+    hasUnsafeEnglishResidue,
     sourceNote: "Tên tiếng Anh WHO/WebPathology được giữ nguyên làm danh pháp nguồn; bản dịch tiếng Việt dùng để hỗ trợ tra cứu và học tập.",
   };
 }());

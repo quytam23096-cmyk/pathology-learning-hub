@@ -2,7 +2,8 @@
   "name": "pathology-learning-hub",
   "private": true,
   "scripts": {
-    "build:css": "tailwindcss -i ./tailwind-input.css -o ./tailwind.css --minify"
+    "build:css": "tailwindcss -i ./tailwind-input.css -o ./tailwind.css --minify",
+    "audit:medical-vi": "node ./scripts/audit-medical-vi.js"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.10",

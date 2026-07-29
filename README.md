@@ -30,7 +30,8 @@ Website tĩnh tiếng Việt dạng atlas giải phẫu bệnh: chia theo cơ qu
 ## Chuẩn hóa thuật ngữ
 
 - Tên chẩn đoán hiển thị bằng tiếng Việt, kèm tên tiếng Anh để tra cứu song ngữ.
-- `medical-vi.js` cung cấp lớp thuật ngữ Việt cho toàn bộ tiêu đề WHO và WebPathology; mỗi thẻ vẫn giữ tên tiếng Anh nguyên bản ngay bên dưới để đối chiếu.
+- `medical-vi.js` cung cấp lớp thuật ngữ Việt cho tiêu đề WHO và WebPathology, phân biệt bản dịch đã hiệu đính, bản dịch hỗ trợ và mục chỉ giữ tên nguồn. Mọi thẻ vẫn giữ tên tiếng Anh nguyên bản ngay bên dưới để đối chiếu.
+- `scripts/audit-medical-vi.js` quét toàn bộ danh mục và chặn các câu dịch lai Việt - Anh hoặc các lỗi thuật ngữ đã biết. Chạy bằng `npm run audit:medical-vi` trước khi deploy.
 - Tìm kiếm được lập chỉ mục theo từng trường tiếng Việt/tiếng Anh, tránh ghép nhầm `Da` với `Dày...` thành từ khóa `dạ dày`.
 - Các thuật ngữ như `grade`, `margin`, `marker`, `squamous cell` và `carcinoma` được trình bày lần lượt là độ mô học, diện cắt, dấu ấn, tế bào vảy và ung thư biểu mô.
 - Danh pháp được đối chiếu với WHO/IARC và cách dùng trong tài liệu chuyên môn của Bộ Y tế Việt Nam; tên phân loại, gen, dấu ấn và viết tắt quốc tế cần thiết vẫn được giữ nguyên.
