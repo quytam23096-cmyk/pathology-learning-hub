@@ -19,7 +19,7 @@
       href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap"
     />
     <link rel="stylesheet" href="./tailwind.css" />
-    <link rel="stylesheet" href="./styles.css?v=20260723-reading-desk-1" />
+    <link rel="stylesheet" href="./styles.css?v=20260729-guided-search-1" />
     <link rel="stylesheet" href="./hmmd-integration.css?v=20260728-1" />
   </head>
   <body>
@@ -104,8 +104,8 @@
     <div class="app-shell">
       <aside class="sidebar">
         <label class="search-box" for="searchInput">
-          <span>Tìm nhanh</span>
-          <input id="searchInput" type="search" placeholder="VD: dạ dày, stomach, tuyến giáp, thyroid..." autocomplete="off" />
+          <span>Tìm tên, mô tả hoặc marker</span>
+          <input id="searchInput" type="search" placeholder="VD: ung thư vú, tế bào nhỏ, khuôn nhân, TTF-1..." autocomplete="off" />
         </label>
 
         <a class="side-library-link" href="#whoLibrary">
@@ -144,6 +144,35 @@
               <span><i>3</i>Đọc hồ sơ</span>
             </div>
           </div>
+
+          <section class="diagnostic-assistant" aria-labelledby="diagnosticAssistantTitle">
+            <div class="assistant-heading">
+              <div>
+                <span class="eyebrow">Định hướng khi chưa biết tên bệnh</span>
+                <h2 id="diagnosticAssistantTitle">Tìm từ hình thái đang thấy</h2>
+              </div>
+              <span class="assistant-safety">Gợi ý chẩn đoán phân biệt · Không phải kết luận chẩn đoán</span>
+            </div>
+            <div class="assistant-controls">
+              <label for="assistantOrgan">
+                <span>1. Cơ quan</span>
+                <select id="assistantOrgan"></select>
+              </label>
+              <div class="assistant-clue-field">
+                <span>2. Hình thái nổi bật</span>
+                <div id="assistantClues" class="assistant-clues"></div>
+              </div>
+              <label for="assistantMarker">
+                <span>3. HMMD / marker đã có</span>
+                <input id="assistantMarker" type="search" placeholder="VD: TTF-1, p40, GATA3, ER..." autocomplete="off" />
+              </label>
+            </div>
+            <div class="assistant-actions">
+              <button class="btn primary" id="runAssistant" type="button">Gợi ý chẩn đoán phân biệt</button>
+              <button class="btn" id="resetAssistant" type="button">Xóa lựa chọn</button>
+            </div>
+            <div id="assistantResults" class="assistant-results" aria-live="polite"></div>
+          </section>
 
           <section class="toolbar" aria-label="Bộ lọc atlas">
             <div>
@@ -454,7 +483,8 @@
     <script src="./atlas-expansion.js?v=20260724-specialist-expansion-1"></script>
     <script src="./icdo-normalization.js?v=20260729-icdo4-audit-1"></script>
     <script src="./medical-vi.js?v=20260729-language-audit-1"></script>
-    <script src="./app.js?v=20260729-language-audit-1"></script>
+    <script src="./search-assistant.js?v=20260729-guided-search-1"></script>
+    <script src="./app.js?v=20260729-guided-search-1"></script>
     <script src="./ui.js"></script>
     <script src="./hmmd-integration.js?v=20260728-1"></script>
   </body>

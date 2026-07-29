@@ -2110,6 +2110,10 @@ function medicalTranslation(value) {
     status: text !== original ? "assisted" : "source-only",
   };
 }
+const searchAssistant = window.ATLAS_SEARCH_ASSISTANT || {
+  morphologyClues: [],
+  rankCases: () => [],
+};
 const whoVolumeChapters = {
   digestive: ["colon", "hpb", "soft", "uppergi"],
   breast: ["breast"],
@@ -2155,6 +2159,10 @@ let state = {
   webPathOrgan: "all",
   webPathQuery: "",
   webPathLimit: 36,
+  assistantOrgan: "all",
+  assistantClues: [],
+  assistantMarker: "",
+  assistantHasRun: false,
 };
 
 let imageOverrides = loadOverrides();
@@ -2164,6 +2172,12 @@ cases.push(...customCases);
 const els = {
   organNav: document.getElementById("organNav"),
   searchInput: document.getElementById("searchInput"),
+  assistantOrgan: document.getElementById("assistantOrgan"),
+  assistantClues: document.getElementById("assistantClues"),
+  assistantMarker: document.getElementById("assistantMarker"),
+  runAssistant: document.getElementById("runAssistant"),
+  resetAssistant: document.getElementById("resetAssistant"),
+  assistantResults: document.getElementById("assistantResults"),
   patternFilters: document.getElementById("patternFilters"),
   resetFilters: document.getElementById("resetFilters"),
   atlasBoard: document.getElementById("atlasBoard"),
@@ -2614,14 +2628,21 @@ function caseSearchFields(item) {
   return searchFields([
     item.diagnosis,
     item.english,
+    chapterById(item.chapter).name,
     item.pattern,
     item.markers,
+    item.micro,
+    item.report,
+    item.memory,
+    item.pitfall,
     item.icdo?.code,
     item.classification?.label,
     item.whoTerms || [],
     item.searchTerms || [],
   ]);
 }
+
+let lastCaseSearchReasons = new Map();
 
 function filteredCases() {
   const query = normalize(state.query);
@@ -2630,7 +2651,16 @@ function filteredCases() {
     const patternOk = state.pattern === "all" || item.pattern.includes(state.pattern);
     return chapterOk && patternOk;
   });
+  lastCaseSearchReasons = new Map();
   if (!query) return candidates;
+  const ranked = searchAssistant.rankCases(candidates, {
+    query: state.query,
+    chapterNameFor: (id) => chapterById(id).name,
+  });
+  if (ranked.length) {
+    lastCaseSearchReasons = new Map(ranked.map((result) => [result.item.id, result.reasons]));
+    return ranked.map((result) => result.item);
+  }
   const queryVariants = expandBilingualQueries(state.query);
   const directMatches = candidates.filter((item) => queryVariants.some((variant) => fieldMatchesQuery(caseSearchFields(item), variant)));
   if (directMatches.length) return directMatches;
@@ -2753,6 +2783,108 @@ function renderPatterns() {
   });
 }
 
+function renderAssistantControls() {
+  els.assistantOrgan.innerHTML = chapters.map((chapter) => `
+    <option value="${escapeHtml(chapter.id)}">${escapeHtml(chapter.name)}</option>
+  `).join("");
+  els.assistantOrgan.value = state.assistantOrgan;
+
+  els.assistantClues.innerHTML = searchAssistant.morphologyClues.map((clue) => `
+    <button
+      class="assistant-clue ${state.assistantClues.includes(clue.id) ? "active" : ""}"
+      type="button"
+      data-assistant-clue="${escapeHtml(clue.id)}"
+      aria-pressed="${state.assistantClues.includes(clue.id)}"
+    >${escapeHtml(clue.label)}</button>
+  `).join("");
+
+  els.assistantClues.querySelectorAll("[data-assistant-clue]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const clueId = button.dataset.assistantClue;
+      state.assistantClues = state.assistantClues.includes(clueId)
+        ? state.assistantClues.filter((id) => id !== clueId)
+        : [...state.assistantClues, clueId];
+      button.classList.toggle("active", state.assistantClues.includes(clueId));
+      button.setAttribute("aria-pressed", String(state.assistantClues.includes(clueId)));
+    });
+  });
+}
+
+function assistantRankedCases() {
+  return searchAssistant.rankCases(cases, {
+    organ: state.assistantOrgan,
+    clueIds: state.assistantClues,
+    marker: state.assistantMarker,
+    chapterNameFor: (id) => chapterById(id).name,
+  });
+}
+
+function openAssistantCase(item) {
+  state.chapter = item.chapter;
+  state.pattern = "all";
+  state.query = "";
+  state.selectedId = item.id;
+  els.searchInput.value = "";
+  renderAll();
+  els.atlasBoard.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function renderAssistantResults() {
+  if (!state.assistantHasRun) {
+    els.assistantResults.innerHTML = "";
+    return;
+  }
+
+  const hasCriteria = state.assistantOrgan !== "all"
+    || state.assistantClues.length > 0
+    || Boolean(normalize(state.assistantMarker));
+  if (!hasCriteria) {
+    els.assistantResults.innerHTML = `
+      <p class="assistant-empty">Chọn ít nhất một cơ quan, đặc điểm hình thái hoặc marker.</p>
+    `;
+    return;
+  }
+
+  const ranked = assistantRankedCases();
+  if (!ranked.length) {
+    els.assistantResults.innerHTML = `
+      <div class="assistant-result-heading">
+        <strong>Chưa có hồ sơ phù hợp trong atlas hiện tại</strong>
+        <span>Giảm bớt tiêu chí hoặc kiểm tra lại cách viết marker.</span>
+      </div>
+    `;
+    return;
+  }
+
+  const visible = ranked.slice(0, 8);
+  els.assistantResults.innerHTML = `
+    <div class="assistant-result-heading">
+      <strong>${visible.length} chẩn đoán phân biệt được ưu tiên</strong>
+      <span>Sắp theo mức độ khớp với dữ kiện đã chọn; cần đối chiếu toàn bộ hình thái và bối cảnh ca bệnh.</span>
+    </div>
+    <div class="assistant-result-grid">
+      ${visible.map(({ item, reasons }) => `
+        <article class="assistant-result-card">
+          <span>${escapeHtml(chapterById(item.chapter).name)}</span>
+          <h3>${escapeHtml(item.diagnosis)}</h3>
+          <p lang="en">${escapeHtml(item.english)}</p>
+          <div class="assistant-reasons">
+            ${reasons.map((reason) => `<em>${escapeHtml(reason)}</em>`).join("")}
+          </div>
+          <button type="button" data-assistant-case="${escapeHtml(item.id)}">Mở hồ sơ đối chiếu <span aria-hidden="true">→</span></button>
+        </article>
+      `).join("")}
+    </div>
+  `;
+
+  els.assistantResults.querySelectorAll("[data-assistant-case]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const item = cases.find((entry) => entry.id === button.dataset.assistantCase);
+      if (item) openAssistantCase(item);
+    });
+  });
+}
+
 function renderChapterPanel() {
   const chapter = chapterById(state.chapter);
   const visible = filteredCases();
@@ -2778,8 +2910,12 @@ function renderChapterPanel() {
     </div>
   `;
 
-  els.diagnosisHeading.textContent = state.chapter === "all" ? "Tất cả chẩn đoán" : `Atlas ảnh: ${chapter.name}`;
-  els.diagnosisCount.textContent = `${visible.length} chẩn đoán đang hiển thị`;
+  els.diagnosisHeading.textContent = state.query.trim()
+    ? `Gợi ý cho: “${state.query.trim()}”`
+    : state.chapter === "all" ? "Tất cả chẩn đoán" : `Atlas ảnh: ${chapter.name}`;
+  els.diagnosisCount.textContent = state.query.trim()
+    ? `${visible.length} kết quả được xếp theo mức độ phù hợp`
+    : `${visible.length} chẩn đoán đang hiển thị`;
 }
 
 function renderDiagnosisGrid() {
@@ -2791,12 +2927,14 @@ function renderDiagnosisGrid() {
 
   els.diagnosisGrid.innerHTML = items.map((item) => {
     const chapter = chapterById(item.chapter);
+    const matchReasons = lastCaseSearchReasons.get(item.id) || [];
     return `
       <button class="diagnosis-card ${item.id === state.selectedId ? "active" : ""}" type="button" data-case="${escapeHtml(item.id)}" aria-pressed="${item.id === state.selectedId}" aria-label="Mở hồ sơ ${escapeHtml(item.diagnosis)}">
         ${imageMarkup(item, "card-image")}
         <span class="organ-badge" style="--badge:${escapeHtml(chapter.color)}">${escapeHtml(chapter.name)}</span>
         <strong>${escapeHtml(item.diagnosis)}</strong>
         <em>${escapeHtml(item.english)}</em>
+        ${state.query.trim() && matchReasons.length ? `<div class="diagnosis-match">Khớp: ${escapeHtml(matchReasons.join(" · "))}</div>` : ""}
         <p>${escapeHtml(item.micro.slice(0, 2).join(" · "))}</p>
         ${item.learningEn?.micro?.[0] ? `<p class="card-feature-en" lang="en">${escapeHtml(item.learningEn.micro[0])}</p>` : ""}
         <small>${escapeHtml(item.pattern.slice(0, 3).map(patternLabel).join(" / "))}</small>
@@ -3400,6 +3538,38 @@ function bindEvents() {
     renderAll();
   });
 
+  els.assistantOrgan.addEventListener("change", () => {
+    state.assistantOrgan = els.assistantOrgan.value;
+  });
+
+  els.assistantMarker.addEventListener("input", () => {
+    state.assistantMarker = els.assistantMarker.value;
+  });
+
+  els.assistantMarker.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    state.assistantHasRun = true;
+    renderAssistantResults();
+  });
+
+  els.runAssistant.addEventListener("click", () => {
+    state.assistantOrgan = els.assistantOrgan.value;
+    state.assistantMarker = els.assistantMarker.value;
+    state.assistantHasRun = true;
+    renderAssistantResults();
+  });
+
+  els.resetAssistant.addEventListener("click", () => {
+    state.assistantOrgan = "all";
+    state.assistantClues = [];
+    state.assistantMarker = "";
+    state.assistantHasRun = false;
+    els.assistantMarker.value = "";
+    renderAssistantControls();
+    renderAssistantResults();
+  });
+
   els.resetFilters.addEventListener("click", () => {
     state = {
       ...state,
@@ -3516,6 +3686,8 @@ function init() {
   prepareWhoCatalog();
   prepareWebPathologyCatalog();
   updateStats();
+  renderAssistantControls();
+  renderAssistantResults();
   populateCustomChapterOptions();
   updateCustomCount();
   renderSources();

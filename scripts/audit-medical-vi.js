@@ -58,7 +58,7 @@ expectations.forEach((expected, source) => {
   if (actual !== expected) mismatches.push({ source, expected, actual });
 });
 
-const uiFiles = ["app.js", "atlas-bilingual.js", "atlas-curation.js", "atlas-expansion.js", "index.html"];
+const uiFiles = ["app.js", "atlas-bilingual.js", "atlas-curation.js", "atlas-expansion.js", "search-assistant.js", "index.html"];
 const uiViolations = [];
 uiFiles.filter((file) => fs.existsSync(file)).forEach((file) => {
   const lines = fs.readFileSync(file, "utf8").split(/\r?\n/);

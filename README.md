@@ -36,6 +36,12 @@ Website tĩnh tiếng Việt dạng atlas giải phẫu bệnh: chia theo cơ qu
 - Các thuật ngữ như `grade`, `margin`, `marker`, `squamous cell` và `carcinoma` được trình bày lần lượt là độ mô học, diện cắt, dấu ấn, tế bào vảy và ung thư biểu mô.
 - Danh pháp được đối chiếu với WHO/IARC và cách dùng trong tài liệu chuyên môn của Bộ Y tế Việt Nam; tên phân loại, gen, dấu ấn và viết tắt quốc tế cần thiết vẫn được giữ nguyên.
 
+## Tìm kiếm định hướng
+
+- Ô tìm atlas nhận tên chẩn đoán, tên cơ quan, mô tả vi thể và marker bằng tiếng Việt có dấu/không dấu hoặc tiếng Anh.
+- Bộ định hướng `Cơ quan → Hình thái → HMMD` xếp hạng các hồ sơ có sẵn và nêu lý do khớp để hỗ trợ lập chẩn đoán phân biệt; kết quả không thay thế kết luận của bác sĩ giải phẫu bệnh.
+- `search-assistant.js` giữ logic xếp hạng độc lập để có thể kiểm thử. Chạy `npm run audit:search` trước khi deploy.
+
 ## Chạy tại máy
 
 Mở trực tiếp `index.html` bằng trình duyệt, hoặc chạy server tĩnh:
