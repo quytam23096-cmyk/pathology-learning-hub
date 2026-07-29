@@ -94,6 +94,53 @@ if (assistant.organOptions.some((option) => option.id !== "all" && (!option.labe
   coverageFailures.push("Organ option missing label, group, or source terms");
 }
 
+const stomachOption = assistant.organOptions.find((option) => option.id === "stomach");
+const skinOption = assistant.organOptions.find((option) => option.id === "skin");
+const thyroidOption = assistant.organOptions.find((option) => option.id === "thyroid");
+const parathyroidOption = assistant.organOptions.find((option) => option.id === "parathyroid");
+const chapterNameFor = (chapter) => ({ uppergi: "Thực quản - dạ dày", skin: "Da" }[chapter] || chapter);
+const gastricCase = {
+  id: "gastric",
+  chapter: "uppergi",
+  diagnosis: "Ung thư biểu mô tuyến dạ dày",
+  english: "Gastric adenocarcinoma",
+  pattern: ["glandular"],
+  markers: [],
+  micro: ["Tạo tuyến ác tính"],
+  report: [],
+  memory: "",
+  pitfall: "",
+};
+const skinCase = {
+  ...gastricCase,
+  id: "skin",
+  chapter: "skin",
+  diagnosis: "Ung thư biểu mô tế bào đáy",
+  english: "Basal cell carcinoma of skin",
+};
+if (!assistant.caseMatchesOrgan(gastricCase, stomachOption, chapterNameFor)) {
+  coverageFailures.push("Gastric case must match the detailed stomach organ");
+}
+if (assistant.caseMatchesOrgan(skinCase, stomachOption, chapterNameFor)) {
+  coverageFailures.push("Skin case must not match the detailed stomach organ");
+}
+if (!assistant.caseMatchesOrgan(skinCase, skinOption, chapterNameFor)) {
+  coverageFailures.push("Skin case must match the detailed skin organ");
+}
+const parathyroidCase = {
+  ...gastricCase,
+  id: "parathyroid",
+  chapter: "thyroid",
+  diagnosis: "U tuyến cận giáp",
+  english: "Parathyroid adenoma",
+};
+if (!assistant.caseMatchesOrgan(parathyroidCase, parathyroidOption, chapterNameFor)) {
+  coverageFailures.push("Parathyroid case must match the detailed parathyroid organ");
+}
+if (assistant.caseMatchesOrgan(parathyroidCase, thyroidOption, chapterNameFor)) {
+  coverageFailures.push("Parathyroid case must not be grouped as thyroid by substring");
+}
+
 console.log(JSON.stringify({
   checks: checks.length,
   organOptions: assistant.organOptions.length,

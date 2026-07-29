@@ -4434,3 +4434,304 @@ label,
     padding: 18px;
   }
 }
+
+/* Detailed organ atlas and a slightly larger reading scale. */
+html {
+  font-size: 17px;
+}
+
+body {
+  line-height: 1.6;
+}
+
+.search-box span,
+.side-title,
+.eyebrow {
+  font-size: 0.8rem;
+}
+
+.organ-nav-group {
+  display: grid;
+  gap: 4px;
+  padding-top: 8px;
+}
+
+.organ-nav-group-title {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 7px 9px 5px;
+  background: #1c3741;
+  color: #80d9d2;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.nav-pill {
+  min-height: 43px;
+  padding-block: 8px;
+}
+
+.nav-pill strong {
+  overflow: visible;
+  color: #f2f7f8;
+  font-size: 0.88rem;
+  line-height: 1.35;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.nav-pill em {
+  font-size: 0.76rem;
+}
+
+.chapter-title-row {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.chapter-title-row .chapter-code {
+  width: 48px;
+  height: 48px;
+}
+
+.chapter-panel h2 {
+  font-size: 1.42rem;
+  line-height: 1.25;
+}
+
+.chapter-panel .chapter-intro {
+  color: #d0dde1;
+  font-family: var(--font-reading);
+  font-size: 0.92rem;
+  line-height: 1.58;
+}
+
+.chapter-representative {
+  min-width: 0;
+  margin: 0;
+  display: grid;
+  gap: 7px;
+}
+
+.chapter-representative button {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid #58727c;
+  border-radius: 4px;
+  padding: 0;
+  background: #10242c;
+  color: #fff;
+  text-align: left;
+}
+
+.chapter-representative img,
+.chapter-representative .image-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: cover;
+}
+
+.chapter-representative button > span:last-child {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 34px 11px 10px;
+  display: grid;
+  gap: 2px;
+  background: linear-gradient(180deg, transparent, rgba(7, 24, 30, 0.94));
+  font-family: var(--font-reading);
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+
+.chapter-representative button > span strong {
+  color: #91e4dd;
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+}
+
+.chapter-representative figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: #c0d2d7;
+  font-family: var(--font-reading);
+  font-size: 0.74rem;
+  line-height: 1.35;
+}
+
+.chapter-representative figcaption a {
+  color: #8be0d9;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.chapter-image-status {
+  border: 1px dashed #5a747e;
+  padding: 12px;
+  display: grid;
+  gap: 4px;
+  background: #203944;
+}
+
+.chapter-image-status strong {
+  color: #f4f8f9;
+  font-size: 0.86rem;
+}
+
+.chapter-image-status span {
+  color: #bfd0d5;
+  font-family: var(--font-reading);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.chapter-metrics span {
+  font-size: 0.72rem;
+  line-height: 1.3;
+}
+
+.chapter-links button,
+.chapter-links a {
+  min-height: 36px;
+  border: 1px solid #52717a;
+  border-radius: 4px;
+  padding: 7px 9px;
+  display: flex;
+  align-items: center;
+  background: #203944;
+  color: #93e4dd;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: left;
+  text-decoration: none;
+}
+
+.chapter-links button:hover,
+.chapter-links a:hover {
+  border-color: #8fe1db;
+  background: #294852;
+}
+
+.diagnosis-card strong {
+  font-size: 1.03rem;
+  line-height: 1.4;
+}
+
+.diagnosis-card em,
+.diagnosis-card p:first-of-type {
+  font-size: 0.89rem;
+  line-height: 1.55;
+}
+
+.diagnosis-card small,
+.diagnosis-card .card-open-hint,
+.diagnosis-card .icdo-chip {
+  font-size: 0.78rem;
+}
+
+.assistant-result-card h3,
+.assistant-source-card h3,
+.who-entry-vi,
+.webpath-card .webpath-title-vi {
+  font-size: 1.02rem;
+  line-height: 1.45;
+}
+
+.assistant-result-card p,
+.assistant-source-card p,
+.who-entry-en,
+.webpath-card .webpath-title-en {
+  font-size: 0.94rem !important;
+  line-height: 1.5;
+}
+
+.atlas-organ-empty {
+  min-height: 180px;
+  display: grid;
+  place-content: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.atlas-organ-empty strong {
+  color: #173842;
+  font-size: 1.05rem;
+}
+
+.atlas-organ-empty span {
+  max-width: 620px;
+  color: #526a72;
+  font-family: var(--font-reading);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 560px) {
+  html {
+    font-size: 16px;
+  }
+
+  .chapter-representative button {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (min-width: 1181px) {
+  .workspace-deck .chapter-panel {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 0.8fr);
+    align-items: center;
+  }
+
+  .workspace-deck .chapter-panel .chapter-title-row {
+    grid-column: 1;
+  }
+
+  .workspace-deck .chapter-panel .chapter-intro {
+    grid-column: 2;
+  }
+
+  .workspace-deck .chapter-panel .chapter-representative,
+  .workspace-deck .chapter-panel .chapter-image-status {
+    grid-column: 3;
+  }
+
+  .workspace-deck .chapter-panel .chapter-metrics {
+    grid-column: 4;
+  }
+
+  .workspace-deck .chapter-panel .chapter-links {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1180px) {
+  .workspace-deck .chapter-panel {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  .workspace-deck .chapter-panel > * {
+    grid-column: 1;
+  }
+
+  .workspace-deck .chapter-panel .chapter-title-row {
+    grid-template-columns: 48px minmax(0, 1fr);
+  }
+
+  .workspace-deck .chapter-panel .chapter-metrics,
+  .workspace-deck .chapter-panel .chapter-links {
+    grid-column: 1;
+  }
+}

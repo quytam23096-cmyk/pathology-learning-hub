@@ -412,6 +412,14 @@
     });
   }
 
+  function includesAnyWholeTerm(fields, terms) {
+    return terms.some((term) => {
+      const normalizedTerm = normalize(term);
+      if (!normalizedTerm) return false;
+      return fields.some((field) => (` ${field} `).includes(` ${normalizedTerm} `));
+    });
+  }
+
   function buildIndex(item, chapterName) {
     const names = flatten([item.diagnosis, item.english, item.whoTerms, item.searchTerms]);
     const organ = flatten(chapterName);
@@ -437,6 +445,23 @@
       concept.triggers.some((trigger) => normalizedQuery.includes(normalize(trigger)))
       || concept.rawTriggers?.some((trigger) => rawQuery.includes(trigger))
     ));
+  }
+
+  function caseMatchesOrgan(item, option, chapterNameFor = () => "") {
+    if (!option || option.id === "all") return true;
+    if (option.chapters?.length && !option.chapters.includes(item.chapter)) return false;
+    const index = buildIndex(item, "");
+    if (option.id === item.chapter) {
+      const moreSpecificOrgan = organOptions.some((candidate) => (
+        candidate.id !== "all"
+        && candidate.id !== option.id
+        && candidate.chapters?.includes(item.chapter)
+        && includesAnyWholeTerm(index.names, candidate.terms || [])
+      ));
+      return !moreSpecificOrgan;
+    }
+    if (!option.terms?.length) return true;
+    return includesAnyWholeTerm(index.names, option.terms);
   }
 
   function conceptMatches(index, concept) {
@@ -538,6 +563,7 @@
   window.ATLAS_SEARCH_ASSISTANT = {
     morphologyClues,
     organOptions,
+    caseMatchesOrgan,
     normalize,
     rankCases,
   };

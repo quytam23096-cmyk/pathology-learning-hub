@@ -2149,6 +2149,7 @@ const whoEntryAliases = {
 
 let state = {
   chapter: "thyroid",
+  atlasOrgan: "thyroid",
   pattern: "all",
   query: "",
   selectedId: "thyroid-ptc",
@@ -2645,14 +2646,52 @@ function caseSearchFields(item) {
   ]);
 }
 
+function selectedAtlasOrgan() {
+  return searchAssistant.organOptions.find((option) => option.id === state.atlasOrgan)
+    || searchAssistant.organOptions[0];
+}
+
+function caseMatchesAtlasOrgan(item, organ = selectedAtlasOrgan()) {
+  return searchAssistant.caseMatchesOrgan(item, organ, (id) => chapterById(id).name);
+}
+
+function atlasCasesForOrgan(organ = selectedAtlasOrgan()) {
+  return cases.filter((item) => caseMatchesAtlasOrgan(item, organ));
+}
+
+function atlasOrganForCase(item) {
+  const current = selectedAtlasOrgan();
+  if (current?.id !== "all" && caseMatchesAtlasOrgan(item, current)) return current;
+  return searchAssistant.organOptions.find((option) => (
+    option.id !== "all" && caseMatchesAtlasOrgan(item, option)
+  )) || searchAssistant.organOptions[0];
+}
+
+function whoEntriesForAtlasOrgan(organ = selectedAtlasOrgan()) {
+  return whoEntries.filter((entry) => {
+    if (entry.entryType !== "diagnosis") return false;
+    if (organ?.id === "all") return true;
+    const volumeOk = !organ?.whoVolumes?.length || organ.whoVolumes.includes(entry.volumeId);
+    return volumeOk && sourceFieldsMatchOrganTerms(entry.searchFields, organ?.terms || []);
+  });
+}
+
+function webPathologyEntriesForAtlasOrgan(organ = selectedAtlasOrgan()) {
+  return webPathologyEntries.filter((entry) => {
+    if (organ?.id === "all") return true;
+    const webOrganOk = !organ?.webOrgans?.length || organ.webOrgans.includes(entry.organ);
+    return webOrganOk && sourceFieldsMatchOrganTerms(entry.searchFields, organ?.terms || []);
+  });
+}
+
 let lastCaseSearchReasons = new Map();
 
 function filteredCases() {
   const query = normalize(state.query);
   const candidates = cases.filter((item) => {
-    const chapterOk = state.chapter === "all" || item.chapter === state.chapter;
+    const organOk = caseMatchesAtlasOrgan(item);
     const patternOk = state.pattern === "all" || item.pattern.includes(state.pattern);
-    return chapterOk && patternOk;
+    return organOk && patternOk;
   });
   lastCaseSearchReasons = new Map();
   if (!query) return candidates;
@@ -2744,20 +2783,37 @@ function officialLinks(item) {
 }
 
 function renderNav() {
-  els.organNav.innerHTML = chapters.map((chapter) => {
-    const count = chapter.id === "all" ? cases.length : cases.filter((item) => item.chapter === chapter.id).length;
+  const allOption = searchAssistant.organOptions.find((option) => option.id === "all");
+  const groups = [...new Set(searchAssistant.organOptions
+    .filter((option) => option.id !== "all")
+    .map((option) => option.group))];
+  const organButton = (option) => {
+    const count = atlasCasesForOrgan(option).length;
+    const chapter = chapterById(option.chapters?.[0] || "all");
     return `
-      <button class="nav-pill ${state.chapter === chapter.id ? "active" : ""}" type="button" data-chapter="${escapeHtml(chapter.id)}">
+      <button class="nav-pill ${state.atlasOrgan === option.id ? "active" : ""}" type="button" data-atlas-organ="${escapeHtml(option.id)}">
         <i style="--dot:${escapeHtml(chapter.color)}"></i>
-        <strong>${escapeHtml(chapter.name)}</strong>
+        <strong>${escapeHtml(option.label)}</strong>
         <em>${count}</em>
       </button>
     `;
-  }).join("");
+  };
 
-  els.organNav.querySelectorAll("[data-chapter]").forEach((button) => {
+  els.organNav.innerHTML = `
+    ${allOption ? organButton(allOption) : ""}
+    ${groups.map((group) => `
+      <section class="organ-nav-group" aria-label="${escapeHtml(group)}">
+        <span class="organ-nav-group-title">${escapeHtml(group)}</span>
+        ${searchAssistant.organOptions.filter((option) => option.group === group).map(organButton).join("")}
+      </section>
+    `).join("")}
+  `;
+
+  els.organNav.querySelectorAll("[data-atlas-organ]").forEach((button) => {
     button.addEventListener("click", () => {
-      state.chapter = button.dataset.chapter;
+      state.atlasOrgan = button.dataset.atlasOrgan;
+      const organ = selectedAtlasOrgan();
+      state.chapter = organ?.chapters?.length === 1 ? organ.chapters[0] : "all";
       state.pattern = "all";
       state.query = "";
       els.searchInput.value = "";
@@ -2862,6 +2918,8 @@ function assistantRankedCases() {
 }
 
 function openAssistantCase(item) {
+  const organ = atlasOrganForCase(item);
+  state.atlasOrgan = organ.id;
   state.chapter = item.chapter;
   state.pattern = "all";
   state.query = "";
@@ -2879,6 +2937,15 @@ function selectedAssistantSourceTerms() {
 
 function sourceFieldsMatchTerms(fields, terms) {
   return !terms.length || terms.some((term) => fieldMatchesQuery(fields || [], term));
+}
+
+function sourceFieldsMatchOrganTerms(fields, terms) {
+  if (!terms.length) return true;
+  return terms.some((term) => {
+    const normalizedTerm = normalize(term);
+    if (!normalizedTerm) return false;
+    return (fields || []).some((field) => (` ${field} `).includes(` ${normalizedTerm} `));
+  });
 }
 
 function deduplicateSourceEntries(entries, nameFor) {
@@ -2903,7 +2970,7 @@ function assistantWhoSourceResults() {
   const organMatches = whoEntries.filter((entry) => {
     if (entry.entryType !== "diagnosis") return false;
     const volumeOk = !organ?.whoVolumes?.length || organ.whoVolumes.includes(entry.volumeId);
-    const organOk = organ?.id === "all" || sourceFieldsMatchTerms(entry.searchFields, organ?.terms || []);
+    const organOk = organ?.id === "all" || sourceFieldsMatchOrganTerms(entry.searchFields, organ?.terms || []);
     return volumeOk && organOk;
   });
   const clueMatches = clueTerms.length
@@ -2928,7 +2995,7 @@ function assistantWebPathologySourceResults() {
 
   const organMatches = webPathologyEntries.filter((entry) => {
     const webOrganOk = !organ?.webOrgans?.length || organ.webOrgans.includes(entry.organ);
-    const organOk = organ?.id === "all" || sourceFieldsMatchTerms(entry.searchFields, organ?.terms || []);
+    const organOk = organ?.id === "all" || sourceFieldsMatchOrganTerms(entry.searchFields, organ?.terms || []);
     return webOrganOk && organOk;
   });
   const clueMatches = clueTerms.length
@@ -3062,42 +3129,104 @@ function renderAssistantResults() {
 }
 
 function renderChapterPanel() {
-  const chapter = chapterById(state.chapter);
+  const organ = selectedAtlasOrgan();
   const visible = filteredCases();
-  const chapterCases = state.chapter === "all" ? cases : cases.filter((item) => item.chapter === state.chapter);
-  const markerCount = new Set(chapterCases.flatMap((item) => item.markers)).size;
+  const organCases = atlasCasesForOrgan(organ);
+  const contextChapter = chapterById(organ?.chapters?.[0] || organCases[0]?.chapter || "all");
+  const representative = organCases.find((item) => (
+    imageFor(item) && item.pattern.some((pattern) => ["carcinoma", "precursor"].includes(pattern))
+  )) || organCases.find((item) => imageFor(item));
+  const verifiedImageCount = organCases.filter((item) => imageFor(item)).length;
+  const whoSourceResults = whoEntriesForAtlasOrgan(organ);
+  const webPathologySourceResults = webPathologyEntriesForAtlasOrgan(organ);
+  const firstWhoVolume = whoVolumeMap.get(organ?.whoVolumes?.[0]);
+  const pathologyOutlinesTerm = organ?.terms?.[0] || "pathology";
+  const organIntro = organ?.id === "all"
+    ? "Xem toàn bộ atlas, sau đó lọc theo vị trí giải phẫu, kiểu cấu trúc hoặc từ khóa song ngữ."
+    : `Các hồ sơ dưới đây chỉ được xếp vào ${organ.label} khi tên chẩn đoán, vị trí hoặc mô tả nguồn khớp với cơ quan. Ảnh đại diện luôn lấy từ một hồ sơ đã xác minh trong chính nhóm này.`;
 
-  els.chapterPanel.style.setProperty("--chapter-color", chapter.color);
+  els.chapterPanel.style.setProperty("--chapter-color", contextChapter.color);
   els.chapterPanel.innerHTML = `
-    <span class="chapter-code">${escapeHtml(chapter.short)}</span>
-    <div>
-      <span class="eyebrow">${state.chapter === "all" ? "Tổng quan" : "Chương cơ quan"}</span>
-      <h2>${escapeHtml(chapter.name)}</h2>
-      <p>${escapeHtml(chapter.intro)}</p>
+    <div class="chapter-title-row">
+      <span class="chapter-code">${escapeHtml(contextChapter.short)}</span>
+      <div>
+        <span class="eyebrow">${organ?.id === "all" ? "Tổng quan atlas" : escapeHtml(organ.group)}</span>
+        <h2>${escapeHtml(organ?.label || contextChapter.name)}</h2>
+      </div>
     </div>
+    <p class="chapter-intro">${escapeHtml(organIntro)}</p>
+    ${representative ? `
+      <figure class="chapter-representative">
+        <button type="button" data-organ-representative="${escapeHtml(representative.id)}" aria-label="Mở hồ sơ ${escapeHtml(representative.diagnosis)}">
+          ${imageMarkup(representative, "organ-representative")}
+          <span><strong>Ảnh đại diện đã xác minh</strong>${escapeHtml(representative.diagnosis)}</span>
+        </button>
+        <figcaption>
+          <span>${verifiedImageCount}/${organCases.length} hồ sơ có ảnh đã kiểm tra</span>
+          <a href="${escapeHtml(imageLinkFor(representative))}" target="_blank" rel="noreferrer">Nguồn ảnh ↗</a>
+        </figcaption>
+      </figure>
+    ` : `
+      <div class="chapter-image-status">
+        <strong>Chưa có ảnh đại diện đã xác minh</strong>
+        <span>Không dùng ảnh gần giống hoặc ảnh khác vị trí để lấp chỗ trống.</span>
+      </div>
+    `}
     <div class="chapter-metrics">
-      <div><strong>${chapterCases.length}</strong><span>chẩn đoán</span></div>
-      <div><strong>${new Set(chapterCases.flatMap((item) => item.pattern)).size}</strong><span>kiểu cấu trúc</span></div>
-      <div><strong>${markerCount}</strong><span>dấu ấn/gợi ý</span></div>
+      <div><strong>${organCases.length}</strong><span>hồ sơ atlas</span></div>
+      <div><strong>${whoSourceResults.length}</strong><span>mục WHO</span></div>
+      <div><strong>${webPathologySourceResults.length}</strong><span>gallery nguồn</span></div>
     </div>
     <div class="chapter-links">
-      <a href="${escapeHtml(chapter.who)}" target="_blank" rel="noreferrer">Phân loại WHO/IARC ↗</a>
-      <a href="${escapeHtml(chapter.po)}" target="_blank" rel="noreferrer">Chương PathologyOutlines ↗</a>
+      ${whoSourceResults.length ? `<button type="button" data-atlas-who-source>Tra ${whoSourceResults.length} mục WHO trong kho</button>` : ""}
+      ${webPathologySourceResults.length ? `<button type="button" data-atlas-webpath-source>Tra ${webPathologySourceResults.length} gallery WebPathology</button>` : ""}
+      <a href="${escapeHtml(firstWhoVolume?.sourceUrl || contextChapter.who)}" target="_blank" rel="noreferrer">Mở quyển WHO liên quan ↗</a>
+      <a href="${escapeHtml(pathologyOutlinesSearchUrl(pathologyOutlinesTerm))}" target="_blank" rel="noreferrer">Tìm tại PathologyOutlines ↗</a>
     </div>
   `;
 
+  els.chapterPanel.querySelector("[data-organ-representative]")?.addEventListener("click", () => {
+    state.selectedId = representative.id;
+    renderAll();
+    els.caseDetail.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  els.chapterPanel.querySelector("[data-atlas-who-source]")?.addEventListener("click", () => {
+    state.whoVolume = organ?.whoVolumes?.length === 1 ? organ.whoVolumes[0] : "all";
+    state.whoQuery = organ?.terms?.[0] || "";
+    state.whoLimit = 36;
+    els.whoSearchInput.value = state.whoQuery;
+    renderWhoLibrary();
+    document.getElementById("whoLibrary").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  els.chapterPanel.querySelector("[data-atlas-webpath-source]")?.addEventListener("click", () => {
+    state.webPathOrgan = organ?.webOrgans?.length === 1 ? organ.webOrgans[0] : "all";
+    state.webPathQuery = organ?.terms?.[0] || "";
+    state.webPathLimit = 36;
+    els.webPathSearchInput.value = state.webPathQuery;
+    renderWebPathologyLibrary();
+    document.getElementById("webPathologyLibrary").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
   els.diagnosisHeading.textContent = state.query.trim()
     ? `Gợi ý cho: “${state.query.trim()}”`
-    : state.chapter === "all" ? "Tất cả chẩn đoán" : `Atlas ảnh: ${chapter.name}`;
+    : organ?.id === "all" ? "Tất cả chẩn đoán" : `Atlas ảnh: ${organ.label}`;
   els.diagnosisCount.textContent = state.query.trim()
     ? `${visible.length} kết quả được xếp theo mức độ phù hợp`
-    : `${visible.length} chẩn đoán đang hiển thị`;
+    : `${visible.length}/${organCases.length} hồ sơ đang hiển thị`;
 }
 
 function renderDiagnosisGrid() {
   const items = filteredCases();
   if (!items.length) {
-    els.diagnosisGrid.innerHTML = `<div class="empty-state">Không có chẩn đoán phù hợp. Hãy thử từ khóa rộng hơn hoặc bấm “Hiện tất cả”.</div>`;
+    const organ = selectedAtlasOrgan();
+    const whoCount = whoEntriesForAtlasOrgan(organ).length;
+    const webPathCount = webPathologyEntriesForAtlasOrgan(organ).length;
+    els.diagnosisGrid.innerHTML = `
+      <div class="empty-state atlas-organ-empty">
+        <strong>Chưa có hồ sơ atlas đầy đủ cho ${escapeHtml(organ?.label || "bộ lọc này")}</strong>
+        <span>Không thay bằng ảnh hoặc chẩn đoán gần giống. Hiện có ${whoCount} mục WHO và ${webPathCount} gallery nguồn để tiếp tục đối chiếu.</span>
+      </div>
+    `;
     return;
   }
 
@@ -3249,14 +3378,14 @@ function renderDetail() {
 }
 
 function renderPoster() {
-  const chapter = chapterById(state.chapter);
-  const pool = (state.chapter === "all" ? cases : cases.filter((item) => item.chapter === state.chapter)).slice(0, 10);
-  els.posterTitle.textContent = state.chapter === "all" ? "10 kiểu cấu trúc nền tảng" : `Atlas ${chapter.name}`;
-  els.posterNote.textContent = state.chapter === "thyroid"
+  const organ = selectedAtlasOrgan();
+  const pool = atlasCasesForOrgan(organ).slice(0, 10);
+  els.posterTitle.textContent = organ.id === "all" ? "10 kiểu cấu trúc nền tảng" : `Atlas ${organ.label}`;
+  els.posterNote.textContent = organ.id === "thyroid"
     ? "Bố cục mô phỏng poster tuyến giáp: từ lành tính, viêm, u dạng nang đến PTC/MTC/ATC."
-    : state.chapter === "lung"
+    : organ.id === "lung"
       ? "Bảng ôn nhanh ung thư phổi: phân biệt típ tuyến, tế bào vảy, tế bào nhỏ và dạng nhầy."
-      : state.chapter === "colon"
+      : organ.id === "colon-rectum"
         ? "Bảng ôn nhanh polyp đại tràng: phân biệt polyp tăng sản, tổn thương răng cưa, u tuyến và ung thư biểu mô."
         : "Dùng để ôn nhanh: mỗi thẻ là một hình ảnh, ba dấu hiệu chính và một câu ghi nhớ.";
 
@@ -3280,8 +3409,8 @@ function renderPoster() {
 
 function renderGallery() {
   const items = filteredCases();
-  const chapter = chapterById(state.chapter);
-  els.galleryTitle.textContent = state.chapter === "all" ? "Tất cả ảnh atlas" : `Thư viện ảnh ${chapter.name}`;
+  const organ = selectedAtlasOrgan();
+  els.galleryTitle.textContent = organ.id === "all" ? "Tất cả ảnh atlas" : `Thư viện ảnh ${organ.label}`;
   els.galleryCount.textContent = `${items.length} ảnh/chẩn đoán đang hiển thị`;
 
   if (!items.length) {
@@ -3314,6 +3443,7 @@ function renderGallery() {
 function openAtlasCaseFromWho(id) {
   const item = cases.find((entry) => entry.id === id);
   if (!item) return;
+  state.atlasOrgan = atlasOrganForCase(item).id;
   state.chapter = item.chapter;
   state.pattern = "all";
   state.query = "";
@@ -3517,7 +3647,10 @@ function bindCaseCards(scope) {
     card.addEventListener("click", () => {
       state.selectedId = card.dataset.case;
       const selected = cases.find((item) => item.id === state.selectedId);
-      if (selected) state.chapter = selected.chapter;
+      if (selected) {
+        state.atlasOrgan = atlasOrganForCase(selected).id;
+        state.chapter = selected.chapter;
+      }
       state.pattern = "all";
       state.query = "";
       els.searchInput.value = "";
@@ -3629,6 +3762,7 @@ function saveCustomCaseFromForm() {
   cases.push(item);
   saveCustomCases();
   state.chapter = item.chapter;
+  state.atlasOrgan = atlasOrganForCase(item).id;
   state.pattern = "all";
   state.query = "";
   state.selectedId = item.id;
@@ -3708,7 +3842,10 @@ function clearCustomCases() {
 function bindEvents() {
   els.searchInput.addEventListener("input", () => {
     state.query = els.searchInput.value;
-    if (state.query.trim()) state.chapter = "all";
+    if (state.query.trim()) {
+      state.atlasOrgan = "all";
+      state.chapter = "all";
+    }
     const first = filteredCases()[0];
     if (first) state.selectedId = first.id;
     renderAll();
@@ -3750,10 +3887,11 @@ function bindEvents() {
   els.resetFilters.addEventListener("click", () => {
     state = {
       ...state,
-      chapter: "thyroid",
+      chapter: "all",
+      atlasOrgan: "all",
       pattern: "all",
       query: "",
-      selectedId: "thyroid-ptc",
+      selectedId: cases[0]?.id || "",
     };
     els.searchInput.value = "";
     renderAll();
@@ -3837,7 +3975,7 @@ function bindEvents() {
 }
 
 function updateStats() {
-  els.statOrgans.textContent = String(chapters.length - 1);
+  els.statOrgans.textContent = String(searchAssistant.organOptions.length - 1);
   els.statDx.textContent = String(cases.length);
   els.statWho.textContent = whoEntries.length.toLocaleString("vi-VN");
   els.statSources.textContent = String(sourceCards.length);
