@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="./tailwind.css" />
     <link rel="stylesheet" href="./styles.css?v=20260729-atlas-organ-1" />
     <link rel="stylesheet" href="./hmmd-integration.css?v=20260728-1" />
+    <link rel="stylesheet" href="./auth-ui.css?v=20260729-1" />
   </head>
   <body>
     <header class="top-navbar sticky top-0 z-50 border-b border-slate-700 bg-[#102a33] text-white">
@@ -45,6 +46,9 @@
           <a class="hidden min-h-9 items-center rounded border border-cyan-300/40 bg-cyan-300 px-4 text-xs font-black text-slate-950 no-underline transition hover:bg-cyan-200 sm:inline-flex" href="#atlasBoard">
             Khám phá atlas <span class="ml-2" aria-hidden="true">→</span>
           </a>
+          <form class="auth-logout-form hidden sm:block" action="/api/logout" method="post">
+            <button class="auth-logout-button" type="submit">Đăng xuất</button>
+          </form>
           <button class="mobile-menu-button grid size-10 place-items-center rounded border border-white/20 bg-white/5 lg:hidden" id="mobileMenuButton" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Mở menu">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -59,6 +63,9 @@
             <a class="mobile-nav-link" href="#whoLibrary">Danh mục WHO</a>
             <a class="mobile-nav-link" href="#webPathologyLibrary">Kho ảnh</a>
             <a class="mobile-nav-link" href="#sources">Nguồn học</a>
+            <form class="auth-logout-form mobile-auth-logout" action="/api/logout" method="post">
+              <button class="auth-logout-button mobile-auth-logout" type="submit">Đăng xuất</button>
+            </form>
           </div>
         </div>
       </nav>

@@ -20,6 +20,7 @@
       href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap"
     />
     <link rel="stylesheet" href="./hmmd-search.css?v=20260729-10" />
+    <link rel="stylesheet" href="./auth-ui.css?v=20260729-1" />
   </head>
   <body>
     <div class="app-shell">
@@ -54,6 +55,9 @@
             <button class="quiet-button" type="button" id="resetQuery">↻ <span>Làm mới</span></button>
             <button class="add-rule-button" type="button" id="openCaseDialog">＋ Nạp ca mới</button>
             <div class="user-badge" aria-label="Atlas GPB">GPB</div>
+            <form class="auth-logout-form" action="/api/logout" method="post">
+              <button class="auth-logout-button" type="submit">Đăng xuất</button>
+            </form>
           </div>
         </header>
 

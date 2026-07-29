@@ -1,0 +1,21 @@
+.auth-logout-form { margin: 0; }
+.auth-logout-button {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: 6px;
+  padding: 0 12px;
+  color: #f3ffff;
+  background: rgba(255, 255, 255, .06);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+}
+.auth-logout-button:hover { border-color: rgba(118, 232, 226, .65); background: rgba(118, 232, 226, .12); }
+.mobile-auth-logout { grid-column: 1 / -1; width: 100%; }
+.top-actions .auth-logout-button { border-color: #c6d8dc; color: #35545c; background: #fff; }
+.top-actions .auth-logout-button:hover { border-color: #198e88; color: #08756f; background: #eefaf9; }
+
