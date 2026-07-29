@@ -2064,8 +2064,8 @@ const sourceCards = [
   },
   {
     title: "ICD-O-4",
-    kind: "Mã hình thái ung thư",
-    note: "International Classification of Diseases for Oncology (Phân loại Bệnh Quốc tế về Ung thư), bản ICD-O-4 do IARC công bố ngày 20/07/2026. Atlas chỉ hiện mã đã đối chiếu; mã vị trí giải phẫu phụ thuộc đúng vị trí lấy mẫu.",
+    kind: "Mã hình thái tân sinh",
+    note: "International Classification of Diseases for Oncology (Phân loại Bệnh Quốc tế về Ung thư), bản ICD-O-4 do IARC công bố ngày 20/07/2026. Tên thực thể được đối chiếu thêm với WHO/PathologyOutlines, nhưng bảng ICD-O-4 chính thức của WHO/IARC là nguồn thẩm quyền của mã. Mã vị trí giải phẫu phụ thuộc đúng vị trí lấy mẫu.",
     url: curation.sources?.icdo4 || `${IARC}/icd-o-4/`,
   },
   {
@@ -2671,6 +2671,9 @@ function officialLinks(item) {
     { label: exactPathologyOutlines ? "PathologyOutlines · đúng chủ đề" : "PathologyOutlines · tìm đúng tên chẩn đoán", url: exactPathologyOutlines || pathologyOutlinesSearchUrl(item.english) },
     { label: directWebPathology ? "WebPathology · gallery đúng tên" : "WebPathology · tìm đúng tên chẩn đoán", url: directWebPathology || webPathologyUrlFor(item) },
   ];
+  if (item.icdo?.source) {
+    links.push({ label: "ICD-O-4 · bảng hình thái chính thức", url: item.icdo.source });
+  }
   if (item.report.some((entry) => {
     const text = normalize(entry);
     return text.includes("margin") || text.includes("grade") || text.includes("dien cat") || text.includes("do mo hoc") || text.includes("hach");
@@ -2770,7 +2773,7 @@ function renderDiagnosisGrid() {
         <p>${escapeHtml(item.micro.slice(0, 2).join(" · "))}</p>
         ${item.learningEn?.micro?.[0] ? `<p class="card-feature-en" lang="en">${escapeHtml(item.learningEn.micro[0])}</p>` : ""}
         <small>${escapeHtml(item.pattern.slice(0, 3).map(patternLabel).join(" / "))}</small>
-        ${item.icdo?.code ? `<span class="icdo-chip">ICD-O-4 ${escapeHtml(item.icdo.code)}</span>` : ""}
+        ${item.icdo?.status !== "not-coded" && item.icdo?.code ? `<span class="icdo-chip">ICD-O-4 ${escapeHtml(item.icdo.code)}</span>` : ""}
         <span class="card-open-hint">Mở hồ sơ <span aria-hidden="true">→</span></span>
       </button>
     `;
@@ -2836,6 +2839,8 @@ function renderDetail() {
         <div>
           <span>Mã hình thái / Morphology code</span>
           <strong>${escapeHtml(`${icdo.version || "ICD-O-4"} · ${icdo.code}`)}</strong>
+          ${icdo.statusLabel ? `<small>${escapeHtml(icdo.statusLabel)}</small>` : ""}
+          ${icdo.officialTerms?.length ? `<small lang="en">${escapeHtml(`Official term: ${icdo.officialTerms.join(" · ")}`)}</small>` : ""}
           <small>${escapeHtml(icdo.note || "Mã vị trí giải phẫu (topography) phụ thuộc chính xác vào vị trí bệnh phẩm.")}</small>
         </div>
         <div>

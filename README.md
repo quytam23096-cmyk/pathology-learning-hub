@@ -7,8 +7,8 @@ Website tĩnh tiếng Việt dạng atlas giải phẫu bệnh: chia theo cơ qu
 - Thanh điều hướng cố định, hero H&E toàn chiều rộng với CTA rõ ràng, khu làm việc atlas và footer nguồn học được thiết kế lại theo hướng hiện đại, tương lai và responsive.
 - Giao diện chính dùng bố cục Atlas Workspace: thanh cơ quan cố định, lưới chẩn đoán có ảnh, hồ sơ vi thể lớn và nội dung học song ngữ đặt cạnh nhau.
 - Có trang `interface-demos.html` để thử trực tiếp ba hướng giao diện mới: Clinical Light, Digital Scope và Atlas Workspace. Mỗi mẫu dùng chung dữ liệu GPB mẫu, hỗ trợ tìm kiếm, lọc cơ quan, chọn ca, đổi tab nội dung và phóng đại ảnh.
-- 15 nhóm cơ quan, 102 thẻ chẩn đoán mẫu.
-- Cả 102 thẻ có nội dung học song ngữ Việt - Anh: đặc điểm vi thể/tế bào, gợi ý báo cáo, điểm ghi nhớ và bẫy chẩn đoán.
+- 15 nhóm cơ quan, 120 thẻ chẩn đoán mẫu.
+- Cả 120 thẻ có nội dung học song ngữ Việt - Anh: đặc điểm vi thể/tế bào, gợi ý báo cáo, điểm ghi nhớ và bẫy chẩn đoán.
 - 101 thẻ có ảnh mở đã đối chiếu tên tệp và giấy phép; thẻ còn lại hiện trạng thái chờ thay vì dùng ảnh gần giống hoặc sai thực thể.
 - Thư viện WHO/IARC phản ánh 20 quyển đang có trên WHO Classification Online: 4 quyển tế bào học, 2 quyển ấn bản 6 và 14 quyển ấn bản 5.
 - 4.487 mục trong mục lục có URL `chaptercontent/{bookId}/{chapterId}` trực tiếp; giao diện hiển thị rõ Book ID và Chapter ID để kiểm tra trích dẫn.
@@ -16,6 +16,8 @@ Website tĩnh tiếng Việt dạng atlas giải phẫu bệnh: chia theo cơ qu
 - Tệp danh mục chỉ lưu metadata mục lục và URL chính thức, không lưu tài khoản, token, nội dung bài, bảng hoặc hình ảnh WHO.
 - Có tìm kiếm song ngữ toàn danh mục WHO, lọc theo quyển và mở thẻ học tiếng Việt khi atlas đã có nội dung tương ứng.
 - Các thực thể đã đối chiếu hiển thị mã hình thái ICD-O-4; tổn thương không tân sinh ghi rõ không áp dụng, còn mã phụ thuộc cấp độ/xâm nhập được giải thích riêng.
+- `icdo-normalization.js` chuẩn hóa toàn bộ 120 hồ sơ theo bảng Morphology ICD-O-4 chính thức phát hành ngày 20/07/2026, lưu thuật ngữ ưu tiên tương ứng và tách rõ mã thực thể, mã điều kiện và trường hợp không có mã riêng.
+- Chạy `node scripts/validate-icdo4.js` để kiểm tra đủ 120 hồ sơ, định dạng mã, thuật ngữ ưu tiên và các hiệu chỉnh bắt buộc trước khi deploy.
 - Có bộ lọc theo cơ quan, kiểu cấu trúc và tìm kiếm tiếng Việt/tiếng Anh.
 - Có poster ghi nhớ theo cơ quan, phù hợp kiểu học bằng hình ảnh.
 - Có nút thay ảnh cho từng chẩn đoán, lưu cục bộ trên trình duyệt.
