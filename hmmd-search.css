@@ -342,9 +342,167 @@ body { font-size: 15px; }
 .source-data dt { margin: 0 0 4px; color: #718096; font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
 .source-data dd { margin: 0; color: #33445b; font-size: 12px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
 
+/* Official data workspace */
+.dataset-summary button {
+  min-width: 110px;
+  padding: 14px 18px;
+  border: 0;
+  border-right: 1px solid var(--line);
+  background: white;
+  text-align: left;
+  transition: background .18s ease;
+}
+.dataset-summary button:last-child { border-right: 0; }
+.dataset-summary button:hover { background: #f4f8fd; }
+.dataset-summary button strong,
+.dataset-summary button span { display: block; }
+.dataset-summary button strong { color: #1d3657; font-size: 18px; }
+.dataset-summary button span { margin-top: 3px; color: #8794a5; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+
+.marker-lane { position: relative; overflow: visible; }
+.marker-picker { position: relative; }
+.marker-entry input {
+  border-style: solid;
+  border-color: #d8e2ec;
+  background: #fff;
+}
+.marker-entry input::placeholder { color: #93a0b0; }
+.marker-suggestions {
+  position: absolute;
+  top: calc(100% + 7px);
+  left: 0;
+  right: 46px;
+  z-index: 35;
+  max-height: 304px;
+  overflow: auto;
+  padding: 7px;
+  border: 1px solid #d9e3ee;
+  border-radius: 11px;
+  background: #fff;
+  box-shadow: 0 20px 48px rgba(12, 39, 69, .2);
+}
+.marker-suggestions[hidden] { display: none; }
+.marker-option {
+  width: 100%;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #26384f;
+  text-align: left;
+}
+.marker-option:hover,
+.marker-option.active { background: #edf5ff; }
+.marker-option > span,
+.marker-option strong,
+.marker-option small { display: block; }
+.marker-option strong { font-size: 13px; }
+.marker-option small { margin-top: 3px; color: #8b98a8; font-size: 10px; font-weight: 500; }
+.marker-option em { display: flex; gap: 5px; font-style: normal; }
+.marker-option em b,
+.marker-option em i { min-width: 38px; padding: 4px 6px; border-radius: 5px; font-size: 10px; font-style: normal; text-align: center; }
+.marker-option em b { background: var(--green-soft); color: var(--green); }
+.marker-option em i { background: var(--red-soft); color: var(--red); }
+.marker-option-empty { padding: 18px 12px; color: #8794a5; font-size: 12px; text-align: center; }
+
+.rule-dialog form {
+  max-height: calc(100vh - 30px);
+  display: flex;
+  flex-direction: column;
+}
+.rule-dialog .dialog-body { overflow-y: auto; }
+.case-dialog { width: min(720px, calc(100vw - 30px)); }
+
+.data-dialog {
+  width: min(980px, calc(100vw - 30px));
+  max-height: calc(100vh - 30px);
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 35px 100px rgba(5,23,45,.32);
+}
+.data-dialog::backdrop { background: rgba(5,20,38,.58); backdrop-filter: blur(3px); }
+.data-dialog-shell { max-height: calc(100vh - 30px); display: flex; flex-direction: column; }
+.data-dialog-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; padding: 22px 24px 18px; border-bottom: 1px solid var(--line); }
+.data-dialog-header h2 { margin: 5px 0 0; font-size: 22px; }
+.data-dialog-header p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+.data-tabs { display: flex; gap: 7px; padding: 14px 24px 0; }
+.data-tabs button { min-height: 38px; padding: 0 15px; border: 1px solid #dfe7f0; border-radius: 8px; background: #f8fafc; color: #637287; font-size: 12px; font-weight: 700; }
+.data-tabs button.active { border-color: #1768d7; background: #eaf4ff; color: #1768d7; }
+.data-dialog-tools { display: grid; grid-template-columns: auto minmax(220px, 420px); align-items: center; justify-content: space-between; gap: 16px; margin: 14px 24px 0; padding: 12px 14px; border: 1px solid #e4eaf1; border-radius: 10px; background: #f9fbfd; }
+.data-dialog-tools.hidden { display: none; }
+.data-dialog-tools label { color: #617086; font-size: 12px; font-weight: 700; }
+.data-dialog-tools input { height: 38px; padding: 0 12px; border: 1px solid #d9e3ed; border-radius: 8px; background: #fff; color: var(--text); font-size: 12px; outline: none; }
+.data-dialog-tools input:focus { border-color: #5ba1ee; box-shadow: 0 0 0 3px #e8f3ff; }
+.data-dialog-content { min-height: 360px; overflow: auto; padding: 18px 24px 24px; }
+.data-list-summary { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
+.data-list-summary strong { font-size: 16px; }
+.data-list-summary span { color: #7c8999; font-size: 11px; }
+.data-table { overflow: hidden; border: 1px solid #dfe7ef; border-radius: 11px; }
+.data-table-head,
+.data-table-row { display: grid; align-items: center; gap: 12px; padding: 10px 14px; }
+.marker-table .data-table-head,
+.marker-table .data-table-row { grid-template-columns: minmax(180px, 1fr) 90px 90px 90px; }
+.diagnosis-table .data-table-head,
+.diagnosis-table .data-table-row { grid-template-columns: minmax(0, 1fr) 100px; }
+.data-table-head { background: #edf4fb; color: #607088; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+.data-table-row { min-height: 46px; border-top: 1px solid #e8edf3; background: #fff; font-size: 12px; }
+.data-table-row:nth-child(odd) { background: #fbfcfe; }
+.data-table-row strong { min-width: 0; overflow-wrap: anywhere; font-size: 12px; }
+.positive-value { color: var(--green); font-weight: 700; }
+.negative-value { color: var(--red); font-weight: 700; }
+.data-limit-note { margin: 12px 0 0; color: #7d8b9d; font-size: 11px; text-align: center; }
+
+.organ-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.organ-card { padding: 16px; border: 1px solid #e1e8f0; border-radius: 11px; background: #fbfcfe; }
+.organ-card > div:first-child { display: flex; justify-content: space-between; gap: 12px; }
+.organ-card span { color: #506178; font-size: 12px; font-weight: 700; }
+.organ-card strong { color: #193d68; font-size: 14px; }
+.organ-card small { display: block; margin-top: 7px; color: #8b97a6; font-size: 10px; }
+.organ-bar { height: 7px; margin-top: 13px; overflow: hidden; border-radius: 8px; background: #e7edf4; }
+.organ-bar i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #2b88ec, #1768d7); }
+
+.report-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.report-cards article { padding: 16px; border: 1px solid #dfe7f0; border-radius: 11px; background: linear-gradient(145deg, #fff, #f4f8fd); }
+.report-cards span,
+.report-cards strong { display: block; }
+.report-cards span { color: #748295; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+.report-cards strong { margin-top: 8px; color: #173c68; font-size: 24px; }
+.coverage-panel { margin-top: 16px; padding: 18px; border: 1px solid #e1e8f0; border-radius: 12px; }
+.coverage-panel h3 { margin: 0 0 14px; font-size: 15px; }
+.coverage-row { margin-top: 13px; }
+.coverage-row > div:first-child { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+.coverage-row span { color: #586a80; font-size: 11px; }
+.coverage-row strong { color: #294f79; font-size: 11px; }
+.coverage-row > div:last-child { height: 8px; overflow: hidden; border-radius: 8px; background: #e9eef4; }
+.coverage-row i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #3bb58a, #159968); }
+
 @media (max-width: 560px) {
   .result-details { padding-left: 12px; }
   .workspace-heading h1 { font-size: 28px; }
   .dataset-summary strong { font-size: 16px; }
   .dataset-summary span { font-size: 9px; }
+  .dataset-summary { display: grid; grid-template-columns: 1fr 1fr; }
+  .dataset-summary button { min-width: 0; border-bottom: 1px solid var(--line); }
+  .dataset-summary button:nth-child(2) { border-right: 0; }
+  .dataset-summary button:nth-child(3),
+  .dataset-summary button:nth-child(4) { border-bottom: 0; }
+  .marker-suggestions { right: 0; }
+  .marker-option em { display: none; }
+  .data-dialog-header { padding: 18px; }
+  .data-tabs { overflow-x: auto; padding: 12px 18px 0; }
+  .data-dialog-tools { grid-template-columns: 1fr; gap: 8px; margin: 12px 18px 0; }
+  .data-dialog-content { padding: 16px 18px 20px; }
+  .marker-table .data-table-head,
+  .marker-table .data-table-row { grid-template-columns: minmax(120px, 1fr) 58px 58px; }
+  .marker-table .data-table-head span:nth-child(2),
+  .marker-table .data-table-row span:nth-child(2) { display: none; }
+  .organ-grid,
+  .report-cards { grid-template-columns: 1fr; }
 }
