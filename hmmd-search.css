@@ -97,8 +97,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .card-heading h2, .results-heading h2 { margin: 0; font-size: 14px; letter-spacing: -.015em; }
 .card-heading p, .results-heading p { margin: 4px 0 0; color: var(--muted); font-size: 9px; }
 .text-button { border: 0; background: transparent; color: var(--blue-700); font-size: 9px; font-weight: 700; }
-.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 17px 0 14px; }
-.field-label > span, .dialog-body label > span { display: block; margin: 0 0 7px; color: #4b5b70; font-size: 9px; font-weight: 700; }
+.field-grid { position: relative; z-index: 30; display: grid; grid-template-columns: minmax(180px, .85fr) minmax(260px, 1.15fr); gap: 12px; margin: 17px 0 14px; }
+.field-label > span, .field-label > label, .dialog-body label > span { display: block; margin: 0 0 7px; color: #4b5b70; font-size: 9px; font-weight: 700; }
 .field-label input, .field-label select, .dialog-body input, .dialog-body select, .dialog-body textarea { width: 100%; border: 1px solid #dce4ed; border-radius: 8px; background: #fbfcfe; color: var(--text); outline: none; }
 .field-label input, .field-label select, .dialog-body input, .dialog-body select { height: 39px; padding: 0 11px; font-size: 10px; }
 .field-label input:focus, .field-label select:focus, .dialog-body input:focus, .dialog-body select:focus, .dialog-body textarea:focus { border-color: #5ba1ee; background: white; box-shadow: 0 0 0 3px #e8f3ff; }
@@ -291,7 +291,7 @@ body { font-size: 15px; }
 .card-heading p, .results-heading p { font-size: 12px; }
 .step-number { width: 35px; height: 35px; font-size: 11px; }
 .text-button { font-size: 12px; }
-.field-label > span, .dialog-body label > span { font-size: 12px; }
+.field-label > span, .field-label > label, .dialog-body label > span { font-size: 12px; }
 .field-label input, .field-label select, .dialog-body input, .dialog-body select { height: 44px; font-size: 13px; }
 .lane-icon { width: 28px; height: 28px; font-size: 15px; }
 .lane-heading strong { font-size: 13px; }
@@ -409,6 +409,120 @@ body { font-size: 15px; }
 .marker-option em b { background: var(--green-soft); color: var(--green); }
 .marker-option em i { background: var(--red-soft); color: var(--red); }
 .marker-option-empty { padding: 18px 12px; color: #8794a5; font-size: 12px; text-align: center; }
+
+.diagnosis-field { min-width: 0; }
+.diagnosis-picker { position: relative; }
+.diagnosis-input-shell {
+  height: 44px;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) 32px;
+  align-items: center;
+  padding: 0 6px 0 8px;
+  border: 1px solid #d7e1ec;
+  border-radius: 9px;
+  background: #fff;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+.diagnosis-input-shell:focus-within { border-color: #4b95e8; box-shadow: 0 0 0 3px #e8f3ff; }
+.diagnosis-input-shell > span { color: #4d88ca; font-size: 20px; line-height: 1; text-align: center; }
+.diagnosis-input-shell input {
+  min-width: 0;
+  height: 42px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: 13px;
+}
+.diagnosis-input-shell input:focus { border: 0; background: transparent; box-shadow: none; }
+.diagnosis-input-shell input::-webkit-search-cancel-button { display: none; }
+.diagnosis-input-shell button {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background: #eef4fa;
+  color: #63768d;
+  font-size: 17px;
+}
+.diagnosis-input-shell button:hover { background: #e1ecf7; color: #1e5f9f; }
+.diagnosis-input-shell button[hidden] { display: none; }
+.field-hint { display: block; margin-top: 6px; color: #8897aa; font-size: 10px; line-height: 1.45; }
+.diagnosis-suggestions {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 60;
+  width: min(500px, calc(100vw - 48px));
+  max-height: 430px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px;
+  border: 1px solid #d8e3ee;
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 22px 60px rgba(10, 35, 65, .22);
+}
+.diagnosis-suggestions[hidden] { display: none; }
+.diagnosis-group-heading {
+  position: sticky;
+  top: -8px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 -1px 4px;
+  padding: 10px 10px 8px;
+  border-bottom: 1px solid #e8eef5;
+  background: rgba(255, 255, 255, .96);
+  backdrop-filter: blur(8px);
+}
+.diagnosis-group-heading:not(:first-child) { margin-top: 7px; }
+.diagnosis-group-heading span { color: #315779; font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.diagnosis-group-heading small { color: #8c99a9; font-size: 9px; }
+.diagnosis-option {
+  width: 100%;
+  min-height: 66px;
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #26384f;
+  text-align: left;
+}
+.diagnosis-option:hover,
+.diagnosis-option.active { background: #edf5ff; }
+.diagnosis-code {
+  min-width: 48px;
+  padding: 6px 7px;
+  border-radius: 7px;
+  background: #eaf4ff;
+  color: #1768d7;
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  font-weight: 800;
+  text-align: center;
+}
+.diagnosis-code.clinical { background: #edf8f3; color: #16815a; }
+.diagnosis-option-copy { min-width: 0; }
+.diagnosis-option-copy strong,
+.diagnosis-option-copy small { display: block; }
+.diagnosis-option-copy strong { color: #22334a; font-size: 12px; line-height: 1.45; }
+.diagnosis-option-copy small { margin-top: 4px; color: #8190a2; font-size: 10px; line-height: 1.4; }
+.diagnosis-option em { padding-left: 8px; color: #65758a; font-size: 10px; font-style: normal; font-weight: 700; white-space: nowrap; }
+.diagnosis-option-empty { display: grid; justify-items: center; gap: 5px; padding: 28px 18px; color: #8796a8; text-align: center; }
+.diagnosis-option-empty > span { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 10px; background: #eef5fc; color: #2674ca; font-size: 23px; }
+.diagnosis-option-empty strong { color: #42546a; font-size: 13px; }
+.diagnosis-option-empty small { font-size: 10px; }
 
 .rule-dialog form {
   max-height: calc(100vh - 30px);
@@ -530,6 +644,9 @@ body { font-size: 15px; }
   .dataset-summary button:nth-child(5) { grid-column: 1 / -1; border-right: 0; border-bottom: 0; }
   .marker-suggestions { right: 0; }
   .marker-option em { display: none; }
+  .diagnosis-suggestions { width: 100%; max-height: 350px; }
+  .diagnosis-option { grid-template-columns: 50px minmax(0, 1fr); }
+  .diagnosis-option em { display: none; }
   .data-dialog-header { padding: 18px; }
   .data-tabs { overflow-x: auto; padding: 12px 18px 0; }
   .data-dialog-tools { grid-template-columns: 1fr; gap: 8px; margin: 12px 18px 0; }

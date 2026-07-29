@@ -56,6 +56,7 @@ const state = {
   filter: "all",
   explorerView: "reports",
   pickerIndex: { positive: 0, negative: 0 },
+  diagnosisPickerIndex: 0,
 };
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -255,13 +256,84 @@ function getDiagnosisStats() {
   return diagnosisStatsCache;
 }
 
-function renderDiagnosisSearchOptions() {
-  const options = new Map();
-  getDiagnosisStats().forEach((item) => options.set(`diagnosis:${normalizedText(item.name)}`, item.name));
-  getIcdEntries().forEach((item) => options.set(`icd:${item.code}:${normalizedText(item.name)}`, `${item.code} — ${item.name}`));
-  $("#diagnosisSearchOptions").innerHTML = [...options.values()]
-    .map((value) => `<option value="${escapeHtml(value)}"></option>`)
-    .join("");
+function diagnosisSuggestionsFor(query) {
+  const rawQuery = String(query || "").trim();
+  const textQuery = normalizedText(rawQuery).trim();
+  const codeQuery = rawQuery.toUpperCase().replace(/\s+/g, "");
+  const diagnosesInData = getDiagnosisStats()
+    .filter((item) => {
+      if (!textQuery) return true;
+      const codes = [...item.directCodes, ...item.suggestedIcd.map((match) => match.code)].join(" ").toUpperCase();
+      return normalizedText(item.name).includes(textQuery) || codes.includes(codeQuery);
+    })
+    .slice(0, textQuery ? 7 : 6)
+    .map((item) => {
+      const codes = item.directCodes.length ? item.directCodes : item.suggestedIcd.map((match) => match.code);
+      return {
+        group: "clinical",
+        value: item.name,
+        code: codes[0] || "LS",
+        label: item.name,
+        detail: codes.length ? `ICD-10 đối chiếu: ${codes.slice(0, 3).join(" · ")}` : "Chẩn đoán lâm sàng trong kho HMMD",
+        meta: `${item.cases.toLocaleString("vi-VN")} ca`,
+      };
+    });
+  const officialIcd = textQuery
+    ? icdMatches(rawQuery).slice(0, 8).map((item) => ({
+        group: "icd",
+        value: `${item.code} — ${item.name}`,
+        code: item.code,
+        label: item.name,
+        detail: "Danh mục ICD-10 chính thức của Bộ Y tế",
+        meta: "ICD-10",
+      }))
+    : [];
+  return [...diagnosesInData, ...officialIcd];
+}
+
+function renderDiagnosisPicker(query = "") {
+  const list = $("#diagnosisSuggestions");
+  const input = $("#diagnosisSearch");
+  const suggestions = diagnosisSuggestionsFor(query);
+  state.diagnosisPickerIndex = Math.min(state.diagnosisPickerIndex, Math.max(suggestions.length - 1, 0));
+  let previousGroup = "";
+  list.innerHTML = suggestions.length
+    ? suggestions.map((item, index) => {
+        const groupHeading = item.group !== previousGroup
+          ? `<div class="diagnosis-group-heading"><span>${item.group === "clinical" ? "Chẩn đoán trong dữ liệu HMMD" : "Danh mục ICD-10 Bộ Y tế"}</span><small>${item.group === "clinical" ? "Theo số ca hiện có" : "Theo Thông tư 06/2026/TT-BYT"}</small></div>`
+          : "";
+        previousGroup = item.group;
+        return `${groupHeading}<button type="button" role="option" class="diagnosis-option${index === state.diagnosisPickerIndex ? " active" : ""}" data-diagnosis-option="${escapeHtml(item.value)}" aria-selected="${index === state.diagnosisPickerIndex}"><span class="diagnosis-code ${item.group}">${escapeHtml(item.code)}</span><span class="diagnosis-option-copy"><strong>${escapeHtml(item.label)}</strong><small>${escapeHtml(item.detail)}</small></span><em>${escapeHtml(item.meta)}</em></button>`;
+      }).join("")
+    : `<div class="diagnosis-option-empty"><span>⌕</span><strong>Không tìm thấy kết quả phù hợp</strong><small>Thử nhập tên bệnh khác hoặc mã dạng C34.9</small></div>`;
+  list.hidden = false;
+  input.setAttribute("aria-expanded", "true");
+  $("#diagnosisClear").hidden = !input.value;
+}
+
+function closeDiagnosisPicker() {
+  const list = $("#diagnosisSuggestions");
+  const input = $("#diagnosisSearch");
+  list.hidden = true;
+  input.setAttribute("aria-expanded", "false");
+  state.diagnosisPickerIndex = 0;
+}
+
+function selectDiagnosisSuggestion(value) {
+  $("#diagnosisSearch").value = value;
+  $("#diagnosisClear").hidden = false;
+  closeDiagnosisPicker();
+}
+
+function moveDiagnosisPickerSelection(direction) {
+  const options = $$('[data-diagnosis-option]', $("#diagnosisSuggestions"));
+  if (!options.length) return;
+  state.diagnosisPickerIndex = (state.diagnosisPickerIndex + direction + options.length) % options.length;
+  options.forEach((option, index) => {
+    option.classList.toggle("active", index === state.diagnosisPickerIndex);
+    option.setAttribute("aria-selected", index === state.diagnosisPickerIndex);
+  });
+  options[state.diagnosisPickerIndex].scrollIntoView({ block: "nearest" });
 }
 
 function diagnosticTokens(value) {
@@ -579,6 +651,8 @@ function resetQuery() {
   $("#organSelect").value = "all";
   $("#notesInput").value = "";
   $("#diagnosisSearch").value = "";
+  $("#diagnosisClear").hidden = true;
+  closeDiagnosisPicker();
   renderQuery();
   $("#resultSummary").textContent = "Sẵn sàng tra cứu";
   $("#resultsList").innerHTML = `<div class="empty-results"><span>⌕</span><h3>Bắt đầu từ một kiểu hình HMMD</h3><p>Thêm marker dương tính, âm tính hoặc nhập chẩn đoán lâm sàng / mã ICD-10, sau đó bấm “Tra cứu chẩn đoán”.</p></div>`;
@@ -631,7 +705,6 @@ function saveCase(event) {
   saveLocalCases();
   invalidateStats();
   updateDatasetSummary();
-  renderDiagnosisSearchOptions();
   form.reset();
   $("#caseDialog").close();
   showToast(`Đã nạp ca “${newCase.caseCode}” trên thiết bị này.`);
@@ -730,6 +803,12 @@ function renderDataExplorer() {
 }
 
 document.addEventListener("click", (event) => {
+  const diagnosisOption = event.target.closest("[data-diagnosis-option]");
+  if (diagnosisOption) {
+    selectDiagnosisSuggestion(diagnosisOption.dataset.diagnosisOption);
+    $("#diagnosisSearch").focus();
+    return;
+  }
   const markerOption = event.target.closest("[data-marker-option]");
   if (markerOption) {
     addMarker(markerOption.dataset.lane, markerOption.dataset.markerOption);
@@ -793,6 +872,7 @@ document.addEventListener("click", (event) => {
     closeMarkerPicker("positive");
     closeMarkerPicker("negative");
   }
+  if (!event.target.closest(".diagnosis-picker")) closeDiagnosisPicker();
 });
 
 $$('[data-marker-input]').forEach((input) => {
@@ -821,10 +901,36 @@ $$('[data-marker-input]').forEach((input) => {
 });
 
 $("#runSearch").addEventListener("click", () => runSearch());
+$("#diagnosisSearch").addEventListener("focus", (event) => renderDiagnosisPicker(event.target.value));
+$("#diagnosisSearch").addEventListener("input", (event) => {
+  state.diagnosisPickerIndex = 0;
+  renderDiagnosisPicker(event.target.value);
+});
 $("#diagnosisSearch").addEventListener("keydown", (event) => {
+  const list = $("#diagnosisSuggestions");
+  if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+    event.preventDefault();
+    if (list.hidden) renderDiagnosisPicker(event.currentTarget.value);
+    else moveDiagnosisPickerSelection(event.key === "ArrowDown" ? 1 : -1);
+    return;
+  }
+  if (event.key === "Escape") {
+    closeDiagnosisPicker();
+    return;
+  }
   if (event.key !== "Enter") return;
   event.preventDefault();
+  const options = $$('[data-diagnosis-option]', list);
+  const selected = !list.hidden && event.currentTarget.value.trim() && options[state.diagnosisPickerIndex];
+  if (selected) selectDiagnosisSuggestion(selected.dataset.diagnosisOption);
   runSearch();
+});
+$("#diagnosisClear").addEventListener("click", () => {
+  $("#diagnosisSearch").value = "";
+  $("#diagnosisClear").hidden = true;
+  state.diagnosisPickerIndex = 0;
+  renderDiagnosisPicker();
+  $("#diagnosisSearch").focus();
 });
 $("#resetQuery").addEventListener("click", resetQuery);
 $("#openCaseDialog").addEventListener("click", openCaseDialog);
@@ -852,6 +958,5 @@ document.addEventListener("keydown", (event) => {
 });
 
 updateDatasetSummary();
-renderDiagnosisSearchOptions();
 renderQuery();
 resetQuery();
