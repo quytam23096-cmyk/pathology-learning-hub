@@ -6,6 +6,7 @@ const organLabels = {
   thyroid: "Tuyến giáp",
   kidney: "Thận",
   liver: "Gan",
+  other: "Khác / chưa phân nhóm",
 };
 
 const baseDiagnoses = [
@@ -110,8 +111,12 @@ const markerAliases = new Map([
 ]);
 
 const popularMarkers = ["CK7", "CK20", "TTF-1", "Napsin A", "p40", "p63", "CK5/6", "CD56", "PAX8", "GATA3", "CDX2", "SATB2"];
+const uploadedDataset = window.HMMD_DATASET && Array.isArray(window.HMMD_DATASET.cases) ? window.HMMD_DATASET : null;
+const datasetMeta = uploadedDataset?.meta || { name: "Dữ liệu mô phỏng", version: "DEMO", caseCount: baseDiagnoses.length, markerCount: 0 };
+const activeBaseDiagnoses = uploadedDataset?.cases.length ? uploadedDataset.cases : baseDiagnoses;
+const MAX_VISIBLE_RESULTS = 50;
 const state = { positive: [], negative: [], results: [], filter: "all" };
-let diagnoses = [...baseDiagnoses, ...loadCustomRules()];
+let diagnoses = [...activeBaseDiagnoses, ...loadCustomRules()];
 let toastTimer;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -157,8 +162,13 @@ function showToast(message) {
 
 function populateMarkerSuggestions() {
   $("#markerSuggestions").innerHTML = allMarkers().map((marker) => `<option value="${escapeHtml(marker)}"></option>`).join("");
-  $("#markerTotal").textContent = allMarkers().length;
-  $("#diagnosisTotal").textContent = diagnoses.length;
+  $("#markerTotal").textContent = allMarkers().length.toLocaleString("vi-VN");
+  $("#diagnosisTotal").textContent = diagnoses.length.toLocaleString("vi-VN");
+  $("#lastUpdated").textContent = datasetMeta.version;
+  const datasetStatus = $("#datasetStatus");
+  const datasetStatusDetail = $("#datasetStatusDetail");
+  if (datasetStatus) datasetStatus.textContent = uploadedDataset ? "Dữ liệu đã nhập" : "Chế độ demo";
+  if (datasetStatusDetail) datasetStatusDetail.textContent = uploadedDataset ? `${datasetMeta.caseCount.toLocaleString("vi-VN")} ca · ${datasetMeta.version}` : "Dữ liệu mô phỏng";
 }
 
 function addMarker(lane, rawValue) {
@@ -234,7 +244,8 @@ function scoreDiagnosis(diagnosis) {
   const conflictPenalty = conflicts.length * Math.min(16, 26 / compared);
   const organScore = organ === "all" ? 8 : diagnosis.organ === organ ? 18 : -14;
   const notes = $("#notesInput").value.toLowerCase();
-  const noteScore = notes && diagnosis.notes.toLowerCase().split(/\W+/).some((word) => word.length > 5 && notes.includes(word)) ? 3 : 0;
+  const searchableNotes = `${diagnosis.notes || ""} ${diagnosis.diagnosisText || ""} ${diagnosis.conclusionText || ""}`.toLowerCase();
+  const noteScore = notes && searchableNotes.split(/\W+/).some((word) => word.length > 5 && notes.includes(word)) ? 3 : 0;
   const score = Math.round(Math.max(4, Math.min(99, evidenceScore + organScore + noteScore - conflictPenalty)));
   const selectedKeys = new Set(query.map(({ marker }) => normalizeKey(marker)));
   const suggested = [...diagnosis.positive, ...diagnosis.suggested].filter((marker) => !selectedKeys.has(normalizeKey(marker))).slice(0, 4);
@@ -247,9 +258,24 @@ function runSearch({ announce = true } = {}) {
     $("#positiveInput").focus();
     return;
   }
-  state.results = diagnoses.map(scoreDiagnosis).sort((a, b) => b.score - a.score || a.conflicts.length - b.conflicts.length);
+  const caseCode = normalizeKey($("#caseCode").value);
+  const exactCaseMatches = caseCode
+    ? diagnoses.filter((item) => normalizeKey(item.caseCode || item.sourceNumber || item.id) === caseCode)
+    : [];
+  const candidates = caseCode
+    ? (exactCaseMatches.length
+        ? exactCaseMatches
+        : diagnoses.filter((item) => normalizeKey(item.caseCode || item.sourceNumber || item.id).includes(caseCode)))
+    : diagnoses;
+  if (!candidates.length) {
+    state.results = [];
+    renderResults();
+    showToast("Không tìm thấy mã ca tương ứng trong dữ liệu HMMD 2025.");
+    return;
+  }
+  state.results = candidates.map(scoreDiagnosis).sort((a, b) => b.score - a.score || a.conflicts.length - b.conflicts.length);
   renderResults();
-  if (announce) showToast(`Đã đối chiếu ${diagnoses.length} quy tắc trong dữ liệu demo.`);
+  if (announce) showToast(`Đã đối chiếu ${candidates.length.toLocaleString("vi-VN")} ca trong dữ liệu HMMD 2025.`);
 }
 
 function renderResults() {
@@ -257,12 +283,15 @@ function renderResults() {
   let results = state.results;
   if (filter === "strong") results = results.filter((item) => item.score >= 75);
   if (filter === "conflict-free") results = results.filter((item) => item.conflicts.length === 0);
-  $("#resultSummary").textContent = state.results.length ? `${results.length} kết quả · xếp theo mức độ tương đồng` : "Sẵn sàng tra cứu";
+  const visibleResults = results.slice(0, MAX_VISIBLE_RESULTS);
+  $("#resultSummary").textContent = state.results.length
+    ? `${results.length.toLocaleString("vi-VN")} kết quả · hiển thị ${visibleResults.length} ca phù hợp nhất`
+    : "Sẵn sàng tra cứu";
   if (!results.length) {
     $("#resultsList").innerHTML = `<div class="empty-results"><span>⌕</span><h3>Chưa có kết quả phù hợp bộ lọc</h3><p>Thử đổi cơ quan, bớt marker hoặc chọn “Tất cả kết quả”.</p></div>`;
     return;
   }
-  $("#resultsList").innerHTML = results.map((item, index) => resultTemplate(item, index)).join("");
+  $("#resultsList").innerHTML = visibleResults.map((item, index) => resultTemplate(item, index)).join("");
 }
 
 function resultTemplate(item, index) {
@@ -272,32 +301,48 @@ function resultTemplate(item, index) {
     ...item.conflicts.map((value) => `<span class="evidence conflict">! ${escapeHtml(value)}</span>`),
     ...item.unknown.map((value) => `<span class="evidence unknown">? ${escapeHtml(value)}</span>`),
   ].join("");
-  const suggested = item.suggested.length
+  const suggested = (item.suggested || []).length
     ? item.suggested.map((marker) => `<button type="button" data-suggest-marker="${escapeHtml(marker)}">＋ ${escapeHtml(marker)}</button>`).join("")
-    : `<span class="empty-lane">Không có gợi ý bổ sung trong quy tắc demo.</span>`;
+    : `<span class="empty-lane">Không có gợi ý bổ sung trong bản ghi này.</span>`;
+  const locationLabel = organLabels[item.organ] || organLabels.other;
+  const recordMeta = item.uploaded
+    ? `${locationLabel} · ${escapeHtml(item.caseCode)}`
+    : `${locationLabel} · ICD-O ${escapeHtml(item.icdo || "—")}`;
+  const subtitle = item.uploaded
+    ? `Chẩn đoán lâm sàng: ${escapeHtml(item.diagnosisText || "Chưa ghi")}`
+    : escapeHtml(item.nameEn || "");
+  const sourceDetails = item.uploaded
+    ? `<dl class="source-data">
+        <div><dt>Chẩn đoán lâm sàng</dt><dd>${escapeHtml(item.diagnosisText || "—")}</dd></div>
+        <div><dt>Kết quả nhuộm hóa mô</dt><dd>${escapeHtml(item.conclusionText || "—")}</dd></div>
+        <div><dt>Dương tính</dt><dd>${escapeHtml(item.positiveText || "—")}</dd></div>
+        <div><dt>Âm tính</dt><dd>${escapeHtml(item.negativeText || "—")}</dd></div>
+        <div><dt>Ghi chú</dt><dd>${escapeHtml(item.notesText || "—")}</dd></div>
+      </dl>`
+    : `<div class="suggested-markers">${suggested}</div><p class="detail-note">Bấm marker để thêm vào nhóm dương tính và chạy lại đối chiếu.</p>`;
   return `<article class="result-item${index === 0 ? " is-top expanded" : ""}" data-result-id="${item.id}">
     <div class="result-main" tabindex="0" role="button" aria-expanded="${index === 0 ? "true" : "false"}">
       <div class="score-ring" style="--score:${item.score};--score-color:${scoreColor}"><strong>${item.score}<small>%</small></strong></div>
       <div class="result-title">
-        <div class="result-rank"><span>#${index + 1}</span>${index === 0 ? "Gần nhất" : organLabels[item.organ]} · ICD-O ${escapeHtml(item.icdo || "—")}</div>
-        <h3>${escapeHtml(item.nameVi)}</h3><p>${escapeHtml(item.nameEn || "")}</p>
+        <div class="result-rank"><span>#${index + 1}</span>${index === 0 ? "Gần nhất · " : ""}${recordMeta}</div>
+        <h3>${escapeHtml(item.nameVi)}</h3><p>${subtitle}</p>
         <div class="match-meta"><span class="match">✓ ${item.matched.length} phù hợp</span><span class="conflict">! ${item.conflicts.length} xung đột</span><span class="unknown">? ${item.unknown.length} chưa có trong quy tắc</span></div>
       </div>
       <button class="result-open" type="button" aria-label="Xem chi tiết">⌄</button>
     </div>
     <div class="result-details">
-      <div class="detail-block"><h4>Đối chiếu dấu ấn đã nhập</h4><div class="evidence-list">${evidence || '<span class="empty-lane">Chưa có dữ liệu đối chiếu.</span>'}</div><p class="detail-note">${escapeHtml(item.notes)}</p><div class="result-source">RECORD · ${item.custom ? "CUSTOM" : "SIMULATED"}-${escapeHtml(item.id.toUpperCase())}</div></div>
-      <div class="detail-block"><h4>Marker có thể cân nhắc tiếp</h4><div class="suggested-markers">${suggested}</div><p class="detail-note">Bấm marker để thêm vào nhóm dương tính và chạy lại đối chiếu.</p></div>
+      <div class="detail-block"><h4>Đối chiếu dấu ấn đã nhập</h4><div class="evidence-list">${evidence || '<span class="empty-lane">Chưa có dữ liệu đối chiếu.</span>'}</div>${item.uploaded ? "" : `<p class="detail-note">${escapeHtml(item.notes)}</p>`}<div class="result-source">${item.uploaded ? `DANH SÁCH HMMD 2025 · CA ${escapeHtml(item.sourceNumber)}` : `RECORD · ${item.custom ? "CUSTOM" : "SIMULATED"}-${escapeHtml(item.id.toUpperCase())}`}</div></div>
+      <div class="detail-block"><h4>${item.uploaded ? "Dữ liệu nguồn nguyên văn" : "Marker có thể cân nhắc tiếp"}</h4>${sourceDetails}</div>
     </div>
   </article>`;
 }
 
 function loadPreset() {
-  state.positive = ["CK7", "CK5/6", "Napsin A"];
-  state.negative = ["TTF-1", "p63", "CD56"];
+  state.positive = ["CK AE1/3", "CK7"];
+  state.negative = ["CK5/6", "P63", "NapsinA", "TTF1", "ALK"];
   $("#organSelect").value = "lung";
-  $("#notesInput").value = "Grade III, biệt hóa kém";
-  $("#caseCode").value = "HMMD-DEMO-042";
+  $("#notesInput").value = "";
+  $("#caseCode").value = "";
   renderQuery();
   runSearch({ announce: false });
 }

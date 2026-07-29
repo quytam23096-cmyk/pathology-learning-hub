@@ -8,10 +8,10 @@
         document.documentElement.classList.add("embed-mode");
       }
     </script>
-    <title>HMMD Search — Demo hỗ trợ tra cứu</title>
+    <title>HMMD Search — Dữ liệu HMMD 2025</title>
     <meta
       name="description"
-      content="Bản demo công cụ tra cứu chẩn đoán theo dấu ấn hóa mô miễn dịch dương tính, âm tính và ghi chú."
+      content="Công cụ tra cứu 2.378 ca HMMD theo dấu ấn dương tính, âm tính, chẩn đoán lâm sàng và kết quả nhuộm hóa mô."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,7 +19,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap"
     />
-    <link rel="stylesheet" href="./hmmd-search.css" />
+    <link rel="stylesheet" href="./hmmd-search.css?v=20260729-4" />
   </head>
   <body>
     <div class="app-shell">
@@ -40,7 +40,7 @@
         <div class="sidebar-spacer"></div>
         <div class="demo-status">
           <span class="status-dot" aria-hidden="true"></span>
-          <div><strong>Chế độ demo</strong><small>Dữ liệu mô phỏng</small></div>
+          <div><strong id="datasetStatus">Dữ liệu đã nhập</strong><small id="datasetStatusDetail">2.378 ca · HMMD 2025</small></div>
         </div>
         <a class="back-atlas" href="./index.html"><span aria-hidden="true">←</span> Về Atlas GPB</a>
       </aside>
@@ -52,7 +52,7 @@
           <div class="top-actions">
             <button class="quiet-button" type="button" id="resetQuery">↻ <span>Làm mới</span></button>
             <button class="add-rule-button" type="button" id="openRuleDialog">＋ Thêm quy tắc</button>
-            <div class="user-badge" aria-label="Tài khoản demo">GPB</div>
+            <div class="user-badge" aria-label="Atlas GPB">GPB</div>
           </div>
         </header>
 
@@ -63,16 +63,16 @@
               <h1 id="pageTitle">Tra cứu theo dấu ấn HMMD</h1>
               <p>Chọn marker đã làm, đối chiếu nhanh các kiểu hình gần nhất và xem dấu ấn nên bổ sung.</p>
             </div>
-            <div class="dataset-summary" aria-label="Thông tin dữ liệu demo">
-              <div><strong id="diagnosisTotal">8</strong><span>quy tắc</span></div>
-              <div><strong id="markerTotal">30</strong><span>marker</span></div>
-              <div><strong id="lastUpdated">DEMO</strong><span>phiên bản</span></div>
+            <div class="dataset-summary" aria-label="Thông tin dữ liệu HMMD 2025">
+              <div><strong id="diagnosisTotal">2.378</strong><span>ca HMMD</span></div>
+              <div><strong id="markerTotal">240</strong><span>marker</span></div>
+              <div><strong id="lastUpdated">HMMD 2025</strong><span>phiên bản</span></div>
             </div>
           </section>
 
           <div class="notice" role="note">
             <span aria-hidden="true">i</span>
-            <p><strong>Bản mô phỏng giao diện và thuật toán.</strong> “Độ tương đồng” không phải xác suất chẩn đoán; luôn cần đối chiếu hình thái, lâm sàng và quy trình đã thẩm định.</p>
+            <p><strong>Dữ liệu HMMD 2025 đã được nhập và đối chiếu nguyên văn.</strong> “Độ tương đồng” là công cụ tra cứu, không phải xác suất chẩn đoán; luôn cần đối chiếu hình thái và lâm sàng.</p>
             <button type="button" id="dismissNotice" aria-label="Ẩn thông báo">×</button>
           </div>
 
@@ -86,17 +86,18 @@
               <div class="field-grid">
                 <label class="field-label" for="organSelect"><span>Cơ quan / vị trí lấy mẫu</span>
                   <select id="organSelect">
-                    <option value="all">Tất cả cơ quan</option>
-                    <option value="lung" selected>Phổi</option>
+                    <option value="all" selected>Tất cả cơ quan</option>
+                    <option value="lung">Phổi</option>
                     <option value="colorectal">Đại trực tràng</option>
                     <option value="breast">Vú</option>
                     <option value="thyroid">Tuyến giáp</option>
                     <option value="kidney">Thận</option>
                     <option value="liver">Gan</option>
+                    <option value="other">Khác / chưa phân nhóm</option>
                   </select>
                 </label>
                 <label class="field-label" for="caseCode"><span>Mã ca (không bắt buộc)</span>
-                  <input id="caseCode" type="text" value="HMMD-DEMO-042" autocomplete="off" />
+                  <input id="caseCode" type="text" value="" placeholder="HMMD-2025-135" autocomplete="off" />
                 </label>
               </div>
 
@@ -185,6 +186,7 @@
     </dialog>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="./hmmd-search.js"></script>
+    <script src="./hmmd-data.js?v=20260729-4"></script>
+    <script src="./hmmd-search.js?v=20260729-4"></script>
   </body>
 </html>
