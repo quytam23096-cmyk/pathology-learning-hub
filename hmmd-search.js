@@ -71,10 +71,6 @@ function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
 }
 
-function normalizeKey(value) {
-  return String(value || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[\s_-]+/g, "").replace(/[^a-z0-9/+]/g, "");
-}
-
 function markerKey(value) {
   return String(value || "")
     .trim()
@@ -259,6 +255,15 @@ function getDiagnosisStats() {
   return diagnosisStatsCache;
 }
 
+function renderDiagnosisSearchOptions() {
+  const options = new Map();
+  getDiagnosisStats().forEach((item) => options.set(`diagnosis:${normalizedText(item.name)}`, item.name));
+  getIcdEntries().forEach((item) => options.set(`icd:${item.code}:${normalizedText(item.name)}`, `${item.code} — ${item.name}`));
+  $("#diagnosisSearchOptions").innerHTML = [...options.values()]
+    .map((value) => `<option value="${escapeHtml(value)}"></option>`)
+    .join("");
+}
+
 function diagnosticTokens(value) {
   const stopWords = new Set(["u", "cua", "o", "tinh", "va", "hoac", "khac", "theo", "doi", "nghi", "den", "tu", "cac", "vi", "tri"]);
   return normalizedText(value).replace(/[^a-z0-9]+/g, " ").trim().split(/\s+/).filter((token) => token.length > 1 && !stopWords.has(token));
@@ -300,6 +305,39 @@ function getDiagnosisIcdSuggestions(name) {
   }
   diagnosisIcdCache.set(cacheKey, uniqueCodes);
   return uniqueCodes;
+}
+
+function extractIcdCode(value) {
+  const match = String(value || "").toUpperCase().match(/\b[A-Z]\d{2}(?:\.\d[A-Z0-9]?)?\b/);
+  return match ? match[0] : "";
+}
+
+function createClinicalDiagnosisQuery(query) {
+  const rawQuery = String(query || "").trim();
+  const textQuery = normalizedText(rawQuery).trim();
+  const queryCode = extractIcdCode(rawQuery);
+  const officialCodes = queryCode ? [] : getIcdEntries()
+    .filter((entry) => normalizedText(entry.name).includes(textQuery))
+    .map((entry) => String(entry.code).toUpperCase());
+  return { textQuery, queryCode, officialCodes };
+}
+
+function clinicalDiagnosisMatches(item, query) {
+  const { textQuery, queryCode, officialCodes } = query;
+  if (!textQuery) return true;
+
+  const diagnosisText = item.diagnosisText || item.nameEn || "";
+  if (normalizedText(diagnosisText).includes(textQuery)) return true;
+
+  const itemCodes = new Set([
+    item.icd10,
+    ...getDiagnosisIcdSuggestions(diagnosisText).map((match) => match.code),
+  ].filter(Boolean).map((code) => String(code).toUpperCase()));
+  if (queryCode) {
+    return [...itemCodes].some((code) => code === queryCode || code.startsWith(`${queryCode}.`) || queryCode.startsWith(`${code}.`));
+  }
+
+  return officialCodes.some((officialCode) => [...itemCodes].some((code) => code === officialCode || code.startsWith(`${officialCode}.`) || officialCode.startsWith(`${code}.`)));
 }
 
 function getOrganStats() {
@@ -462,24 +500,18 @@ function scoreDiagnosis(diagnosis) {
 }
 
 function runSearch({ announce = true } = {}) {
-  const caseCode = normalizeKey($("#caseCode").value);
-  if (!state.positive.length && !state.negative.length && !caseCode) {
-    showToast("Hãy thêm marker hoặc nhập mã ca cần tìm.");
-    $("#positiveInput").focus();
+  const diagnosisQuery = $("#diagnosisSearch").value.trim();
+  if (!state.positive.length && !state.negative.length && !diagnosisQuery) {
+    showToast("Hãy thêm marker hoặc nhập chẩn đoán lâm sàng / mã ICD-10.");
+    $("#diagnosisSearch").focus();
     return;
   }
-  const exactCaseMatches = caseCode
-    ? diagnoses.filter((item) => normalizeKey(item.caseCode || item.sourceNumber || item.id) === caseCode)
-    : [];
-  const candidates = caseCode
-    ? (exactCaseMatches.length
-        ? exactCaseMatches
-        : diagnoses.filter((item) => normalizeKey(item.caseCode || item.sourceNumber || item.id).includes(caseCode)))
-    : diagnoses;
+  const diagnosisFilter = createClinicalDiagnosisQuery(diagnosisQuery);
+  const candidates = diagnosisQuery ? diagnoses.filter((item) => clinicalDiagnosisMatches(item, diagnosisFilter)) : diagnoses;
   if (!candidates.length) {
     state.results = [];
     renderResults();
-    showToast("Không tìm thấy mã ca tương ứng trong kho dữ liệu.");
+    showToast("Không tìm thấy chẩn đoán lâm sàng hoặc mã ICD-10 tương ứng.");
     return;
   }
   state.results = candidates.map(scoreDiagnosis).sort((a, b) => b.score - a.score || a.conflicts.length - b.conflicts.length);
@@ -496,7 +528,7 @@ function renderResults() {
     ? `${results.length.toLocaleString("vi-VN")} kết quả · hiển thị ${visibleResults.length} ca phù hợp nhất`
     : "Sẵn sàng tra cứu";
   if (!results.length) {
-    $("#resultsList").innerHTML = `<div class="empty-results"><span>⌕</span><h3>Chưa có kết quả phù hợp</h3><p>Thử đổi cơ quan, bớt marker hoặc kiểm tra lại mã ca.</p></div>`;
+    $("#resultsList").innerHTML = `<div class="empty-results"><span>⌕</span><h3>Chưa có kết quả phù hợp</h3><p>Thử đổi cơ quan, bớt marker hoặc kiểm tra lại chẩn đoán lâm sàng / mã ICD-10.</p></div>`;
     return;
   }
   $("#resultsList").innerHTML = visibleResults.map((item, index) => resultTemplate(item, index)).join("");
@@ -510,7 +542,7 @@ function resultTemplate(item, index) {
     ...item.unknown.map((value) => `<span class="evidence unknown">? ${escapeHtml(value)}</span>`),
   ].join("");
   const locationLabel = organLabels[item.organ] || organLabels.other;
-  const recordMeta = `${locationLabel} · ${escapeHtml(item.caseCode || item.id)}`;
+  const recordMeta = locationLabel;
   const title = item.conclusionText || item.nameVi || item.diagnosisText || "Chưa ghi kết quả";
   const subtitle = `Chẩn đoán lâm sàng: ${escapeHtml(item.diagnosisText || item.nameEn || "Chưa ghi")}`;
   const sourceDetails = `<dl class="source-data">
@@ -522,7 +554,7 @@ function resultTemplate(item, index) {
       ${markerReportSummary(item) ? `<div><dt>Kết quả marker chuyên biệt</dt><dd>${escapeHtml(markerReportSummary(item))}</dd></div>` : ""}
       <div><dt>Ghi chú</dt><dd>${escapeHtml(item.notesText || item.notes || "—")}</dd></div>
     </dl>`;
-  const sourceLabel = item.local ? "CA NẠP TRÊN THIẾT BỊ" : `KHO DỮ LIỆU HMMD · CA ${escapeHtml(item.sourceNumber || item.id)}`;
+  const sourceLabel = item.local ? "CA NẠP TRÊN THIẾT BỊ" : "KHO DỮ LIỆU HMMD";
   return `<article class="result-item${index === 0 ? " is-top expanded" : ""}" data-result-id="${escapeHtml(item.id)}">
     <div class="result-main" tabindex="0" role="button" aria-expanded="${index === 0 ? "true" : "false"}">
       <div class="score-ring" style="--score:${item.score};--score-color:${scoreColor}"><strong>${item.score}<small>%</small></strong></div>
@@ -540,26 +572,16 @@ function resultTemplate(item, index) {
   </article>`;
 }
 
-function loadPreset() {
-  state.positive = ["CK AE1/AE3", "CK7"];
-  state.negative = ["CK5/6", "P63", "Napsin A", "TTF-1", "ALK"];
-  $("#organSelect").value = "lung";
-  $("#notesInput").value = "";
-  $("#caseCode").value = "";
-  renderQuery();
-  runSearch({ announce: false });
-}
-
 function resetQuery() {
   state.positive = [];
   state.negative = [];
   state.results = [];
   $("#organSelect").value = "all";
   $("#notesInput").value = "";
-  $("#caseCode").value = "";
+  $("#diagnosisSearch").value = "";
   renderQuery();
   $("#resultSummary").textContent = "Sẵn sàng tra cứu";
-  $("#resultsList").innerHTML = `<div class="empty-results"><span>⌕</span><h3>Bắt đầu từ một kiểu hình HMMD</h3><p>Thêm marker dương tính, âm tính hoặc nhập mã ca, sau đó bấm “Tra cứu chẩn đoán”.</p></div>`;
+  $("#resultsList").innerHTML = `<div class="empty-results"><span>⌕</span><h3>Bắt đầu từ một kiểu hình HMMD</h3><p>Thêm marker dương tính, âm tính hoặc nhập chẩn đoán lâm sàng / mã ICD-10, sau đó bấm “Tra cứu chẩn đoán”.</p></div>`;
 }
 
 function splitMarkerInput(value) {
@@ -609,6 +631,7 @@ function saveCase(event) {
   saveLocalCases();
   invalidateStats();
   updateDatasetSummary();
+  renderDiagnosisSearchOptions();
   form.reset();
   $("#caseDialog").close();
   showToast(`Đã nạp ca “${newCase.caseCode}” trên thiết bị này.`);
@@ -659,7 +682,7 @@ function renderDataExplorer() {
   $$('[data-explorer-tab]').forEach((button) => button.classList.toggle("active", button.dataset.explorerTab === view));
   const search = $("#dataSearch").value.trim().toLocaleLowerCase("vi");
   $(".data-dialog-tools").classList.toggle("hidden", view === "organs" || view === "reports");
-  $("#dataSearch").placeholder = view === "diagnoses" ? "Nhập mã ICD-10 hoặc chẩn đoán lâm sàng…" : view === "results" ? "Tìm mã ca, chẩn đoán, marker hoặc kết quả…" : "Nhập tên marker hoặc biến thể nguồn…";
+  $("#dataSearch").placeholder = view === "diagnoses" ? "Nhập mã ICD-10 hoặc chẩn đoán lâm sàng…" : view === "results" ? "Tìm chẩn đoán, marker hoặc kết quả…" : "Nhập tên marker hoặc biến thể nguồn…";
 
   if (view === "markers") {
     const rows = getMarkerStats().filter((item) => `${item.name} ${(item.aliases || []).join(" ")}`.toLocaleLowerCase("vi").includes(search));
@@ -683,9 +706,9 @@ function renderDataExplorer() {
   }
 
   if (view === "results") {
-    const rows = diagnoses.filter((item) => !search || normalizedText([item.caseCode, item.diagnosisText, item.conclusionText, item.positiveText, item.negativeText, item.notesText, markerReportSummary(item)].join(" ")).includes(normalizedText(search)));
+    const rows = diagnoses.filter((item) => !search || normalizedText([item.diagnosisText, item.conclusionText, item.positiveText, item.negativeText, item.notesText, markerReportSummary(item)].join(" ")).includes(normalizedText(search)));
     const visible = rows.slice(0, MAX_EXPLORER_ROWS);
-    $("#dataDialogContent").innerHTML = `<div class="data-list-summary"><strong>${rows.length.toLocaleString("vi-VN")} kết quả nhuộm HMMD</strong><span>Hiển thị nguyên văn theo từng ca; không diễn giải lại nội dung nguồn</span></div><div class="result-record-list">${visible.map((item) => `<article class="result-record-card"><header><div><code>${escapeHtml(item.caseCode || item.id)}</code><strong>${escapeHtml(item.diagnosisText || item.nameEn || "Chưa ghi chẩn đoán lâm sàng")}</strong></div><span>${escapeHtml(organLabels[item.organ] || organLabels.other)}</span></header><dl><div><dt>Kết quả nhuộm HMMD</dt><dd>${escapeHtml(item.conclusionText || item.nameVi || "—")}</dd></div><div><dt>Marker dương tính</dt><dd>${escapeHtml(item.positiveText || (item.rawPositive || []).join(", ") || "—")}</dd></div><div><dt>Marker âm tính</dt><dd>${escapeHtml(item.negativeText || (item.rawNegative || []).join(", ") || "—")}</dd></div>${markerReportSummary(item) ? `<div class="special-marker-result"><dt>Kết quả marker chuyên biệt</dt><dd>${escapeHtml(markerReportSummary(item))}</dd></div>` : ""}<div><dt>Ghi chú</dt><dd>${escapeHtml(item.notesText || item.notes || "—")}</dd></div></dl></article>`).join("")}</div>${rows.length > visible.length ? `<p class="data-limit-note">Đang hiển thị ${visible.length} ca. Hãy tìm theo mã ca, chẩn đoán, marker hoặc nội dung kết quả để thu hẹp.</p>` : ""}`;
+    $("#dataDialogContent").innerHTML = `<div class="data-list-summary"><strong>${rows.length.toLocaleString("vi-VN")} kết quả nhuộm HMMD</strong><span>Hiển thị nguyên văn theo từng ca; không diễn giải lại nội dung nguồn</span></div><div class="result-record-list">${visible.map((item) => `<article class="result-record-card"><header><div><strong>${escapeHtml(item.diagnosisText || item.nameEn || "Chưa ghi chẩn đoán lâm sàng")}</strong></div><span>${escapeHtml(organLabels[item.organ] || organLabels.other)}</span></header><dl><div><dt>Kết quả nhuộm HMMD</dt><dd>${escapeHtml(item.conclusionText || item.nameVi || "—")}</dd></div><div><dt>Marker dương tính</dt><dd>${escapeHtml(item.positiveText || (item.rawPositive || []).join(", ") || "—")}</dd></div><div><dt>Marker âm tính</dt><dd>${escapeHtml(item.negativeText || (item.rawNegative || []).join(", ") || "—")}</dd></div>${markerReportSummary(item) ? `<div class="special-marker-result"><dt>Kết quả marker chuyên biệt</dt><dd>${escapeHtml(markerReportSummary(item))}</dd></div>` : ""}<div><dt>Ghi chú</dt><dd>${escapeHtml(item.notesText || item.notes || "—")}</dd></div></dl></article>`).join("")}</div>${rows.length > visible.length ? `<p class="data-limit-note">Đang hiển thị ${visible.length} ca. Hãy tìm theo chẩn đoán, marker hoặc nội dung kết quả để thu hẹp.</p>` : ""}`;
     return;
   }
 
@@ -798,7 +821,11 @@ $$('[data-marker-input]').forEach((input) => {
 });
 
 $("#runSearch").addEventListener("click", () => runSearch());
-$("#loadPreset").addEventListener("click", loadPreset);
+$("#diagnosisSearch").addEventListener("keydown", (event) => {
+  if (event.key !== "Enter") return;
+  event.preventDefault();
+  runSearch();
+});
 $("#resetQuery").addEventListener("click", resetQuery);
 $("#openCaseDialog").addEventListener("click", openCaseDialog);
 $("#caseForm").addEventListener("submit", saveCase);
@@ -825,5 +852,6 @@ document.addEventListener("keydown", (event) => {
 });
 
 updateDatasetSummary();
+renderDiagnosisSearchOptions();
 renderQuery();
 resetQuery();

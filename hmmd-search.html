@@ -19,7 +19,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap"
     />
-    <link rel="stylesheet" href="./hmmd-search.css?v=20260729-8" />
+    <link rel="stylesheet" href="./hmmd-search.css?v=20260729-9" />
   </head>
   <body>
     <div class="app-shell">
@@ -76,8 +76,7 @@
           <div class="content-grid">
             <section class="query-card" aria-labelledby="queryTitle">
               <div class="card-heading">
-                <div><span class="step-number">01</span><div><h2 id="queryTitle">Nhập kiểu hình</h2><p>Chọn cơ quan, mã ca và marker</p></div></div>
-                <button class="text-button" type="button" id="loadPreset">Nạp ca mẫu</button>
+                <div><span class="step-number">01</span><div><h2 id="queryTitle">Nhập kiểu hình</h2><p>Chọn cơ quan, chẩn đoán lâm sàng / ICD-10 và marker</p></div></div>
               </div>
 
               <div class="field-grid">
@@ -93,8 +92,9 @@
                     <option value="other">Khác / chưa phân nhóm</option>
                   </select>
                 </label>
-                <label class="field-label" for="caseCode"><span>Mã ca (không bắt buộc)</span>
-                  <input id="caseCode" type="text" value="" placeholder="Nhập mã ca" autocomplete="off" />
+                <label class="field-label" for="diagnosisSearch"><span>Chẩn đoán lâm sàng / ICD-10</span>
+                  <input id="diagnosisSearch" type="search" list="diagnosisSearchOptions" placeholder="Nhập chẩn đoán hoặc mã ICD-10" autocomplete="off" />
+                  <datalist id="diagnosisSearchOptions"></datalist>
                 </label>
               </div>
 
@@ -212,8 +212,8 @@
     </dialog>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="./hmmd-data.js?v=20260729-8"></script>
-    <script src="./icd10-tt06-data.js?v=20260729-8"></script>
-    <script src="./hmmd-search.js?v=20260729-8"></script>
+    <script src="./hmmd-data.js?v=20260729-9"></script>
+    <script src="./icd10-tt06-data.js?v=20260729-9"></script>
+    <script src="./hmmd-search.js?v=20260729-9"></script>
   </body>
 </html>
