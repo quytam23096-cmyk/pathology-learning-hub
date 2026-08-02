@@ -5,6 +5,7 @@
     "build:css": "tailwindcss -i ./tailwind-input.css -o ./tailwind.css --minify",
     "audit:auth": "node ./scripts/audit-auth.mjs",
     "audit:hmmd": "node ./scripts/audit-hmmd-data.mjs",
+    "audit:hmmd-organs": "node ./scripts/audit-hmmd-organ-mapping.mjs",
     "audit:medical-vi": "node ./scripts/audit-medical-vi.js",
     "audit:search": "node ./scripts/audit-search-assistant.js",
     "audit:morphology": "node ./scripts/audit-morphology-matrix.js",
