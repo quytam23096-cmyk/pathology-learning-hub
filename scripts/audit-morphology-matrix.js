@@ -71,6 +71,21 @@ const invariants = [
   ["amyloid identifies medullary thyroid carcinoma", matchingIds(["amyloid"]).includes("thyroid-medullary")],
   ["hyaline material excludes medullary thyroid carcinoma", !matchingIds(["hyaline-amyloid"]).includes("thyroid-medullary")],
   ["combined clues are intersected", !matchingIds(["lepidic", "small-cell"]).length],
+  ["Vietnamese morphology phrase maps to small cell carcinoma", assistant.rankCases(cases, {
+    morphologyQuery: "tế bào nhỏ, khuôn nhân, hoại tử",
+    allowedChapters: ["lung"],
+    chapterNameFor: (id) => chapterNames.get(id) || id,
+  })[0]?.item.id === "lung-small-cell"],
+  ["English morphology phrase maps to small cell carcinoma", assistant.rankCases(cases, {
+    morphologyQuery: "small cells with nuclear molding and necrosis",
+    allowedChapters: ["lung"],
+    chapterNameFor: (id) => chapterNames.get(id) || id,
+  })[0]?.item.id === "lung-small-cell"],
+  ["typed lepidic morphology still excludes thyroid", !assistant.rankCases(cases, {
+    morphologyQuery: "lepidic growth along alveolar walls",
+    allowedChapters: ["thyroid"],
+    chapterNameFor: (id) => chapterNames.get(id) || id,
+  }).length],
 ];
 
 for (const [label, passed] of invariants) {

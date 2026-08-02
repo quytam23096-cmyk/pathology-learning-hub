@@ -170,9 +170,11 @@
                 <div id="assistantClueGroups" class="assistant-clue-groups" aria-label="Nhóm đặc điểm hình thái"></div>
                 <div id="assistantClues" class="assistant-clues"></div>
               </div>
-              <label for="assistantMarker">
-                <span>3. HMMD / marker đã có</span>
-                <input id="assistantMarker" type="search" placeholder="VD: TTF-1, p40, GATA3, ER..." autocomplete="off" />
+              <label for="assistantMorphologyQuery" class="assistant-morphology-field">
+                <span>3. Mô tả hình thái bằng tiếng Việt hoặc tiếng Anh</span>
+                <input id="assistantMorphologyQuery" type="search" placeholder="VD: tế bào nhỏ, khuôn nhân, hoại tử / small cells, nuclear molding, necrosis..." autocomplete="off" />
+                <small>Nhập những gì đang thấy trên tiêu bản. Hệ thống nhận diện thuật ngữ song ngữ và đối chiếu mục WHO/IARC có liên kết trực tiếp.</small>
+                <div id="assistantMorphologyMatches" class="assistant-morphology-matches" aria-live="polite"></div>
               </label>
             </div>
             <div class="assistant-actions">
@@ -491,8 +493,8 @@
     <script src="./atlas-expansion.js?v=20260724-specialist-expansion-1"></script>
     <script src="./icdo-normalization.js?v=20260729-icdo4-audit-1"></script>
     <script src="./medical-vi.js?v=20260729-language-audit-1"></script>
-    <script src="./search-assistant.js?v=20260802-morphology-audit-1"></script>
-    <script src="./app.js?v=20260802-morphology-audit-1"></script>
+    <script src="./search-assistant.js?v=20260802-morphology-text-2"></script>
+    <script src="./app.js?v=20260802-morphology-text-2"></script>
     <script src="./ui.js"></script>
     <script src="./hmmd-integration.js?v=20260728-1"></script>
   </body>

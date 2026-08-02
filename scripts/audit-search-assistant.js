@@ -140,6 +140,11 @@ const checks = [
   ["Sụn does not match sừng", rank({ clueIds: ["chondroid-osteoid"] }).some(({ item }) => item.id === "skin-scc"), false],
   ["Osteoid identifies osteosarcoma", rank({ organ: "soft", clueIds: ["chondroid-osteoid"] })[0]?.item.id, "soft-osteosarcoma"],
   ["Multiple clues use intersection", rank({ organ: "lung", clueIds: ["lepidic", "small-cell"] }).length, 0],
+  ["Vietnamese free morphology query", rank({ organ: "lung", morphologyQuery: "tế bào nhỏ, khuôn nhân, hoại tử" })[0]?.item.id, "lung-small-cell"],
+  ["English free morphology query", rank({ organ: "lung", morphologyQuery: "small cells with nuclear molding and necrosis" })[0]?.item.id, "lung-small-cell"],
+  ["Free lepidic query is absent from thyroid", rank({ organ: "thyroid", morphologyQuery: "mọc dọc vách phế nang / lepidic" }).length, 0],
+  ["Free keratin pearl query identifies SCC", rank({ organ: "skin", morphologyQuery: "cầu sừng / keratin pearl" })[0]?.item.id, "skin-scc"],
+  ["Free capsular invasion query identifies FTC", rank({ organ: "thyroid", morphologyQuery: "xâm nhập bao của u dạng nang" })[0]?.item.id, "thyroid-ftc"],
 ];
 
 const failures = checks.filter(([, actual, expected]) => actual !== expected);
@@ -152,7 +157,7 @@ if (assistant.morphologyClues.some((clue) => !clue.group || !clue.sourceTerms?.l
 if (assistant.morphologyClues.some((clue) => !Array.isArray(clue.caseIds))) {
   coverageFailures.push("Morphology clue missing curated case matrix");
 }
-if (assistant.morphologyAuditVersion !== "2026-08-02") {
+if (!assistant.morphologyAuditVersion?.startsWith("2026-08-02")) {
   coverageFailures.push("Morphology audit version is missing or stale");
 }
 if (new Set(assistant.organOptions.map((option) => option.id)).size !== assistant.organOptions.length) {

@@ -1,5 +1,4 @@
 const PO = "https://www.pathologyoutlines.com";
-const PO_SEARCH = "https://www.google.com/cse?cx=partner-pub-3521518608648020%3A8640627894&q=";
 const WCT = "https://whobluebooks.iarc.fr/structures";
 const IARC = "https://tumourclassification.iarc.who.int";
 const CAP = "https://www.cap.org/protocols-and-guidelines/cancer-protocols/current-cancer-protocols/";
@@ -2164,7 +2163,7 @@ let state = {
   assistantOrgan: "all",
   assistantClueGroup: "Kiến trúc",
   assistantClues: [],
-  assistantMarker: "",
+  assistantMorphologyQuery: "",
   assistantHasRun: false,
 };
 
@@ -2178,7 +2177,8 @@ const els = {
   assistantOrgan: document.getElementById("assistantOrgan"),
   assistantClueGroups: document.getElementById("assistantClueGroups"),
   assistantClues: document.getElementById("assistantClues"),
-  assistantMarker: document.getElementById("assistantMarker"),
+  assistantMorphologyQuery: document.getElementById("assistantMorphologyQuery"),
+  assistantMorphologyMatches: document.getElementById("assistantMorphologyMatches"),
   runAssistant: document.getElementById("runAssistant"),
   resetAssistant: document.getElementById("resetAssistant"),
   assistantResults: document.getElementById("assistantResults"),
@@ -2613,21 +2613,6 @@ function imageSearchLinkFor(item) {
   return `https://commons.wikimedia.org/w/index.php?search=${encodeURIComponent(`${item.english} histopathology`)}&title=Special:MediaSearch&type=image`;
 }
 
-function webPathologyUrlFor(item) {
-  if (item.webPathologyUrl) return item.webPathologyUrl;
-  const exactEntry = exactWebPathologyEntryFor(item);
-  if (exactEntry) return exactEntry.url;
-  return `https://www.webpathology.com/search-result?query=${encodeURIComponent(item.english)}`;
-}
-
-function pathologyOutlinesSearchUrl(term) {
-  return `${PO_SEARCH}${encodeURIComponent(term)}`;
-}
-
-function webPathologyEntryUrl(entry) {
-  return `https://www.webpathology.com/search-result?query=${encodeURIComponent(entry.nameEn)}`;
-}
-
 function caseSearchFields(item) {
   return searchFields([
     item.diagnosis,
@@ -2767,8 +2752,8 @@ function officialLinks(item) {
   const directWebPathology = item.webPathologyUrl || exactWebPathologyEntryFor(item)?.url;
   const links = [
     { label: whoLinkLabel(whoMetadata), url: directWhoLink || chapterStandard?.url || chapter.who },
-    { label: exactPathologyOutlines ? "PathologyOutlines · đúng chủ đề" : "PathologyOutlines · tìm đúng tên chẩn đoán", url: exactPathologyOutlines || pathologyOutlinesSearchUrl(item.english) },
-    { label: directWebPathology ? "WebPathology · gallery đúng tên" : "WebPathology · tìm đúng tên chẩn đoán", url: directWebPathology || webPathologyUrlFor(item) },
+    ...(exactPathologyOutlines ? [{ label: "PathologyOutlines · đúng chủ đề", url: exactPathologyOutlines }] : []),
+    ...(directWebPathology ? [{ label: "WebPathology · gallery đúng tên", url: directWebPathology }] : []),
   ];
   if (item.icdo?.source) {
     links.push({ label: "ICD-O-4 · bảng hình thái chính thức", url: item.icdo.source });
@@ -2856,7 +2841,7 @@ function renderAssistantControls() {
     `).join("")}
   `;
   els.assistantOrgan.value = state.assistantOrgan;
-  els.assistantMarker.value = state.assistantMarker;
+  els.assistantMorphologyQuery.value = state.assistantMorphologyQuery;
 
   const clueGroups = [...new Set(searchAssistant.morphologyClues.map((clue) => clue.group))];
   if (!clueGroups.includes(state.assistantClueGroup)) state.assistantClueGroup = clueGroups[0] || "";
@@ -2900,6 +2885,33 @@ function renderAssistantControls() {
       renderAssistantControls();
     });
   });
+  renderMorphologyQueryMatches();
+}
+
+function inferredAssistantClues() {
+  return typeof searchAssistant.matchMorphologyClues === "function"
+    ? searchAssistant.matchMorphologyClues(state.assistantMorphologyQuery)
+    : [];
+}
+
+function effectiveAssistantClueIds() {
+  return [...new Set([
+    ...state.assistantClues,
+    ...inferredAssistantClues().map((clue) => clue.id),
+  ])];
+}
+
+function renderMorphologyQueryMatches() {
+  if (!els.assistantMorphologyMatches) return;
+  const query = state.assistantMorphologyQuery.trim();
+  if (!query) {
+    els.assistantMorphologyMatches.innerHTML = "";
+    return;
+  }
+  const matches = inferredAssistantClues().slice(0, 8);
+  els.assistantMorphologyMatches.innerHTML = matches.length
+    ? matches.map((clue) => `<span class="assistant-morphology-match">${escapeHtml(clue.label)}</span>`).join("")
+    : `<span class="assistant-morphology-unmatched">Chưa nhận diện thành cụm chuẩn; hệ thống vẫn tìm trong mô tả vi thể song ngữ.</span>`;
 }
 
 function selectedAssistantOrgan() {
@@ -2912,8 +2924,8 @@ function assistantRankedCases() {
   return searchAssistant.rankCases(cases, {
     allowedChapters: organ?.chapters || [],
     organTerms: organ?.terms || [],
-    clueIds: state.assistantClues,
-    marker: state.assistantMarker,
+    clueIds: effectiveAssistantClueIds(),
+    morphologyQuery: state.assistantMorphologyQuery,
     chapterNameFor: (id) => chapterById(id).name,
   });
 }
@@ -2931,9 +2943,13 @@ function openAssistantCase(item) {
 }
 
 function selectedAssistantSourceTerms() {
-  return state.assistantClues.flatMap((id) => (
+  const clueTerms = effectiveAssistantClueIds().flatMap((id) => (
     searchAssistant.morphologyClues.find((clue) => clue.id === id)?.sourceTerms || []
   ));
+  const queryTerms = expandBilingualQueries(state.assistantMorphologyQuery)
+    .map((term) => term.trim())
+    .filter((term) => term.length >= 3);
+  return [...new Set([...clueTerms, ...queryTerms])];
 }
 
 function sourceFieldsMatchTerms(fields, terms) {
@@ -3021,10 +3037,10 @@ function renderAssistantResults() {
 
   const hasCriteria = state.assistantOrgan !== "all"
     || state.assistantClues.length > 0
-    || Boolean(normalize(state.assistantMarker));
+    || Boolean(normalize(state.assistantMorphologyQuery));
   if (!hasCriteria) {
     els.assistantResults.innerHTML = `
-      <p class="assistant-empty">Chọn ít nhất một cơ quan, đặc điểm hình thái hoặc marker.</p>
+      <p class="assistant-empty">Chọn ít nhất một cơ quan, đặc điểm hình thái hoặc nhập mô tả vi thể.</p>
     `;
     return;
   }
@@ -3042,7 +3058,7 @@ function renderAssistantResults() {
     els.assistantResults.innerHTML = `
       <div class="assistant-result-heading">
         <strong>Chưa có kết quả phù hợp</strong>
-        <span>Giảm bớt tiêu chí, chọn nhóm hình thái khác hoặc kiểm tra lại cách viết marker.</span>
+        <span>Giảm bớt tiêu chí, chọn nhóm hình thái khác hoặc thử mô tả ngắn hơn bằng tiếng Việt/tiếng Anh.</span>
       </div>
     `;
     return;
@@ -3053,20 +3069,30 @@ function renderAssistantResults() {
       <section class="assistant-result-section">
         <div class="assistant-result-heading">
           <strong>${visible.length} hồ sơ atlas được ưu tiên</strong>
-          <span>Đã có vi thể, điểm ghi nhớ, marker và nguồn đối chiếu.</span>
+          <span>Đã có vi thể, điểm ghi nhớ và liên kết nguồn trực tiếp để đối chiếu.</span>
         </div>
         <div class="assistant-result-grid">
-          ${visible.map(({ item, reasons }) => `
-            <article class="assistant-result-card">
-              <span>${escapeHtml(chapterById(item.chapter).name)}</span>
-              <h3>${escapeHtml(item.diagnosis)}</h3>
-              <p lang="en">${escapeHtml(item.english)}</p>
-              <div class="assistant-reasons">
-                ${reasons.map((reason) => `<em>${escapeHtml(reason)}</em>`).join("")}
-              </div>
-              <button type="button" data-assistant-case="${escapeHtml(item.id)}">Mở hồ sơ đối chiếu <span aria-hidden="true">→</span></button>
-            </article>
-          `).join("")}
+          ${visible.map(({ item, reasons }) => {
+            const directWhoUrl = verifiedWhoMetadata[item.id]?.url || "";
+            const directPoUrl = verifiedTopicLinks[item.id] || "";
+            return `
+              <article class="assistant-result-card">
+                <span>${escapeHtml(chapterById(item.chapter).name)}</span>
+                <h3>${escapeHtml(item.diagnosis)}</h3>
+                <p lang="en">${escapeHtml(item.english)}</p>
+                <div class="assistant-reasons">
+                  ${reasons.map((reason) => `<em>${escapeHtml(reason)}</em>`).join("")}
+                </div>
+                ${(directWhoUrl || directPoUrl) ? `
+                  <div class="assistant-result-links">
+                    ${directWhoUrl ? `<a href="${escapeHtml(directWhoUrl)}" target="_blank" rel="noreferrer">WHO đúng mục ↗</a>` : ""}
+                    ${directPoUrl ? `<a href="${escapeHtml(directPoUrl)}" target="_blank" rel="noreferrer">PathologyOutlines đúng chủ đề ↗</a>` : ""}
+                  </div>
+                ` : ""}
+                <button type="button" data-assistant-case="${escapeHtml(item.id)}">Mở hồ sơ đối chiếu <span aria-hidden="true">→</span></button>
+              </article>
+            `;
+          }).join("")}
         </div>
       </section>
     ` : `
@@ -3137,7 +3163,6 @@ function renderChapterPanel() {
   const whoSourceResults = whoEntriesForAtlasOrgan(organ);
   const webPathologySourceResults = webPathologyEntriesForAtlasOrgan(organ);
   const firstWhoVolume = whoVolumeMap.get(organ?.whoVolumes?.[0]);
-  const pathologyOutlinesTerm = organ?.terms?.[0] || "pathology";
   const organIntro = organ?.id === "all"
     ? "Xem toàn bộ atlas, sau đó lọc theo vị trí giải phẫu, kiểu cấu trúc hoặc từ khóa song ngữ."
     : `Các hồ sơ dưới đây chỉ được xếp vào ${organ.label} khi tên chẩn đoán, vị trí hoặc mô tả nguồn khớp với cơ quan. Ảnh đại diện luôn lấy từ một hồ sơ đã xác minh trong chính nhóm này.`;
@@ -3178,7 +3203,7 @@ function renderChapterPanel() {
       ${whoSourceResults.length ? `<button type="button" data-atlas-who-source>Tra ${whoSourceResults.length} mục WHO trong kho</button>` : ""}
       ${webPathologySourceResults.length ? `<button type="button" data-atlas-webpath-source>Tra ${webPathologySourceResults.length} gallery WebPathology</button>` : ""}
       <a href="${escapeHtml(firstWhoVolume?.sourceUrl || contextChapter.who)}" target="_blank" rel="noreferrer">Mở quyển WHO liên quan ↗</a>
-      <a href="${escapeHtml(pathologyOutlinesSearchUrl(pathologyOutlinesTerm))}" target="_blank" rel="noreferrer">Tìm tại PathologyOutlines ↗</a>
+      <a href="${escapeHtml(contextChapter.po || PO)}" target="_blank" rel="noreferrer">Mở chương PathologyOutlines ↗</a>
     </div>
   `;
 
@@ -3530,8 +3555,8 @@ function renderWhoLibrary() {
           <p class="who-entry-citation">WHO Online · Book ${escapeHtml(entry.bookId)} · Chapter ${escapeHtml(entry.chapterId)}</p>
           <div class="who-entry-actions">
             <a href="${escapeHtml(exactWhoUrl || volume.sourceUrl || whoCatalog.source)}" target="_blank" rel="noreferrer">${exactWhoUrl ? "Mở đúng mục WHO" : "Mở mục lục quyển WHO"} ↗</a>
-            <a href="${escapeHtml(exactPoUrl || pathologyOutlinesSearchUrl(entry.nameEn))}" target="_blank" rel="noreferrer">${exactPoUrl ? "PathologyOutlines đúng chủ đề" : "Tìm trên PathologyOutlines"} ↗</a>
-            <a href="${escapeHtml(exactWebPathologyUrl || (linkedCase ? webPathologyUrlFor(linkedCase) : webPathologyEntryUrl(entry)))}" target="_blank" rel="noreferrer">${exactWebPathologyUrl ? "WebPathology: gallery đúng tên" : "WebPathology: tìm đúng tên"} ↗</a>
+            ${exactPoUrl ? `<a href="${escapeHtml(exactPoUrl)}" target="_blank" rel="noreferrer">PathologyOutlines đúng chủ đề ↗</a>` : ""}
+            ${exactWebPathologyUrl ? `<a href="${escapeHtml(exactWebPathologyUrl)}" target="_blank" rel="noreferrer">WebPathology: gallery đúng tên ↗</a>` : ""}
             ${linkedCase ? `<button type="button" data-who-case="${escapeHtml(linkedCase.id)}">Mở thẻ học song ngữ</button>` : ""}
           </div>
         </article>
@@ -3852,11 +3877,12 @@ function bindEvents() {
     state.assistantOrgan = els.assistantOrgan.value;
   });
 
-  els.assistantMarker.addEventListener("input", () => {
-    state.assistantMarker = els.assistantMarker.value;
+  els.assistantMorphologyQuery.addEventListener("input", () => {
+    state.assistantMorphologyQuery = els.assistantMorphologyQuery.value;
+    renderMorphologyQueryMatches();
   });
 
-  els.assistantMarker.addEventListener("keydown", (event) => {
+  els.assistantMorphologyQuery.addEventListener("keydown", (event) => {
     if (event.key !== "Enter") return;
     event.preventDefault();
     state.assistantHasRun = true;
@@ -3865,7 +3891,7 @@ function bindEvents() {
 
   els.runAssistant.addEventListener("click", () => {
     state.assistantOrgan = els.assistantOrgan.value;
-    state.assistantMarker = els.assistantMarker.value;
+    state.assistantMorphologyQuery = els.assistantMorphologyQuery.value;
     state.assistantHasRun = true;
     renderAssistantResults();
   });
@@ -3874,9 +3900,9 @@ function bindEvents() {
     state.assistantOrgan = "all";
     state.assistantClueGroup = "Kiến trúc";
     state.assistantClues = [];
-    state.assistantMarker = "";
+    state.assistantMorphologyQuery = "";
     state.assistantHasRun = false;
-    els.assistantMarker.value = "";
+    els.assistantMorphologyQuery.value = "";
     renderAssistantControls();
     renderAssistantResults();
   });

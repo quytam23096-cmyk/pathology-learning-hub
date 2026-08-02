@@ -7,7 +7,8 @@
     "audit:hmmd": "node ./scripts/audit-hmmd-data.mjs",
     "audit:medical-vi": "node ./scripts/audit-medical-vi.js",
     "audit:search": "node ./scripts/audit-search-assistant.js",
-    "audit:morphology": "node ./scripts/audit-morphology-matrix.js"
+    "audit:morphology": "node ./scripts/audit-morphology-matrix.js",
+    "audit:sources": "node ./scripts/audit-source-links.js"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.10",

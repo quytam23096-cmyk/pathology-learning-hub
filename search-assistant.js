@@ -573,6 +573,184 @@
     },
   );
 
+  morphologyClues.push(
+    {
+      id: "keratin-pearl",
+      label: "Cầu sừng / keratin pearl",
+      group: "Dấu hiệu gợi ý",
+      terms: ["cau sung", "ngoc sung", "keratin pearl", "keratinization"],
+      sourceTerms: ["squamous cell carcinoma", "keratinizing squamous"],
+      caseIds: ["lung-squamous", "skin-scc", "cervix-scc", "headneck-oral-scc", "uppergi-esophagus-scc"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "papillary-nuclear-features",
+      label: "Rãnh nhân / thể vùi giả trong nhân",
+      group: "Dấu hiệu gợi ý",
+      terms: ["ranh nhan", "the vui trong nhan", "the vui gia trong nhan", "nuclear groove", "intranuclear cytoplasmic pseudoinclusion"],
+      sourceTerms: ["papillary thyroid carcinoma", "NIFTP"],
+      caseIds: ["thyroid-ptc", "thyroid-niftp", "thyroid-tall-cell-ptc"],
+      allowedChapters: ["thyroid"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "comedonecrosis",
+      label: "Hoại tử kiểu comedo",
+      group: "Dấu hiệu gợi ý",
+      terms: ["hoai tu comedo", "hoai tu trung tam ong", "comedonecrosis", "comedo necrosis"],
+      sourceTerms: ["ductal carcinoma in situ", "comedo DCIS"],
+      caseIds: ["breast-dcis"],
+      allowedChapters: ["breast"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "leaf-like",
+      label: "Cấu trúc dạng lá / leaf-like",
+      group: "Dấu hiệu gợi ý",
+      terms: ["cau truc dang la", "dang la", "leaf like", "leaf-like architecture"],
+      sourceTerms: ["phyllodes tumour", "phyllodes tumor"],
+      caseIds: ["breast-phyllodes"],
+      allowedChapters: ["breast"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "biphasic",
+      label: "Hai thành phần biểu mô - mô đệm",
+      group: "Dấu hiệu gợi ý",
+      terms: ["hai thanh phan", "bieu mo mo dem", "biphasic", "epithelial stromal"],
+      sourceTerms: ["biphasic", "phyllodes tumour", "synovial sarcoma", "pleomorphic adenoma"],
+      caseIds: ["breast-phyllodes", "soft-synovial-sarcoma", "headneck-pleomorphic"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "chicken-wire",
+      label: "Mạng mao mạch kiểu lưới gà",
+      group: "Dấu hiệu gợi ý",
+      terms: ["mang mao mach luoi ga", "mach luoi ga", "chicken wire capillary", "chicken-wire vasculature"],
+      sourceTerms: ["oligodendroglioma"],
+      caseIds: ["cns-oligodendroglioma-idh-codeleted"],
+      allowedChapters: ["cns"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "pseudopalisading-necrosis",
+      label: "Giả hàng rào quanh hoại tử",
+      group: "Dấu hiệu gợi ý",
+      terms: ["gia hang rao quanh hoai tu", "te bao xep quanh hoai tu", "pseudopalisading necrosis"],
+      sourceTerms: ["glioblastoma", "pseudopalisading necrosis"],
+      caseIds: ["cns-glioblastoma"],
+      allowedChapters: ["cns"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "verocay-bodies",
+      label: "Thể Verocay / vùng Antoni A-B",
+      group: "Dấu hiệu gợi ý",
+      terms: ["the verocay", "vung antoni a", "vung antoni b", "verocay body", "antoni a", "antoni b"],
+      sourceTerms: ["schwannoma"],
+      caseIds: ["cns-schwannoma"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "reed-sternberg",
+      label: "Tế bào Reed-Sternberg",
+      group: "Dấu hiệu gợi ý",
+      terms: ["te bao reed sternberg", "nhan mat cu", "reed sternberg", "owl eye nucleolus"],
+      sourceTerms: ["classic Hodgkin lymphoma", "Hodgkin lymphoma"],
+      caseIds: ["heme-hodgkin"],
+      allowedChapters: ["heme"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "lymphoepithelial",
+      label: "Mô hình lympho-biểu mô",
+      group: "Dấu hiệu gợi ý",
+      terms: ["lympho bieu mo", "dam bieu mo tren nen lympho", "lymphoepithelial", "lymphoepithelioma like"],
+      sourceTerms: ["nasopharyngeal carcinoma", "lymphoepithelial carcinoma", "HPV-associated squamous cell carcinoma"],
+      caseIds: ["headneck-nasopharyngeal", "headneck-oropharynx-scc-hpv"],
+      allowedChapters: ["headneck"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "dirty-necrosis",
+      label: "Hoại tử bẩn trong lòng tuyến",
+      group: "Dấu hiệu gợi ý",
+      terms: ["hoai tu ban", "hoai tu trong long tuyen", "dirty necrosis", "luminal dirty necrosis"],
+      sourceTerms: ["colorectal adenocarcinoma", "colon adenocarcinoma"],
+      caseIds: ["colon-adeno"],
+      allowedChapters: ["colon"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "cigar-nuclei",
+      label: "Nhân hình điếu xì gà",
+      group: "Dấu hiệu gợi ý",
+      terms: ["nhan hinh dieu xi ga", "nhan hai dau tu", "cigar shaped nuclei", "blunt ended nuclei"],
+      sourceTerms: ["leiomyoma", "leiomyosarcoma"],
+      caseIds: ["gyn-leiomyoma", "gyn-leiomyosarcoma"],
+      allowedChapters: ["gyn"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "lace-like-osteoid",
+      label: "Chất dạng xương dạng ren",
+      group: "Dấu hiệu gợi ý",
+      terms: ["chat dang xuong dang ren", "osteoid dang ren", "lace like osteoid", "malignant osteoid"],
+      sourceTerms: ["osteosarcoma", "malignant osteoid"],
+      caseIds: ["soft-osteosarcoma"],
+      allowedChapters: ["soft"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "chondroid-lacunae",
+      label: "Tế bào u trong ổ sụn",
+      group: "Dấu hiệu gợi ý",
+      terms: ["te bao trong o sun", "o sun", "chondroid lacuna", "tumour cells in lacunae"],
+      sourceTerms: ["central chondrosarcoma", "chondrosarcoma"],
+      caseIds: ["soft-central-chondrosarcoma-grade23"],
+      allowedChapters: ["soft"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "capsular-vascular-invasion",
+      label: "Xâm nhập bao / mạch của u dạng nang",
+      group: "Dấu hiệu gợi ý",
+      terms: ["xam nhap bao", "xam nhap mach u dang nang", "capsular invasion", "vascular invasion in follicular tumour"],
+      sourceTerms: ["follicular thyroid carcinoma", "capsular invasion", "vascular invasion"],
+      caseIds: ["thyroid-ftc"],
+      allowedChapters: ["thyroid"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "scalloped-colloid",
+      label: "Bờ chất keo khía lõm",
+      group: "Dấu hiệu gợi ý",
+      terms: ["bo keo khia lom", "chat keo khia lom", "scalloped colloid", "scalloping of colloid"],
+      sourceTerms: ["Graves disease", "diffuse toxic hyperplasia"],
+      caseIds: ["thyroid-graves"],
+      allowedChapters: ["thyroid"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "melanin-pigment",
+      label: "Sắc tố melanin",
+      group: "Dấu hiệu gợi ý",
+      terms: ["sac to melanin", "hat sac to nau", "melanin pigment", "brown pigment"],
+      sourceTerms: ["melanoma", "melanocytic tumour"],
+      caseIds: ["skin-melanoma", "eye-iris-melanoma", "eye-conjunctival-melanoma"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "delicate-vasculature",
+      label: "Mạng mao mạch mảnh, phân nhánh",
+      group: "Dấu hiệu gợi ý",
+      terms: ["mang mao mach manh", "mach mau phan nhanh", "delicate vasculature", "branching capillary network"],
+      sourceTerms: ["clear cell renal cell carcinoma", "oligodendroglioma"],
+      caseIds: ["kidney-clear-cell", "cns-oligodendroglioma-idh-codeleted"],
+      auditStatus: "curated-positive",
+    },
+  );
+
   const semanticConcepts = [
     {
       id: "malignant",
@@ -599,6 +777,24 @@
     return normalize(value)
       .split(" ")
       .filter((token) => token.length > 1 && !stopWords.has(token));
+  }
+
+  function matchMorphologyClues(value) {
+    const normalizedQuery = normalize(value);
+    if (!normalizedQuery) return [];
+    const queryTokens = meaningfulTokens(normalizedQuery);
+    return morphologyClues.filter((clue) => (clue.terms || []).some((term) => {
+      const normalizedTerm = normalize(term);
+      if (!normalizedTerm) return false;
+      if ((` ${normalizedQuery} `).includes(` ${normalizedTerm} `)) return true;
+      const termTokens = meaningfulTokens(normalizedTerm);
+      if (termTokens.length < 2) return false;
+      return termTokens.every((termToken) => queryTokens.some((queryToken) => (
+        queryToken === termToken
+        || (termToken.length >= 5 && queryToken.includes(termToken))
+        || (queryToken.length >= 5 && termToken.includes(queryToken))
+      )));
+    }));
   }
 
   function hasToken(text, token) {
@@ -686,12 +882,14 @@
   }
 
   function rankCases(items, options = {}) {
-    const rawQuery = String(options.query || "");
+    const morphologyQuery = String(options.morphologyQuery || "");
+    const rawQuery = String(options.query || morphologyQuery);
     const query = normalize(rawQuery);
     const tokens = meaningfulTokens(query);
     const concepts = inferredConcepts(rawQuery);
     const clueIds = Array.isArray(options.clueIds) ? options.clueIds : [];
-    const selectedClues = clueIds
+    const inferredClueIds = matchMorphologyClues(morphologyQuery).map((clue) => clue.id);
+    const selectedClues = [...new Set([...clueIds, ...inferredClueIds])]
       .map((id) => morphologyClues.find((clue) => clue.id === id))
       .filter(Boolean);
     const markerTokens = meaningfulTokens(options.marker);
@@ -727,7 +925,7 @@
         const conceptHits = concepts.filter((concept) => conceptMatches(index, concept));
 
         if (concepts.length && !conceptHits.length) return null;
-        if (!score && matchedRatio < requiredRatio && !conceptHits.length) return null;
+        if (!score && matchedRatio < requiredRatio && !conceptHits.length && !selectedClues.length) return null;
         score += tokenScores.reduce((total, value) => total + value, 0);
         if (matchedTokenCount) reasons.push("khớp từ khóa mô tả");
         if (conceptHits.length) {
@@ -771,7 +969,8 @@
     organOptions,
     caseMatchesOrgan,
     normalize,
+    matchMorphologyClues,
     rankCases,
-    morphologyAuditVersion: "2026-08-02",
+    morphologyAuditVersion: "2026-08-02-text-search-2",
   };
 }());

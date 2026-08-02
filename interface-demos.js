@@ -42,7 +42,7 @@ const demoCases = [
     memory: "Tế bào C + calcitonin + amyloid là bộ ba định hướng quan trọng.",
     who: `${IARC}/chaptercontent/53/50`,
     po: `${PO}/topic/thyroidmedullary.html`,
-    webpath: "https://www.webpathology.com/search-result?query=Medullary%20thyroid%20carcinoma",
+    webpath: "https://www.webpathology.com/images/endocrine/thyroid/medullary-carcinoma",
   },
   {
     id: "lung-adeno",
@@ -59,7 +59,7 @@ const demoCases = [
     memory: "Tạo tuyến hoặc mucin, thường được hỗ trợ bởi TTF-1 và Napsin A.",
     who: `${IARC}/chaptercontent/35/23`,
     po: `${PO}/topic/lungtumoradenocarcinoma.html`,
-    webpath: "https://www.webpathology.com/search-result?query=Lung%20adenocarcinoma",
+    webpath: "https://www.webpathology.com/images/pulmonary/epithelial-lung-tumors/adenocarcinoma",
   },
   {
     id: "lung-squamous",
@@ -76,7 +76,7 @@ const demoCases = [
     memory: "Tế bào vảy: bào tương ái toan, cầu sừng và cầu nối gian bào.",
     who: `${IARC}/chaptercontent/35/41`,
     po: `${PO}/topic/lungtumorsquamous.html`,
-    webpath: "https://www.webpathology.com/search-result?query=Squamous%20cell%20carcinoma%20of%20the%20lung",
+    webpath: "https://www.webpathology.com/images/pulmonary/epithelial-lung-tumors/squamous-cell-carcinoma",
   },
   {
     id: "colon-adeno",
@@ -93,7 +93,7 @@ const demoCases = [
     memory: "Tuyến bẩn, bất thường và phản ứng xơ mô đệm gợi xâm nhập.",
     who: `${IARC}/chaptercontent/31/62`,
     po: `${PO}/topic/colontumoradenocarcinoma.html`,
-    webpath: "https://www.webpathology.com/search-result?query=Colorectal%20adenocarcinoma",
+    webpath: "https://www.webpathology.com/images/gastrointestinal/large-bowel/colo-rectal-adenocarcinoma",
   },
   {
     id: "breast-idc",
@@ -110,7 +110,7 @@ const demoCases = [
     memory: "Xâm nhập là khi tế bào u vượt khỏi đơn vị ống - tiểu thùy vào mô đệm hoặc mỡ.",
     who: `${IARC}/chaptercontent/84/77`,
     po: `${PO}/topic/breastmalignantductalNOS.html`,
-    webpath: "https://www.webpathology.com/search-result?query=Invasive%20breast%20carcinoma%20of%20no%20special%20type",
+    webpath: "https://www.webpathology.com/images/breast/breast-carcinomas/infiltrating-ductal-carcinoma",
   },
   {
     id: "hpb-hcc",
@@ -127,7 +127,7 @@ const demoCases = [
     memory: "U vẫn gợi tế bào gan nhưng bè dày, mất reticulin và có thể tạo mật.",
     who: `${IARC}/chaptercontent/72/83`,
     po: `${PO}/topic/livertumorhcc.html`,
-    webpath: "https://www.webpathology.com/search-result?query=Hepatocellular%20carcinoma",
+    webpath: "",
   },
   {
     id: "cns-glioblastoma",
@@ -144,7 +144,7 @@ const demoCases = [
     memory: "Hoại tử giả hàng rào và tăng sinh vi mạch là hai điểm neo hình thái.",
     who: `${IARC}/chaptercontent/45/7`,
     po: `${PO}/topic/cnstumorglioblastoma.html`,
-    webpath: "https://www.webpathology.com/search-result?query=Glioblastoma%20IDH-wildtype",
+    webpath: "https://www.webpathology.com/images/neuropath/glial-tumors/glioblastoma",
   },
 ].map((item) => ({
   ...item,
@@ -343,7 +343,7 @@ function renderDetailContent(item) {
       <div class="source-links">
         <a href="${escapeHtml(item.who)}" target="_blank" rel="noreferrer">WHO Classification <span>↗</span></a>
         <a href="${escapeHtml(item.po)}" target="_blank" rel="noreferrer">PathologyOutlines <span>↗</span></a>
-        <a href="${escapeHtml(item.webpath)}" target="_blank" rel="noreferrer">WebPathology <span>↗</span></a>
+        ${item.webpath ? `<a href="${escapeHtml(item.webpath)}" target="_blank" rel="noreferrer">WebPathology <span>↗</span></a>` : ""}
       </div>
     `;
     return;

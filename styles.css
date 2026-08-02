@@ -756,6 +756,44 @@ h1 {
   gap: 8px;
 }
 
+.assistant-morphology-field small {
+  color: #587477;
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.assistant-morphology-matches {
+  min-height: 27px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+}
+
+.assistant-morphology-matches:empty {
+  display: none;
+}
+
+.assistant-morphology-match,
+.assistant-morphology-unmatched {
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 0.68rem;
+  line-height: 1.25;
+}
+
+.assistant-morphology-match {
+  border: 1px solid #9fcfc8;
+  background: #e9f7f4;
+  color: #075f59;
+  font-weight: 820;
+}
+
+.assistant-morphology-unmatched {
+  border-left: 2px solid #c89216;
+  color: #765714;
+}
+
 .assistant-controls label > span,
 .assistant-clue-field > span {
   color: #31565a;
@@ -1047,6 +1085,24 @@ h1 {
 .assistant-result-card button:hover,
 .assistant-result-card button:focus-visible {
   color: #004d49;
+  text-decoration: underline;
+}
+
+.assistant-result-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.assistant-result-links a {
+  color: #006d68;
+  font-size: 0.7rem;
+  font-weight: 850;
+  text-decoration: none;
+}
+
+.assistant-result-links a:hover,
+.assistant-result-links a:focus-visible {
   text-decoration: underline;
 }
 
