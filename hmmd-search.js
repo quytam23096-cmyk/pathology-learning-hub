@@ -27,21 +27,24 @@ const markerNameOverrides = new Map([
   ["ema", "EMA"], ["er", "ER"], ["gata", "GATA3"], ["gata3", "GATA3"], ["gfap", "GFAP"],
   ["hepar", "HepPar-1"], ["hepar1", "HepPar-1"], ["heppar", "HepPar-1"], ["heppar1", "HepPar-1"],
   ["hepparto", "HepPar-1"], ["peppar1", "HepPar-1"], ["her", "HER2"], ["her2", "HER2"],
-  ["hmb45", "HMB45"], ["hymb45", "HMB45"], ["kappa", "Kappa"], ["ki", "Ki-67"], ["ki67", "Ki-67"],
-  ["lambda", "Lambda"], ["lamda", "Lambda"], ["lca", "LCA"], ["lmh1", "MLH1"], ["mlh1", "MLH1"],
+  ["hmb45", "HMB45"], ["hymb45", "HMB45"], ["kappa", "Kappa"], ["ki", "Ki67"], ["ki67", "Ki67"], ["ki567", "Ki67"], ["k67", "Ki67"],
+  ["lambda", "Lambda"], ["lamda", "Lambda"], ["lca", "LCA"], ["lmh1", "MLH1"], ["mlh1", "MLH1"], ["mlhi", "MLH1"], ["mls1", "MLH1"], ["msh1", "MLH1"],
   ["mmr", "MMR"], ["msh2", "MSH2"], ["msh6", "MSH6"], ["muc2", "MUC2"], ["mum1", "MUM1"],
   ["myogenin", "Myogenin"], ["myoglobin", "Myoglobin"], ["napsina", "Napsin A"], ["nsapsina", "Napsin A"],
   ["neurofilament", "Neurofilament"], ["nse", "NSE"], ["oct34", "OCT3/4"], ["oct4", "OCT4"],
   ["olig2", "Olig2"], ["p16", "P16"], ["p40", "P40"], ["p53", "P53"], ["p63", "P63"],
   ["pdl1", "PD-L1"],
-  ["pax5", "PAX5"], ["pax8", "PAX8"], ["pms2", "PMS2"], ["psm2", "PMS2"], ["pr", "PR"],
+  ["pax5", "PAX5"], ["pax8", "PAX8"], ["pms2", "PMS2"], ["psm2", "PMS2"], ["phs2", "PMS2"], ["pr", "PR"],
   ["psa", "PSA"], ["s100", "S100"], ["sall4", "SALL4"], ["sma", "SMA"],
   ["synap", "Synaptophysin"], ["synapphytosin", "Synaptophysin"], ["synaptophysin", "Synaptophysin"],
-  ["synaptophysine", "Synaptophysin"], ["tdt", "TdT"], ["tff1", "TFF1"],
+  ["synaptophyssin", "Synaptophysin"], ["synaptophussin", "Synaptophysin"], ["synaptophysine", "Synaptophysin"], ["tdt", "TdT"], ["tff1", "TFF1"],
   ["thyroglobolin", "Thyroglobulin"], ["thyroglobulin", "Thyroglobulin"],
   ["ttf", "TTF-1"], ["ttf1", "TTF-1"], ["ttfi", "TTF-1"],
   ["vimantin", "Vimentin"], ["vimentin", "Vimentin"], ["vimentine", "Vimentin"],
-  ["wt1", "WT1"], ["wtf1", "WT1"],
+  ["wt1", "WT1"], ["wti", "WT1"], ["wtf1", "WT1"],
+  ["cd31", "CD31"], ["ck67", "CK6/7"], ["ckae12", "CK AE1/AE3"],
+  ["pas", "PAS"], ["c3", "C3"], ["igm", "IgM"], ["hbme1", "HBME-1"],
+  ["rcc", "RCC"], ["sall1", "SALL1"], ["desnim", "Desmin"], ["chromoganina", "Chromogranin A"], ["napsin", "Napsin A"],
 ]);
 
 const uploadedDataset = window.HMMD_DATASET && Array.isArray(window.HMMD_DATASET.cases) ? window.HMMD_DATASET : null;
@@ -104,13 +107,23 @@ function uniqueMarkers(values) {
   });
 }
 
+function expandMmrPanel(values) {
+  const expanded = [];
+  (values || []).forEach((value) => {
+    const marker = canonicalMarker(value);
+    if (markerKey(marker) === "mmr") expanded.push("MLH1", "PMS2", "MSH2", "MSH6");
+    else if (marker) expanded.push(marker);
+  });
+  return uniqueMarkers(expanded);
+}
+
 function normalizedText(value) {
   return String(value || "").toLocaleLowerCase("vi-VN").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d");
 }
 
 function extractPdL1Report(item) {
   const source = [item.conclusionText, item.notesText || item.notes].filter(Boolean).join("\n");
-  if (!/(?:\bPD\s*[-–]?\s*L\s*[-–]?\s*1\b|\bPDL\s*[-–]?\s*1\b)/i.test(source)) return null;
+  if (!/(?:\bPD\s*[-–=]?\s*L\s*[-–=]?\s*1\b|\bPDL\s*[-–=]?\s*1\b)/i.test(source)) return null;
   const text = normalizedText(source);
   const hasNegative = /khong\s+boc\s+lo|\bam\s+tinh\b/.test(text);
   const hasPositive = /\bco\s+boc\s+lo|\bduong\s+tinh\b/.test(text);
@@ -138,8 +151,8 @@ function extractPdL1Report(item) {
 function normalizeCaseMarkers(item) {
   const rawPositive = Array.isArray(item.rawPositive) ? item.rawPositive : [...(item.positive || [])];
   const rawNegative = Array.isArray(item.rawNegative) ? item.rawNegative : [...(item.negative || [])];
-  const positive = uniqueMarkers(rawPositive);
-  const negative = uniqueMarkers(rawNegative);
+  const positive = expandMmrPanel(rawPositive);
+  const negative = expandMmrPanel(rawNegative);
   const markerReports = [];
   const pdL1 = extractPdL1Report(item);
   if (pdL1) {
@@ -153,9 +166,9 @@ function normalizeCaseMarkers(item) {
     rawNegative,
     positive,
     negative,
-    reportedMarkers: uniqueMarkers([...(item.reportedMarkers || []), ...markerReports.map((report) => report.marker)]),
+    reportedMarkers: expandMmrPanel([...(item.reportedMarkers || []), ...markerReports.map((report) => report.marker)]),
     markerReports,
-    suggested: uniqueMarkers(item.suggested),
+    suggested: expandMmrPanel(item.suggested),
   };
 }
 
@@ -436,12 +449,15 @@ function updateDatasetSummary() {
 }
 
 function addMarker(lane, rawValue) {
-  const marker = canonicalMarker(rawValue);
-  if (!marker) return;
   const otherLane = lane === "positive" ? "negative" : "positive";
-  const key = markerKey(marker);
-  state[otherLane] = state[otherLane].filter((item) => markerKey(item) !== key);
-  if (!state[lane].some((item) => markerKey(item) === key)) state[lane].push(marker);
+  const markers = expandMmrPanel([rawValue]);
+  if (!markers.length) return;
+  const keys = new Set(markers.map(markerKey));
+  state[otherLane] = state[otherLane].filter((item) => !keys.has(markerKey(item)));
+  markers.forEach((marker) => {
+    const key = markerKey(marker);
+    if (!state[lane].some((item) => markerKey(item) === key)) state[lane].push(marker);
+  });
   closeMarkerPicker(lane);
   renderQuery();
 }
@@ -487,11 +503,23 @@ function renderQuery() {
 
 function markerSuggestionsFor(lane, query) {
   const queryKey = markerKey(query);
+  const canonicalQueryKey = markerKey(canonicalMarker(query));
+  const mmrKeys = canonicalQueryKey === "mmr" ? new Set(["mlh1", "pms2", "msh2", "msh6"]) : null;
   const selectedKeys = new Set([...state.positive, ...state.negative].map(markerKey));
   const popularOrder = new Map(popularMarkers.map((marker, index) => [markerKey(marker), index]));
   return getMarkerStats()
     .filter((item) => !selectedKeys.has(markerKey(item.name)))
-    .filter((item) => !queryKey || markerKey(item.name).includes(queryKey))
+    .filter((item) => {
+      const nameKey = markerKey(item.name);
+      if (mmrKeys) return mmrKeys.has(nameKey);
+      if (!queryKey) return true;
+      const aliasKeys = (item.aliases || []).map(markerKey);
+      const overrideKeys = [...markerNameOverrides.entries()]
+        .filter(([, canonical]) => markerKey(canonical) === nameKey)
+        .map(([alias]) => alias);
+      return [nameKey, ...aliasKeys, ...overrideKeys]
+        .some((key) => key.includes(queryKey) || key.includes(canonicalQueryKey));
+    })
     .sort((a, b) => {
       const aKey = markerKey(a.name);
       const bKey = markerKey(b.name);
@@ -895,7 +923,8 @@ $$('[data-marker-input]').forEach((input) => {
     event.preventDefault();
     const options = $$("[data-marker-option]", list);
     const selected = !list.hidden && options[state.pickerIndex[lane]];
-    addMarker(lane, selected ? selected.dataset.markerOption : input.value);
+    const isMmrPanel = markerKey(canonicalMarker(input.value)) === "mmr";
+    addMarker(lane, isMmrPanel ? input.value : selected ? selected.dataset.markerOption : input.value);
     input.value = "";
   });
 });
