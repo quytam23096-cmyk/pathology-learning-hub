@@ -1,11 +1,25 @@
 const organLabels = {
   all: "Tất cả cơ quan",
-  lung: "Phổi",
-  colorectal: "Đại trực tràng",
+  lung: "Phổi – màng phổi",
+  colorectal: "Đại trực tràng – hậu môn",
   breast: "Vú",
-  thyroid: "Tuyến giáp",
-  kidney: "Thận",
+  stomach: "Dạ dày",
+  esophagus: "Thực quản",
+  small_bowel: "Ruột non – tá tràng",
   liver: "Gan",
+  biliary_pancreas: "Đường mật – túi mật – tụy",
+  kidney: "Thận",
+  urinary_male: "Tiết niệu – sinh dục nam",
+  gynecologic: "Phụ khoa",
+  thyroid: "Tuyến giáp",
+  endocrine: "Nội tiết khác",
+  head_neck: "Đầu – cổ",
+  cns: "Hệ thần kinh trung ương",
+  hematolymphoid: "Hạch – huyết học",
+  skin: "Da – hắc tố",
+  bone_soft_tissue: "Xương – mô mềm",
+  mediastinum: "Trung thất – tuyến ức",
+  peritoneum_retroperitoneum: "Phúc mạc – sau phúc mạc",
   other: "Khác / chưa phân nhóm",
 };
 
@@ -73,6 +87,22 @@ const diagnosisIcdCache = new Map();
 
 function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
+}
+
+function caseLocationLabel(item) {
+  const organ = organLabels[item.organ] || organLabels.other;
+  const site = String(item.specimenSite || "").trim();
+  return site && normalizedText(site) !== normalizedText(organ) ? `${organ} · ${site}` : organ;
+}
+
+function caseIcdSummary(item) {
+  const code = item.icd10 || item.icd10Suggested || "";
+  if (!code) return null;
+  return {
+    code,
+    name: item.icd10SuggestedName || "",
+    inferred: !item.icd10 && Boolean(item.icd10Suggested),
+  };
 }
 
 function markerKey(value) {
@@ -256,16 +286,26 @@ function getDiagnosisStats() {
   diagnoses.forEach((item) => {
     const name = String(item.diagnosisText || item.nameEn || "Chưa ghi chẩn đoán").trim() || "Chưa ghi chẩn đoán";
     const key = name.toLocaleLowerCase("vi").replace(/\s+/g, " ");
-    const entry = stats.get(key) || { name, cases: 0, directCodes: new Set() };
+    const entry = stats.get(key) || { name, cases: 0, directCodes: new Set(), mappedCodes: new Set() };
     entry.cases += 1;
     if (item.icd10) entry.directCodes.add(String(item.icd10).toUpperCase());
+    if (item.icd10Suggested) entry.mappedCodes.add(String(item.icd10Suggested).toUpperCase());
     stats.set(key, entry);
   });
-  diagnosisStatsCache = [...stats.values()].map((entry) => ({
-    ...entry,
-    directCodes: [...entry.directCodes],
-    suggestedIcd: getDiagnosisIcdSuggestions(entry.name),
-  })).sort((a, b) => b.cases - a.cases || a.name.localeCompare(b.name, "vi"));
+  diagnosisStatsCache = [...stats.values()].map((entry) => {
+    const mappedSuggestions = [...entry.mappedCodes].map((code) => {
+        const official = getIcdEntries().find((item) => String(item.code).toUpperCase() === code && item.model === "disease");
+        return { code, name: official?.name || "ICD-10 đối chiếu từ ánh xạ cơ quan", score: 1 };
+      });
+    const suggested = mappedSuggestions.length ? mappedSuggestions : getDiagnosisIcdSuggestions(entry.name);
+    const seen = new Set();
+    return {
+      name: entry.name,
+      cases: entry.cases,
+      directCodes: [...entry.directCodes],
+      suggestedIcd: suggested.filter((item) => !seen.has(item.code) && seen.add(item.code)),
+    };
+  }).sort((a, b) => b.cases - a.cases || a.name.localeCompare(b.name, "vi"));
   return diagnosisStatsCache;
 }
 
@@ -354,18 +394,38 @@ function diagnosticTokens(value) {
   return normalizedText(value).replace(/[^a-z0-9]+/g, " ").trim().split(/\s+/).filter((token) => token.length > 1 && !stopWords.has(token));
 }
 
+function diagnosisIntent(value) {
+  const text = normalizedText(value).replace(/[^a-z0-9]+/g, " ").trim();
+  if (/\b(?:tai cho|in situ)\b/.test(text)) return "in_situ";
+  if (/\b(?:u ac|ung thu|carcinom|adenocarcinom|sarcom|lymphom|melanom)\b/.test(text) || /^k(?: |$)/.test(text)) return "malignant";
+  if (/\b(?:u lanh|lanh tinh|benign)\b/.test(text)) return "benign";
+  if (/\b(?:khong chac chan|chua ro ban chat|khong ro ban chat|khong xac dinh tinh chat)\b/.test(text)) return "uncertain";
+  return "";
+}
+
+function icdMatchesDiagnosisIntent(code, intent) {
+  const match = String(code || "").toUpperCase().match(/^([CD])(\d{2})/);
+  if (!match || !intent) return !intent;
+  const number = Number(match[2]);
+  if (intent === "malignant") return match[1] === "C";
+  if (intent === "in_situ") return match[1] === "D" && number <= 9;
+  if (intent === "benign") return match[1] === "D" && number >= 10 && number <= 36;
+  if (intent === "uncertain") return match[1] === "D" && number >= 37 && number <= 48;
+  return true;
+}
+
 function getDiagnosisIcdSuggestions(name) {
   const cacheKey = normalizedText(name).trim();
   if (diagnosisIcdCache.has(cacheKey)) return diagnosisIcdCache.get(cacheKey);
   const sourceTokens = [...new Set(diagnosticTokens(name))];
-  const hasDiseaseIntent = sourceTokens.some((token) => ["ac", "lanh", "sinh", "carcinoma", "ung", "lympho", "sarcoma"].includes(token));
-  if (!sourceTokens.length || !hasDiseaseIntent) {
+  const intent = diagnosisIntent(name);
+  if (!sourceTokens.length || !intent) {
     diagnosisIcdCache.set(cacheKey, []);
     return [];
   }
   const sourceSet = new Set(sourceTokens);
   const icdEntries = getIcdEntries();
-  const matches = icdEntries.map((entry) => {
+  const matches = icdEntries.filter((entry) => entry.model === "disease" && icdMatchesDiagnosisIntent(entry.code, intent)).map((entry) => {
     const targetTokens = [...new Set(diagnosticTokens(entry.name))];
     const targetSet = new Set(targetTokens);
     const intersection = sourceTokens.filter((token) => targetSet.has(token)).length;
@@ -376,7 +436,7 @@ function getDiagnosisIcdSuggestions(name) {
     const parent = entry.parentCode ? icdEntries.find((candidate) => candidate.code === entry.parentCode) : null;
     const parentTokens = new Set(parent ? diagnosticTokens(parent.name) : []);
     const distinctiveTokens = targetTokens.filter((token) => !parentTokens.has(token));
-    const detailedDiseaseAllowed = entry.model !== "disease" || /\.9$/.test(entry.code) || distinctiveTokens.every((token) => sourceSet.has(token));
+    const detailedDiseaseAllowed = /\.9$/.test(entry.code) || (distinctiveTokens.length > 0 && distinctiveTokens.every((token) => sourceSet.has(token)));
     return { ...entry, score, intersection, detailedDiseaseAllowed };
   }).filter((entry) => entry.detailedDiseaseAllowed && entry.intersection >= Math.min(2, sourceTokens.length) && entry.score >= 0.84)
     .sort((a, b) => b.score - a.score || a.code.length - b.code.length || a.code.localeCompare(b.code, "vi", { numeric: true }));
@@ -416,6 +476,7 @@ function clinicalDiagnosisMatches(item, query) {
 
   const itemCodes = new Set([
     item.icd10,
+    item.icd10Suggested,
     ...getDiagnosisIcdSuggestions(diagnosisText).map((match) => match.code),
   ].filter(Boolean).map((code) => String(code).toUpperCase()));
   if (queryCode) {
@@ -641,13 +702,14 @@ function resultTemplate(item, index) {
     ...item.conflicts.map((value) => `<span class="evidence conflict">! ${escapeHtml(value)}</span>`),
     ...item.unknown.map((value) => `<span class="evidence unknown">? ${escapeHtml(value)}</span>`),
   ].join("");
-  const locationLabel = organLabels[item.organ] || organLabels.other;
-  const recordMeta = locationLabel;
+  const recordMeta = caseLocationLabel(item);
+  const icdSummary = caseIcdSummary(item);
   const title = item.conclusionText || item.nameVi || item.diagnosisText || "Chưa ghi kết quả";
   const subtitle = `Chẩn đoán lâm sàng: ${escapeHtml(item.diagnosisText || item.nameEn || "Chưa ghi")}`;
   const sourceDetails = `<dl class="source-data">
       <div><dt>Chẩn đoán lâm sàng</dt><dd>${escapeHtml(item.diagnosisText || item.nameEn || "—")}</dd></div>
-      ${item.icd10 ? `<div><dt>ICD-10</dt><dd>${escapeHtml(item.icd10)}</dd></div>` : ""}
+      <div><dt>Cơ quan / vị trí bệnh phẩm</dt><dd>${escapeHtml(recordMeta)}</dd></div>
+      ${icdSummary ? `<div><dt>${icdSummary.inferred ? "ICD-10 đối chiếu" : "ICD-10 nguồn"}</dt><dd><strong>${escapeHtml(icdSummary.code)}</strong>${icdSummary.name ? ` · ${escapeHtml(icdSummary.name)}` : ""}</dd></div>` : ""}
       <div><dt>Kết quả nhuộm hóa mô</dt><dd>${escapeHtml(item.conclusionText || item.nameVi || "—")}</dd></div>
       <div><dt>Dương tính</dt><dd>${escapeHtml(item.positiveText || (item.positive || []).join(", ") || "—")}</dd></div>
       <div><dt>Âm tính</dt><dd>${escapeHtml(item.negativeText || (item.negative || []).join(", ") || "—")}</dd></div>
@@ -807,9 +869,9 @@ function renderDataExplorer() {
   }
 
   if (view === "results") {
-    const rows = diagnoses.filter((item) => !search || normalizedText([item.diagnosisText, item.conclusionText, item.positiveText, item.negativeText, item.notesText, markerReportSummary(item)].join(" ")).includes(normalizedText(search)));
+    const rows = diagnoses.filter((item) => !search || normalizedText([item.diagnosisText, item.conclusionText, item.specimenSite, item.icd10, item.icd10Suggested, item.positiveText, item.negativeText, item.notesText, markerReportSummary(item)].join(" ")).includes(normalizedText(search)));
     const visible = rows.slice(0, MAX_EXPLORER_ROWS);
-    $("#dataDialogContent").innerHTML = `<div class="data-list-summary"><strong>${rows.length.toLocaleString("vi-VN")} kết quả nhuộm HMMD</strong><span>Hiển thị nguyên văn theo từng ca; không diễn giải lại nội dung nguồn</span></div><div class="result-record-list">${visible.map((item) => `<article class="result-record-card"><header><div><strong>${escapeHtml(item.diagnosisText || item.nameEn || "Chưa ghi chẩn đoán lâm sàng")}</strong></div><span>${escapeHtml(organLabels[item.organ] || organLabels.other)}</span></header><dl><div><dt>Kết quả nhuộm HMMD</dt><dd>${escapeHtml(item.conclusionText || item.nameVi || "—")}</dd></div><div><dt>Marker dương tính</dt><dd>${escapeHtml(item.positiveText || (item.rawPositive || []).join(", ") || "—")}</dd></div><div><dt>Marker âm tính</dt><dd>${escapeHtml(item.negativeText || (item.rawNegative || []).join(", ") || "—")}</dd></div>${markerReportSummary(item) ? `<div class="special-marker-result"><dt>Kết quả marker chuyên biệt</dt><dd>${escapeHtml(markerReportSummary(item))}</dd></div>` : ""}<div><dt>Ghi chú</dt><dd>${escapeHtml(item.notesText || item.notes || "—")}</dd></div></dl></article>`).join("")}</div>${rows.length > visible.length ? `<p class="data-limit-note">Đang hiển thị ${visible.length} ca. Hãy tìm theo chẩn đoán, marker hoặc nội dung kết quả để thu hẹp.</p>` : ""}`;
+    $("#dataDialogContent").innerHTML = `<div class="data-list-summary"><strong>${rows.length.toLocaleString("vi-VN")} kết quả nhuộm HMMD</strong><span>Hiển thị nguyên văn theo từng ca; cơ quan, vị trí và ICD-10 được ghi rõ để đối chiếu</span></div><div class="result-record-list">${visible.map((item) => { const icd = caseIcdSummary(item); return `<article class="result-record-card"><header><div><strong>${escapeHtml(item.diagnosisText || item.nameEn || "Chưa ghi chẩn đoán lâm sàng")}</strong>${icd ? `<small>${icd.inferred ? "ICD-10 đối chiếu" : "ICD-10 nguồn"}: ${escapeHtml(icd.code)}</small>` : ""}</div><span>${escapeHtml(caseLocationLabel(item))}</span></header><dl><div><dt>Kết quả nhuộm HMMD</dt><dd>${escapeHtml(item.conclusionText || item.nameVi || "—")}</dd></div><div><dt>Marker dương tính</dt><dd>${escapeHtml(item.positiveText || (item.rawPositive || []).join(", ") || "—")}</dd></div><div><dt>Marker âm tính</dt><dd>${escapeHtml(item.negativeText || (item.rawNegative || []).join(", ") || "—")}</dd></div>${markerReportSummary(item) ? `<div class="special-marker-result"><dt>Kết quả marker chuyên biệt</dt><dd>${escapeHtml(markerReportSummary(item))}</dd></div>` : ""}<div><dt>Ghi chú</dt><dd>${escapeHtml(item.notesText || item.notes || "—")}</dd></div></dl></article>`; }).join("")}</div>${rows.length > visible.length ? `<p class="data-limit-note">Đang hiển thị ${visible.length} ca. Hãy tìm theo chẩn đoán, marker hoặc nội dung kết quả để thu hẹp.</p>` : ""}`;
     return;
   }
 

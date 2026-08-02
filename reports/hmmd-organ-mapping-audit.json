@@ -1,0 +1,2961 @@
+{
+  "generatedAt": "2026-08-02T07:51:16.209Z",
+  "source": {
+    "hmmdCases": 3924,
+    "icdEntries": 895,
+    "icdTitle": "ICD-10 theo Thông tư 06/2026/TT-BYT",
+    "icdSource": "https://icd.kcb.vn/icd-10-tt06/icd10-tt06",
+    "contentHash": "8adae037ca3ab51c155bde3b2d7bbc3bbb21f923bf5627abad263afd9cad4a11"
+  },
+  "before": {
+    "organCounts": {
+      "other": 2028,
+      "breast": 588,
+      "lung": 558,
+      "colorectal": 477,
+      "liver": 136,
+      "kidney": 109,
+      "thyroid": 28
+    },
+    "unclassified": 2028
+  },
+  "after": {
+    "organCounts": {
+      "breast": 597,
+      "lung": 589,
+      "colorectal": 470,
+      "hematolymphoid": 398,
+      "head_neck": 274,
+      "stomach": 254,
+      "cns": 207,
+      "gynecologic": 195,
+      "bone_soft_tissue": 155,
+      "liver": 124,
+      "other": 120,
+      "biliary_pancreas": 112,
+      "kidney": 86,
+      "esophagus": 81,
+      "urinary_male": 65,
+      "mediastinum": 55,
+      "peritoneum_retroperitoneum": 40,
+      "skin": 29,
+      "thyroid": 28,
+      "endocrine": 24,
+      "small_bowel": 21
+    },
+    "unclassified": 120
+  },
+  "quality": {
+    "changedCases": 1978,
+    "correctedPreviouslyClassifiedCases": 70,
+    "resolvedFromOther": 1908,
+    "unresolvedCases": 120,
+    "unclassifiedRate": 0.03058103975535168,
+    "conflictCases": 519,
+    "conflictRate": 0.13226299694189603,
+    "contentMismatches": 0,
+    "contentHashPreserved": true,
+    "invalidOrganKeys": 0,
+    "duplicateIds": 0,
+    "confidence": {
+      "high": 3089,
+      "medium": 715,
+      "low": 120
+    },
+    "sources": {
+      "clinical+icd/hmmd": 2128,
+      "clinical_diagnosis": 1476,
+      "hmmd_conclusion": 183,
+      "unresolved": 120,
+      "existing_classification": 13,
+      "icd10+hmmd_conclusion": 4
+    },
+    "conflictPairs": {
+      "head_neck -> hematolymphoid": 41,
+      "liver -> biliary_pancreas": 27,
+      "lung -> hematolymphoid": 26,
+      "hematolymphoid -> lung": 18,
+      "bone_soft_tissue -> hematolymphoid": 14,
+      "breast -> hematolymphoid": 14,
+      "stomach -> hematolymphoid": 13,
+      "colorectal -> stomach": 10,
+      "biliary_pancreas -> hematolymphoid": 9,
+      "mediastinum -> hematolymphoid": 9,
+      "small_bowel -> stomach": 8,
+      "biliary_pancreas -> liver": 7,
+      "breast -> liver": 7,
+      "liver -> hematolymphoid": 7,
+      "cns -> hematolymphoid": 6,
+      "head_neck -> bone_soft_tissue": 6,
+      "hematolymphoid -> breast": 5,
+      "kidney -> hematolymphoid": 5,
+      "kidney -> urinary_male": 5,
+      "lung -> bone_soft_tissue": 5,
+      "urinary_male -> hematolymphoid": 5,
+      "bone_soft_tissue -> stomach": 4,
+      "breast -> thyroid": 4,
+      "cns -> kidney": 4,
+      "head_neck -> skin": 4,
+      "hematolymphoid -> bone_soft_tissue": 4,
+      "liver -> lung": 4,
+      "lung -> breast": 4,
+      "lung -> colorectal": 4,
+      "small_bowel -> hematolymphoid": 4,
+      "thyroid -> hematolymphoid": 4,
+      "urinary_male -> colorectal": 4,
+      "bone_soft_tissue -> head_neck": 3,
+      "bone_soft_tissue -> skin": 3,
+      "breast -> skin": 3,
+      "colorectal -> gynecologic": 3,
+      "colorectal -> hematolymphoid": 3,
+      "endocrine -> kidney": 3,
+      "gynecologic -> colorectal": 3,
+      "gynecologic -> thyroid": 3,
+      "kidney -> head_neck": 3,
+      "liver -> colorectal": 3,
+      "lung -> stomach": 3,
+      "peritoneum_retroperitoneum -> bone_soft_tissue": 3,
+      "peritoneum_retroperitoneum -> colorectal": 3,
+      "peritoneum_retroperitoneum -> hematolymphoid": 3,
+      "peritoneum_retroperitoneum -> stomach": 3,
+      "stomach -> colorectal": 3,
+      "stomach -> head_neck": 3,
+      "stomach -> liver": 3,
+      "thyroid -> lung": 3,
+      "biliary_pancreas -> breast": 2,
+      "biliary_pancreas -> kidney": 2,
+      "biliary_pancreas -> lung": 2,
+      "biliary_pancreas -> stomach": 2,
+      "bone_soft_tissue -> gynecologic": 2,
+      "bone_soft_tissue -> liver": 2,
+      "bone_soft_tissue -> lung": 2,
+      "bone_soft_tissue -> urinary_male": 2,
+      "breast -> gynecologic": 2,
+      "breast -> head_neck": 2,
+      "cns -> biliary_pancreas": 2,
+      "cns -> bone_soft_tissue": 2,
+      "cns -> lung": 2,
+      "colorectal -> biliary_pancreas": 2,
+      "colorectal -> bone_soft_tissue": 2,
+      "colorectal -> head_neck": 2,
+      "colorectal -> kidney": 2,
+      "colorectal -> lung": 2,
+      "colorectal -> urinary_male": 2,
+      "esophagus -> bone_soft_tissue": 2,
+      "esophagus -> head_neck": 2,
+      "esophagus -> hematolymphoid": 2,
+      "esophagus -> urinary_male": 2,
+      "gynecologic -> hematolymphoid": 2,
+      "gynecologic -> skin": 2,
+      "head_neck -> breast": 2,
+      "head_neck -> liver": 2,
+      "head_neck -> lung": 2,
+      "head_neck -> thyroid": 2,
+      "hematolymphoid -> gynecologic": 2,
+      "hematolymphoid -> head_neck": 2,
+      "hematolymphoid -> skin": 2,
+      "hematolymphoid -> urinary_male": 2,
+      "kidney -> bone_soft_tissue": 2,
+      "kidney -> colorectal": 2,
+      "kidney -> endocrine": 2,
+      "liver -> breast": 2,
+      "liver -> esophagus": 2,
+      "liver -> head_neck": 2,
+      "liver -> stomach": 2,
+      "lung -> biliary_pancreas": 2,
+      "lung -> skin": 2,
+      "lung -> urinary_male": 2,
+      "mediastinum -> lung": 2,
+      "mediastinum -> urinary_male": 2,
+      "peritoneum_retroperitoneum -> biliary_pancreas": 2,
+      "peritoneum_retroperitoneum -> gynecologic": 2,
+      "peritoneum_retroperitoneum -> liver": 2,
+      "peritoneum_retroperitoneum -> skin": 2,
+      "skin -> bone_soft_tissue": 2,
+      "small_bowel -> biliary_pancreas": 2,
+      "stomach -> lung": 2,
+      "urinary_male -> biliary_pancreas": 2,
+      "biliary_pancreas -> colorectal": 1,
+      "biliary_pancreas -> head_neck": 1,
+      "biliary_pancreas -> skin": 1,
+      "biliary_pancreas -> urinary_male": 1,
+      "bone_soft_tissue -> cns": 1,
+      "bone_soft_tissue -> kidney": 1,
+      "breast -> bone_soft_tissue": 1,
+      "breast -> lung": 1,
+      "cns -> endocrine": 1,
+      "cns -> skin": 1,
+      "cns -> stomach": 1,
+      "colorectal -> breast": 1,
+      "colorectal -> endocrine": 1,
+      "colorectal -> liver": 1,
+      "colorectal -> peritoneum_retroperitoneum": 1,
+      "colorectal -> skin": 1,
+      "endocrine -> skin": 1,
+      "esophagus -> lung": 1,
+      "esophagus -> skin": 1,
+      "esophagus -> stomach": 1,
+      "gynecologic -> bone_soft_tissue": 1,
+      "gynecologic -> breast": 1,
+      "gynecologic -> lung": 1,
+      "gynecologic -> stomach": 1,
+      "gynecologic -> urinary_male": 1,
+      "head_neck -> gynecologic": 1,
+      "head_neck -> urinary_male": 1,
+      "hematolymphoid -> biliary_pancreas": 1,
+      "hematolymphoid -> colorectal": 1,
+      "hematolymphoid -> endocrine": 1,
+      "hematolymphoid -> kidney": 1,
+      "hematolymphoid -> stomach": 1,
+      "kidney -> liver": 1,
+      "kidney -> stomach": 1,
+      "kidney -> thyroid": 1,
+      "liver -> kidney": 1,
+      "liver -> skin": 1,
+      "liver -> urinary_male": 1,
+      "lung -> gynecologic": 1,
+      "lung -> liver": 1,
+      "lung -> mediastinum": 1,
+      "mediastinum -> bone_soft_tissue": 1,
+      "mediastinum -> cns": 1,
+      "mediastinum -> head_neck": 1,
+      "peritoneum_retroperitoneum -> head_neck": 1,
+      "peritoneum_retroperitoneum -> kidney": 1,
+      "peritoneum_retroperitoneum -> urinary_male": 1,
+      "skin -> cns": 1,
+      "skin -> hematolymphoid": 1,
+      "small_bowel -> head_neck": 1,
+      "small_bowel -> kidney": 1,
+      "stomach -> biliary_pancreas": 1,
+      "stomach -> bone_soft_tissue": 1,
+      "stomach -> cns": 1,
+      "stomach -> kidney": 1,
+      "stomach -> peritoneum_retroperitoneum": 1,
+      "stomach -> skin": 1,
+      "stomach -> urinary_male": 1,
+      "thyroid -> cns": 1,
+      "thyroid -> esophagus": 1,
+      "thyroid -> head_neck": 1,
+      "thyroid -> kidney": 1,
+      "urinary_male -> bone_soft_tissue": 1,
+      "urinary_male -> gynecologic": 1,
+      "urinary_male -> skin": 1
+    }
+  },
+  "conflictExamples": [
+    {
+      "id": "hmmd-2025-0008",
+      "diagnosisText": "U ác của gan và đường mật trong gan",
+      "conclusionText": "HMMD phù hợp: Car-xi-nôm tế bào gan, thể giả tuyến. \n(Hepatocellular carcinoma). ICD-O: 8170/3.",
+      "selectedOrgan": "biliary_pancreas",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "biliary_pancreas",
+        "hmmdConclusion": "liver"
+      }
+    },
+    {
+      "id": "hmmd-2025-0011",
+      "diagnosisText": "U ác trực tràng  ",
+      "conclusionText": "Car-ci-nôm tuyến di căn phổi.\n- Nghĩ đến từ Ruột hoặc bóng Vater.",
+      "selectedOrgan": "colorectal",
+      "candidates": {
+        "clinical": "colorectal",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "lung"
+      }
+    },
+    {
+      "id": "hmmd-2025-0012",
+      "diagnosisText": "Các bất thường hàm mặt",
+      "conclusionText": "Mô học và Hóa mô miễn dịch hướng đến Fibrosarcoma. \nMô học độ 1 theo FNCLCC.",
+      "selectedOrgan": "head_neck",
+      "candidates": {
+        "clinical": "head_neck",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "bone_soft_tissue"
+      }
+    },
+    {
+      "id": "hmmd-2025-0016",
+      "diagnosisText": "U ác thân vị",
+      "conclusionText": "U lympho ác tính không Hodgkin, lan tỏa. \nTế bào B lớn (DLBCL). Độ cao.",
+      "selectedOrgan": "stomach",
+      "candidates": {
+        "clinical": "stomach",
+        "explicitIcd10": "",
+        "suggestedIcd10": "stomach",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0024",
+      "diagnosisText": "U ác hốc mũi",
+      "conclusionText": "U Lympho không Hodgkin lan tỏa tế bào B lớn, không tâm mầm - Mô học độ cao.\n(Diffuse Large B cell Lymphoma (DLBCL) -Activated B cell type)   WHO 2017",
+      "selectedOrgan": "head_neck",
+      "candidates": {
+        "clinical": "head_neck",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0025",
+      "diagnosisText": "U ác của tim, trung thất và phổi",
+      "conclusionText": "U Lympho không Hodgkin lan tỏa, tế bào B lớn không tâm mầm  - Mô học độ cao.\n(Diffuse Large B cell Lymphoma (DLBCL) - Activated B cell type)   WHO 2017",
+      "selectedOrgan": "lung",
+      "candidates": {
+        "clinical": "lung",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0038",
+      "diagnosisText": "U ác của vú",
+      "conclusionText": "Không thấy di căn hạch và xâm nhập mạch.",
+      "selectedOrgan": "breast",
+      "candidates": {
+        "clinical": "breast",
+        "explicitIcd10": "",
+        "suggestedIcd10": "breast",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0043",
+      "diagnosisText": "U ác gan",
+      "conclusionText": "U gan: Car-xi-nôm tế bào gan (Hepatocellular carcinoma).\nThực quản: Các- xi- nôm tế bào gai biệt hóa vừa, xâm nhập.",
+      "selectedOrgan": "liver",
+      "candidates": {
+        "clinical": "liver",
+        "explicitIcd10": "",
+        "suggestedIcd10": "liver",
+        "hmmdConclusion": "esophagus"
+      }
+    },
+    {
+      "id": "hmmd-2025-0048",
+      "diagnosisText": "U ác của gan",
+      "conclusionText": "Ung thư biểu mô đường mật trong gan- MH độ 3. \n(Intrahepatic Cholangio  carcinoma-  Grade 3)",
+      "selectedOrgan": "liver",
+      "candidates": {
+        "clinical": "liver",
+        "explicitIcd10": "",
+        "suggestedIcd10": "liver",
+        "hmmdConclusion": "biliary_pancreas"
+      }
+    },
+    {
+      "id": "hmmd-2025-0065",
+      "diagnosisText": "U ác tá tràng",
+      "conclusionText": "U mô đệm dạ dày- ruột ; độ I.\n(Gastro-Intestinal Stromal Tumor: GIST- Grade 1)",
+      "selectedOrgan": "small_bowel",
+      "candidates": {
+        "clinical": "small_bowel",
+        "explicitIcd10": "",
+        "suggestedIcd10": "small_bowel",
+        "hmmdConclusion": "stomach"
+      }
+    },
+    {
+      "id": "hmmd-2025-0069",
+      "diagnosisText": "U ác của gan",
+      "conclusionText": "Ung thư biểu mô đường mật trong gan. \n(Intrahepatic Cholangio  carcinoma). ICD-O: 8160/ 3",
+      "selectedOrgan": "liver",
+      "candidates": {
+        "clinical": "liver",
+        "explicitIcd10": "",
+        "suggestedIcd10": "liver",
+        "hmmdConclusion": "biliary_pancreas"
+      }
+    },
+    {
+      "id": "hmmd-2025-0080",
+      "diagnosisText": "U ác tuyến giáp",
+      "conclusionText": "Car-xi-nôm tuyến giáp thể tủy di căn hạch.",
+      "selectedOrgan": "thyroid",
+      "candidates": {
+        "clinical": "thyroid",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0084",
+      "diagnosisText": "U ổ bụng",
+      "conclusionText": "Car-xi-nôm tuyến xâm nhập- \nNghĩ đến Car-xi-nôm tuyến thanh dịch buồng trứng.",
+      "selectedOrgan": "peritoneum_retroperitoneum",
+      "candidates": {
+        "clinical": "peritoneum_retroperitoneum",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "gynecologic"
+      }
+    },
+    {
+      "id": "hmmd-2025-0090",
+      "diagnosisText": "U ác thân vị",
+      "conclusionText": "U lympho ác tính không Hodgkin, lan tỏa. \nTế bào B lớn (DLBCL). Độ cao. \nType tế bào B không trung tâm mầm",
+      "selectedOrgan": "stomach",
+      "candidates": {
+        "clinical": "stomach",
+        "explicitIcd10": "",
+        "suggestedIcd10": "stomach",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0101",
+      "diagnosisText": "U tuyến thượng thận",
+      "conclusionText": "Hóa mô miễn dịch hướng đến Renal cell carcinoma.\n( Hybrid oncocytic chromophobe tumor).",
+      "selectedOrgan": "endocrine",
+      "candidates": {
+        "clinical": "endocrine",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "kidney"
+      }
+    },
+    {
+      "id": "hmmd-2025-0102",
+      "diagnosisText": "U gan",
+      "conclusionText": "Hóa mô miễn dịch hướng đến Renal cell carcinoma. Di căn gan.\n( Hybrid oncocytic chromophobe tumor).",
+      "selectedOrgan": "liver",
+      "candidates": {
+        "clinical": "liver",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "kidney"
+      }
+    },
+    {
+      "id": "hmmd-2025-0103",
+      "diagnosisText": "U lành của hạ hầu",
+      "conclusionText": "Mô lympho lành tính - Quá sản biểu mô lát tầng.",
+      "selectedOrgan": "head_neck",
+      "candidates": {
+        "clinical": "head_neck",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0108",
+      "diagnosisText": "Tràn dịch màng phổi, không phân loại nơi khác",
+      "conclusionText": "Mô học và Hóa mô miễn dịch phù hợp Mesenchymal chondrosarcoma.\nGhi chú: LCA, Myogenin âm tính. D2-40 dương tính.",
+      "selectedOrgan": "lung",
+      "candidates": {
+        "clinical": "lung",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "bone_soft_tissue"
+      }
+    },
+    {
+      "id": "hmmd-2025-0109",
+      "diagnosisText": "U ác của mô liên kết",
+      "conclusionText": "Sarcoma cơ trơn di căn gan. \n(Metastatic Leiomyosarcoma) ICD-O: 8890/ 9.",
+      "selectedOrgan": "bone_soft_tissue",
+      "candidates": {
+        "clinical": "bone_soft_tissue",
+        "explicitIcd10": "",
+        "suggestedIcd10": "bone_soft_tissue",
+        "hmmdConclusion": "liver"
+      }
+    },
+    {
+      "id": "hmmd-2025-0117",
+      "diagnosisText": "U ác của vú",
+      "conclusionText": "Carcinôm tuyến ống di căn hạch – Grade3\nPhân nhóm phân tử (Molecular grouping): HER2 Dương tính.",
+      "selectedOrgan": "breast",
+      "candidates": {
+        "clinical": "breast",
+        "explicitIcd10": "",
+        "suggestedIcd10": "breast",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0118",
+      "diagnosisText": "U ác của gan",
+      "conclusionText": "Hóa mô miễn dịch phù hợp Ung thư biểu mô đường niệu di căn.",
+      "selectedOrgan": "liver",
+      "candidates": {
+        "clinical": "liver",
+        "explicitIcd10": "",
+        "suggestedIcd10": "liver",
+        "hmmdConclusion": "urinary_male"
+      }
+    },
+    {
+      "id": "hmmd-2025-0120",
+      "diagnosisText": "U thận",
+      "conclusionText": "Hóa mô miễn dịch phù hợp Ung thư biểu mô tuyến giáp di căn.",
+      "selectedOrgan": "kidney",
+      "candidates": {
+        "clinical": "kidney",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "thyroid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0133",
+      "diagnosisText": "U ác tuyến ức",
+      "conclusionText": "Hodgkin thể xơ nốt (Hodkin type II). \n(Hodgkin lymphoma, nodular sclerosis)",
+      "selectedOrgan": "mediastinum",
+      "candidates": {
+        "clinical": "mediastinum",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0134",
+      "diagnosisText": "U ác của vú",
+      "conclusionText": "Quá sản tuyến giáp lành tính.",
+      "selectedOrgan": "breast",
+      "candidates": {
+        "clinical": "breast",
+        "explicitIcd10": "",
+        "suggestedIcd10": "breast",
+        "hmmdConclusion": "thyroid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0141",
+      "diagnosisText": "U ác của vú",
+      "conclusionText": "Hạch quá sản phản ứng",
+      "selectedOrgan": "breast",
+      "candidates": {
+        "clinical": "breast",
+        "explicitIcd10": "",
+        "suggestedIcd10": "breast",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0143",
+      "diagnosisText": "U não",
+      "conclusionText": "U lympho non hodgkin hodgkin lan tỏa tế bào B lớn",
+      "selectedOrgan": "cns",
+      "candidates": {
+        "clinical": "cns",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0147",
+      "diagnosisText": "U ác của vú",
+      "conclusionText": "K tuyến ống di căn hạch nách trái grade 3 ",
+      "selectedOrgan": "breast",
+      "candidates": {
+        "clinical": "breast",
+        "explicitIcd10": "",
+        "suggestedIcd10": "breast",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0165",
+      "diagnosisText": "U ác tiền liệt tuyến ",
+      "conclusionText": "Car-ci-nôm tuyến ống của  tụy hoặc đường mật ngoài gan.",
+      "selectedOrgan": "urinary_male",
+      "candidates": {
+        "clinical": "urinary_male",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "biliary_pancreas"
+      }
+    },
+    {
+      "id": "hmmd-2025-0167",
+      "diagnosisText": "U ác của gan ",
+      "conclusionText": "K tế bào gan và đường mật trong gan ",
+      "selectedOrgan": "liver",
+      "candidates": {
+        "clinical": "liver",
+        "explicitIcd10": "",
+        "suggestedIcd10": "liver",
+        "hmmdConclusion": "biliary_pancreas"
+      }
+    },
+    {
+      "id": "hmmd-2025-0171",
+      "diagnosisText": "Tiêu thân đốt sống l1",
+      "conclusionText": "Car-xi-nôm tế bào gan di căn. \n(Metastatic Hepatocellular carcinoma). ICD-O: 8170/9.",
+      "selectedOrgan": "kidney",
+      "candidates": {
+        "clinical": "kidney",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "liver"
+      }
+    },
+    {
+      "id": "hmmd-2025-0178",
+      "diagnosisText": "U ác của gan ",
+      "conclusionText": "Ung thư biểu mô đường mật trong gan.\n                      (Intrahepatic Cholangio  carcinoma). ICD-O: 8160/ 3\n",
+      "selectedOrgan": "liver",
+      "candidates": {
+        "clinical": "liver",
+        "explicitIcd10": "",
+        "suggestedIcd10": "liver",
+        "hmmdConclusion": "biliary_pancreas"
+      }
+    },
+    {
+      "id": "hmmd-2025-0180",
+      "diagnosisText": "U ác phổi",
+      "conclusionText": "K tế bào gan ",
+      "selectedOrgan": "lung",
+      "candidates": {
+        "clinical": "lung",
+        "explicitIcd10": "",
+        "suggestedIcd10": "lung",
+        "hmmdConclusion": "liver"
+      }
+    },
+    {
+      "id": "hmmd-2025-0186",
+      "diagnosisText": "Hạch nách",
+      "conclusionText": "Carcinôm tuyến thùy của vú di căn hạch.\n                  (Invasive lobular carcinoma classic metasta lympho node)\n",
+      "selectedOrgan": "hematolymphoid",
+      "candidates": {
+        "clinical": "hematolymphoid",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "breast"
+      }
+    },
+    {
+      "id": "hmmd-2025-0189",
+      "diagnosisText": "U thực quản ",
+      "conclusionText": "Car-xi-nôm tế bào gai di căn hạch- Nghĩ đến từ phổi.\n(Metastatic Squamous cell carcinoma of the lung)\n",
+      "selectedOrgan": "esophagus",
+      "candidates": {
+        "clinical": "esophagus",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "lung"
+      }
+    },
+    {
+      "id": "hmmd-2025-0200",
+      "diagnosisText": "U dạ dày ",
+      "conclusionText": "Car-xi-nôm tuyến biệt hóa kém- Nghĩ đến từ phổi.",
+      "selectedOrgan": "stomach",
+      "candidates": {
+        "clinical": "stomach",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "lung"
+      }
+    },
+    {
+      "id": "hmmd-2025-0211",
+      "diagnosisText": "U ác mô liên kết ",
+      "conclusionText": "Car-xi-nôm tế bào gai di căn hạch- Mô học độ 2.\n(Squamous cell carcinoma metasta lympho node- Grade 2)\n",
+      "selectedOrgan": "bone_soft_tissue",
+      "candidates": {
+        "clinical": "bone_soft_tissue",
+        "explicitIcd10": "",
+        "suggestedIcd10": "bone_soft_tissue",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0220",
+      "diagnosisText": "U ác amydale ",
+      "conclusionText": "U Lympho không Hodgkin lan tỏa, tế bào B lớn, typ tâm mầm - Mô học độ cao.\n(Diffuse Large B cell Lymphoma (DLBCL) - Germinal center B cell)\n",
+      "selectedOrgan": "head_neck",
+      "candidates": {
+        "clinical": "head_neck",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0226",
+      "diagnosisText": "U ác của não ",
+      "conclusionText": "U Lympho không Hodgkin lan tỏa, tế bào B lớn  - Mô học độ cao.\n                             (Diffuse Large B cell Lymphoma - DLBCL)   WHO 2017\n",
+      "selectedOrgan": "cns",
+      "candidates": {
+        "clinical": "cns",
+        "explicitIcd10": "",
+        "suggestedIcd10": "cns",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0227",
+      "diagnosisText": "U ác phế quản phổi ",
+      "conclusionText": "Hóa mô miễn dịch phù hợp Ung thư  biểu mô tế bào gai tuyến ức. \n(Thymic squamous cell carcinoma).\n",
+      "selectedOrgan": "lung",
+      "candidates": {
+        "clinical": "lung",
+        "explicitIcd10": "",
+        "suggestedIcd10": "lung",
+        "hmmdConclusion": "mediastinum"
+      }
+    },
+    {
+      "id": "hmmd-2025-0238",
+      "diagnosisText": "U ác phế quản ",
+      "conclusionText": "Ung thư biểu mô gai không sừng hóa, di căn hạch\n(Squamous cell carcinoma non keratinization, metasta lympho node).\n",
+      "selectedOrgan": "lung",
+      "candidates": {
+        "clinical": "lung",
+        "explicitIcd10": "",
+        "suggestedIcd10": "lung",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0239",
+      "diagnosisText": "U vú ",
+      "conclusionText": "Carcinôm tuyến ống xâm nhập di căn hạch – Grade 3.\n               Phân nhóm phân tử (Molecular grouping):   HER2 Dương tính.\n",
+      "selectedOrgan": "breast",
+      "candidates": {
+        "clinical": "breast",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0254",
+      "diagnosisText": " U màng não ",
+      "conclusionText": "Car-xi-nôm tuyến đặc của phổi- PDl-1 (SP263): TPS=50 (CPS=60).\n(Solid adenocarcinoma of the lung). ICD-O:  8230/ 3.",
+      "selectedOrgan": "cns",
+      "candidates": {
+        "clinical": "cns",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "lung"
+      }
+    },
+    {
+      "id": "hmmd-2025-0258",
+      "diagnosisText": "U ác của thận",
+      "conclusionText": "HMMD không biểu hiện nguồn gốc của tuyến thượng thận. ",
+      "selectedOrgan": "kidney",
+      "candidates": {
+        "clinical": "kidney",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "endocrine"
+      }
+    },
+    {
+      "id": "hmmd-2025-0259",
+      "diagnosisText": "U ác của thận",
+      "conclusionText": "HMMD không biểu hiện nguồn gốc của tuyến thượng thận. ",
+      "selectedOrgan": "kidney",
+      "candidates": {
+        "clinical": "kidney",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "endocrine"
+      }
+    },
+    {
+      "id": "hmmd-2025-0260",
+      "diagnosisText": "U mạc treo ",
+      "conclusionText": "Sarcoma cơ trơn- Mô học độ 2.\n(Leiomyosarcoma- Grade 2) ICD-O: 8890/ 3.",
+      "selectedOrgan": "peritoneum_retroperitoneum",
+      "candidates": {
+        "clinical": "peritoneum_retroperitoneum",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "bone_soft_tissue"
+      }
+    },
+    {
+      "id": "hmmd-2025-0262",
+      "diagnosisText": "U ác đầu mặt cổ ",
+      "conclusionText": "Hóa mô miễn dịch phù hợp Ung thư biểu mô tế bào gai không sừng hóa, di căn. \nBàn luận: Hướng đến nguồn gốc ngoài phổi.\n\n",
+      "selectedOrgan": "head_neck",
+      "candidates": {
+        "clinical": "head_neck",
+        "explicitIcd10": "",
+        "suggestedIcd10": "head_neck",
+        "hmmdConclusion": "lung"
+      }
+    },
+    {
+      "id": "hmmd-2025-0265",
+      "diagnosisText": "Hạch nách ",
+      "conclusionText": "Ung thư biểu mô tuyến vú thể ống, xâm lấn. Mô học độ II.\nPhân nhóm phân tử: Lòng ống B.",
+      "selectedOrgan": "hematolymphoid",
+      "candidates": {
+        "clinical": "hematolymphoid",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "breast"
+      }
+    },
+    {
+      "id": "hmmd-2025-0269",
+      "diagnosisText": "U ác khẩu cái mềm",
+      "conclusionText": "U lympho ác tính không Hodgkin, lan tỏa. Tế bào B lớn ( DLBCL). Độ cao. \nTyp tế bào B trung tâm mầm ( Germinal center B cell ).\n",
+      "selectedOrgan": "head_neck",
+      "candidates": {
+        "clinical": "head_neck",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0284",
+      "diagnosisText": "U ác tụy ",
+      "conclusionText": "U Lympho không Hodgkin lan tỏa, tế bào B lớn không tâm mầm  - Mô học độ cao.\n(Diffuse Large B cell Lymphoma (DLBCL) - Activated B cell type)   WHO 2017\n",
+      "selectedOrgan": "biliary_pancreas",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "biliary_pancreas",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0287",
+      "diagnosisText": "U lympho",
+      "conclusionText": "Car-xi-nôm tuyến xâm nhập.\nNghĩ đến từ đường mật ngoài gan hoặc tụy.         \n",
+      "selectedOrgan": "hematolymphoid",
+      "candidates": {
+        "clinical": "hematolymphoid",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "biliary_pancreas"
+      }
+    },
+    {
+      "id": "hmmd-2025-0289",
+      "diagnosisText": "u ác màng não ",
+      "conclusionText": "Car-xi-nôm tuyến xâm nhập.\nNghĩ đến từ đường mật ngoài gan hoặc tụy.         \n",
+      "selectedOrgan": "cns",
+      "candidates": {
+        "clinical": "cns",
+        "explicitIcd10": "",
+        "suggestedIcd10": "cns",
+        "hmmdConclusion": "biliary_pancreas"
+      }
+    },
+    {
+      "id": "hmmd-2025-0302",
+      "diagnosisText": "U lành của lưỡi ",
+      "conclusionText": "U Lympho không Hodgkin lan tỏa, tế bào B lớn, type không tâm mầm - Mô học độ thấp.\n(Diffuse Large B cell Lymphoma (DLBCL) - Activated B cell type)\n",
+      "selectedOrgan": "head_neck",
+      "candidates": {
+        "clinical": "head_neck",
+        "explicitIcd10": "",
+        "suggestedIcd10": "head_neck",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0309",
+      "diagnosisText": "U mỡ lành tính",
+      "conclusionText": "U Lympho không Hodgkin lan tỏa, tế bào B lớn, type không tâm mầm - Mô học độ cao.\n(Diffuse Large B cell Lymphoma (DLBCL) - Activated B cell type)\n",
+      "selectedOrgan": "bone_soft_tissue",
+      "candidates": {
+        "clinical": "bone_soft_tissue",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0319",
+      "diagnosisText": "U ác của đáy lưỡi ",
+      "conclusionText": "U Lympho không Hodgkin lan tỏa, tế bào B lớn, type tâm mầm - Mô học độ cao.\n(Diffuse Large B cell Lymphoma (DLBCL) - Germinal center B cell type)",
+      "selectedOrgan": "head_neck",
+      "candidates": {
+        "clinical": "head_neck",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0336",
+      "diagnosisText": "U ác túi mật ",
+      "conclusionText": "Đã hủy",
+      "selectedOrgan": "biliary_pancreas",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "skin"
+      }
+    },
+    {
+      "id": "hmmd-2025-0341",
+      "diagnosisText": "U ác của bàng quang ",
+      "conclusionText": "Hóa mô miễn dịch phù hợp Ung thư biểu mô tuyến đại tràng, xâm lấn.",
+      "selectedOrgan": "urinary_male",
+      "candidates": {
+        "clinical": "urinary_male",
+        "explicitIcd10": "",
+        "suggestedIcd10": "urinary_male",
+        "hmmdConclusion": "colorectal"
+      }
+    },
+    {
+      "id": "hmmd-2025-0342",
+      "diagnosisText": "U ác của vú ",
+      "conclusionText": "   HMMD:    Hạch quá sản phản ứng. Không thấy hình ảnh di căn. ",
+      "selectedOrgan": "breast",
+      "candidates": {
+        "clinical": "breast",
+        "explicitIcd10": "",
+        "suggestedIcd10": "breast",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0353",
+      "diagnosisText": "U ruột non ",
+      "conclusionText": "U mô đệm dạ dày ruột (GIST). Type tế bào hình thoi. \nNhân chia < 5/50HPFs. Mô học độ thấp. Độ nguy cơ thấp",
+      "selectedOrgan": "small_bowel",
+      "candidates": {
+        "clinical": "small_bowel",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "stomach"
+      }
+    },
+    {
+      "id": "hmmd-2025-0354",
+      "diagnosisText": "U ác amidale ",
+      "conclusionText": "U lympho không hodgkin lan tỏa tế bào B lớn, type tâm mầm, hô học độ cao ",
+      "selectedOrgan": "head_neck",
+      "candidates": {
+        "clinical": "head_neck",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "gynecologic"
+      }
+    },
+    {
+      "id": "hmmd-2025-0362",
+      "diagnosisText": "U ác xương chậu ",
+      "conclusionText": "HMMD phù hợp:       Tổ chức nhu mô não (sao bào) kèm viêm.\n                                     Chưa loại trừ u tế bào mầm. \nBàn luận: \nCần lấy thêm mẫu, vì sợ chưa đúng vị trí.\n",
+      "selectedOrgan": "bone_soft_tissue",
+      "candidates": {
+        "clinical": "bone_soft_tissue",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "cns"
+      }
+    },
+    {
+      "id": "hmmd-2025-0363",
+      "diagnosisText": "Gãy xương mũi chính ",
+      "conclusionText": "Ung thư biểu mô tuyến nhú hốc mũi, mô  học độ thấp",
+      "selectedOrgan": "bone_soft_tissue",
+      "candidates": {
+        "clinical": "bone_soft_tissue",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "head_neck"
+      }
+    },
+    {
+      "id": "hmmd-2025-0367",
+      "diagnosisText": "U ác của vú ",
+      "conclusionText": "Car-xi-nôm tuyến ống của vú di căn phổi.",
+      "selectedOrgan": "breast",
+      "candidates": {
+        "clinical": "breast",
+        "explicitIcd10": "",
+        "suggestedIcd10": "breast",
+        "hmmdConclusion": "lung"
+      }
+    },
+    {
+      "id": "hmmd-2025-0370",
+      "diagnosisText": "U lành trung thất ",
+      "conclusionText": "Sarcoma xơ. Mô học độ 1.\n(Fibrosarcoma. Grade 1.)\n",
+      "selectedOrgan": "mediastinum",
+      "candidates": {
+        "clinical": "mediastinum",
+        "explicitIcd10": "",
+        "suggestedIcd10": "mediastinum",
+        "hmmdConclusion": "bone_soft_tissue"
+      }
+    },
+    {
+      "id": "hmmd-2025-0372",
+      "diagnosisText": "Xơ gan ",
+      "conclusionText": "HMMD phù hợp:\nUng thư biểu mô tuyến-gai của phổi, xâm nhập.\n(Invasive adenosquamous carcinoma of the lung)\n\n",
+      "selectedOrgan": "liver",
+      "candidates": {
+        "clinical": "liver",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "lung"
+      }
+    },
+    {
+      "id": "hmmd-2025-0383",
+      "diagnosisText": "U ác dạ dày ",
+      "conclusionText": "Ung thư biểu mô tuyến biệt hóa vừa, xâm nhập. \nHướng đến ung thư biểu mô tuyến đại tràng.\nMMR: Biểu hiện bình thường 4 protein MMR: MLH1, PMS2, MSH2 và MSH6. \nKhông có biểu hiện khiếm khuyết MMR hoặc hội chứng Lynch.\n",
+      "selectedOrgan": "stomach",
+      "candidates": {
+        "clinical": "stomach",
+        "explicitIcd10": "",
+        "suggestedIcd10": "stomach",
+        "hmmdConclusion": "colorectal"
+      }
+    },
+    {
+      "id": "hmmd-2025-0385",
+      "diagnosisText": "U ác xương ",
+      "conclusionText": "Car-xi-nôm tuyến di căn xương - Nghĩ đến từ phổi.",
+      "selectedOrgan": "bone_soft_tissue",
+      "candidates": {
+        "clinical": "bone_soft_tissue",
+        "explicitIcd10": "",
+        "suggestedIcd10": "bone_soft_tissue",
+        "hmmdConclusion": "lung"
+      }
+    },
+    {
+      "id": "hmmd-2025-0389",
+      "diagnosisText": "U gist",
+      "conclusionText": "U mô đệm dạ dày ruột (GIST). Type tế bào hình thoi. \nNhân chia < 5/50HPFs. Mô học độ thấp. Độ nguy cơ thấp",
+      "selectedOrgan": "bone_soft_tissue",
+      "candidates": {
+        "clinical": "bone_soft_tissue",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "stomach"
+      }
+    },
+    {
+      "id": "hmmd-2025-0400",
+      "diagnosisText": "U ác phế quản và phổi",
+      "conclusionText": "U Lympho ác tính không Hodgkin lan tỏa, tế bào B nhỏ - Mô học độ thấp.\n(Small lymphocytic Lymphoma - SLL) - WHO 2008\n",
+      "selectedOrgan": "lung",
+      "candidates": {
+        "clinical": "lung",
+        "explicitIcd10": "",
+        "suggestedIcd10": "lung",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0411",
+      "diagnosisText": "U tân sinh CRBC",
+      "conclusionText": "Car-xi-nôm tế bào gai không sừng hóa của phổi, xâm nhập.\nPDL-1 (SP263): TPS< 1.\n",
+      "selectedOrgan": "hematolymphoid",
+      "candidates": {
+        "clinical": "hematolymphoid",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "lung"
+      }
+    },
+    {
+      "id": "hmmd-2025-0414",
+      "diagnosisText": "Hạch cổ T",
+      "conclusionText": "Ung thư biểu mô, hướng đến biểu mô tuyến, di căn hạch.\nChưa loại trừ Large cell carcinoma từ phổi.\n",
+      "selectedOrgan": "hematolymphoid",
+      "candidates": {
+        "clinical": "hematolymphoid",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "lung"
+      }
+    },
+    {
+      "id": "hmmd-2025-0416",
+      "diagnosisText": "U ác của màng não",
+      "conclusionText": "Hủy CĐ 2/4/25 liên hệ điều dưỡng Loan, BN đã làm HM",
+      "selectedOrgan": "cns",
+      "candidates": {
+        "clinical": "cns",
+        "explicitIcd10": "",
+        "suggestedIcd10": "cns",
+        "hmmdConclusion": "skin"
+      }
+    },
+    {
+      "id": "hmmd-2025-0418",
+      "diagnosisText": "U lành tính buồng trứng",
+      "conclusionText": "U thanh dịch giáp biên. (Serous borderline tumor).",
+      "selectedOrgan": "gynecologic",
+      "candidates": {
+        "clinical": "gynecologic",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "thyroid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0425",
+      "diagnosisText": "U ác vú",
+      "conclusionText": " HMMD phù hợp: Sarcoma mô đệm không biệt hóa.",
+      "selectedOrgan": "breast",
+      "candidates": {
+        "clinical": "breast",
+        "explicitIcd10": "",
+        "suggestedIcd10": "breast",
+        "hmmdConclusion": "bone_soft_tissue"
+      }
+    },
+    {
+      "id": "hmmd-2025-0429",
+      "diagnosisText": "U cơ phần mềm",
+      "conclusionText": "U Lympho ác tính không Hodgkin lan tỏa, tế bào B lớn - Mô học độ cao.\n(Diffuse Large B cell Lymphoma with high grade (DLBCL))\n",
+      "selectedOrgan": "head_neck",
+      "candidates": {
+        "clinical": "head_neck",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0437",
+      "diagnosisText": "U ác trực tràng",
+      "conclusionText": "U mô đệm dạ dày ruột, typ tế bào hình thoi (GIST). Nhân chia <5/50HPF. ",
+      "selectedOrgan": "colorectal",
+      "candidates": {
+        "clinical": "colorectal",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "stomach"
+      }
+    },
+    {
+      "id": "hmmd-2025-0447",
+      "diagnosisText": "U thận P",
+      "conclusionText": "Ung thư biểu mô tuyến nhầy ( Mucinous carcinoma). \nHướng đến tổn thương thứ phát từ đại tràng. Đề nghị tầm soát thêm.\n",
+      "selectedOrgan": "kidney",
+      "candidates": {
+        "clinical": "kidney",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "colorectal"
+      }
+    },
+    {
+      "id": "hmmd-2025-0465",
+      "diagnosisText": "U ác phế quản và phổi",
+      "conclusionText": "  HMMD phù hơp:  Large cell carcinoma di căn hạch- PDL1(SP263) = 10.",
+      "selectedOrgan": "lung",
+      "candidates": {
+        "clinical": "lung",
+        "explicitIcd10": "",
+        "suggestedIcd10": "lung",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0474",
+      "diagnosisText": "U ác vú",
+      "conclusionText": "  HMMD:    Carcinôm tuyến ống di căn hạch nách – Grade 3\n              Phân nhóm phân tử (Molecular grouping): Bộ ba âm tính không dạng đáy.\n",
+      "selectedOrgan": "breast",
+      "candidates": {
+        "clinical": "breast",
+        "explicitIcd10": "",
+        "suggestedIcd10": "breast",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0475",
+      "diagnosisText": "U ác thực quản ",
+      "conclusionText": "Ung thư biểu mô gai không sừng hóa, di căn hạch- Mô học độ 3.\n    (Squamous cell carcinoma non keratinization, metasta lympho node).\n",
+      "selectedOrgan": "esophagus",
+      "candidates": {
+        "clinical": "esophagus",
+        "explicitIcd10": "",
+        "suggestedIcd10": "esophagus",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0480",
+      "diagnosisText": "U ác lưỡi",
+      "conclusionText": "HMMD phù hợp: \nUng thư biểu mô tế bào gai biệt hóa tốt, di căn hạch. \n(Good differentiated squamous cell carcinoma, lymph node metastatis)\n",
+      "selectedOrgan": "head_neck",
+      "candidates": {
+        "clinical": "head_neck",
+        "explicitIcd10": "",
+        "suggestedIcd10": "head_neck",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0490",
+      "diagnosisText": "TD sarcom xương cánh tay T",
+      "conclusionText": "U lympho ác tính không Hodgkin, lan tỏa. Tế bào B lớn (DLBCL). Độ cao.\nTyp tế bào B không trung tâm mầm (non-germinal center B cell).\n",
+      "selectedOrgan": "bone_soft_tissue",
+      "candidates": {
+        "clinical": "bone_soft_tissue",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0496",
+      "diagnosisText": "U ác bàng quang",
+      "conclusionText": "Ung thư biểu mô tuyến, xâm lấn.\nBàn luận: Kết quả nhuộm Hóa mô miễn dịch mẫu đại tràng (24.2370) tương đồng với mẫu u bàng quang ( 25.2603: CK7, P63 âm tính. CK20, CDX2 dương tính). \nPhù hợp với ung thư biểu mô tuyến đại tràng, di căn bàng quang.\n",
+      "selectedOrgan": "urinary_male",
+      "candidates": {
+        "clinical": "urinary_male",
+        "explicitIcd10": "",
+        "suggestedIcd10": "urinary_male",
+        "hmmdConclusion": "colorectal"
+      }
+    },
+    {
+      "id": "hmmd-2025-0515",
+      "diagnosisText": "U mỡ",
+      "conclusionText": "Hóa mô miễn dịch phù hợp U thần kinh nội tiết, grade2",
+      "selectedOrgan": "bone_soft_tissue",
+      "candidates": {
+        "clinical": "bone_soft_tissue",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "kidney"
+      }
+    },
+    {
+      "id": "hmmd-2025-0519",
+      "diagnosisText": "U hỗng tràng",
+      "conclusionText": "HMMD phù hợp:              U mô đệm dạ dày- ruột ; độ I.\n     (Gastro-Intestinal Stromal Tumor: GIST- Grade 1)\n",
+      "selectedOrgan": "small_bowel",
+      "candidates": {
+        "clinical": "small_bowel",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "stomach"
+      }
+    },
+    {
+      "id": "hmmd-2025-0520",
+      "diagnosisText": "U ác trung thất",
+      "conclusionText": "U lympho ác tính không Hodgkin, lan tỏa. Tế bào B lớn (DLBCL). Độ cao. \nTyp tế bào B trung tâm mầm (Germinal center B cell).\n",
+      "selectedOrgan": "mediastinum",
+      "candidates": {
+        "clinical": "mediastinum",
+        "explicitIcd10": "",
+        "suggestedIcd10": "mediastinum",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0523",
+      "diagnosisText": "U nang BT",
+      "conclusionText": "U nhầy giáp biên.\n(Mucinous borderline tumor).\n",
+      "selectedOrgan": "gynecologic",
+      "candidates": {
+        "clinical": "gynecologic",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "thyroid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0538",
+      "diagnosisText": "U ác của gan",
+      "conclusionText": "Hóa mô miễn dịch phù hợp Ung thư biểu mô đường mật, biệt hóa vừa, xâm lấn.",
+      "selectedOrgan": "liver",
+      "candidates": {
+        "clinical": "liver",
+        "explicitIcd10": "",
+        "suggestedIcd10": "liver",
+        "hmmdConclusion": "biliary_pancreas"
+      }
+    },
+    {
+      "id": "hmmd-2025-0546",
+      "diagnosisText": "U tuyến thượng thận",
+      "conclusionText": "Kết quả đã có bệnh nhân vào lại rồi trả kết quả",
+      "selectedOrgan": "endocrine",
+      "candidates": {
+        "clinical": "endocrine",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "skin"
+      }
+    },
+    {
+      "id": "hmmd-2025-0547",
+      "diagnosisText": "U buồng trứng ",
+      "conclusionText": "Hóa mô miễn dịch phù hợp Ung thư biểu mô tuyến bàng quang.",
+      "selectedOrgan": "gynecologic",
+      "candidates": {
+        "clinical": "gynecologic",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "urinary_male"
+      }
+    },
+    {
+      "id": "hmmd-2025-0549",
+      "diagnosisText": "K biểu mô liên kết",
+      "conclusionText": "Hóa mô miễn dịch hướng đến u lympho ác tính.\nĐề nghị nhuộm thêm để phân dòng tế bào u.\n",
+      "selectedOrgan": "bone_soft_tissue",
+      "candidates": {
+        "clinical": "bone_soft_tissue",
+        "explicitIcd10": "",
+        "suggestedIcd10": "bone_soft_tissue",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0563",
+      "diagnosisText": "U ác của não",
+      "conclusionText": "      U Lympho không Hodgkin lan tỏa, tế bào B lớn, type tâm mầm - Mô học độ cao.\n(Diffuse Large B cell Lymphoma (DLBCL) - Germinal center B cell type)\n",
+      "selectedOrgan": "cns",
+      "candidates": {
+        "clinical": "cns",
+        "explicitIcd10": "",
+        "suggestedIcd10": "cns",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0574",
+      "diagnosisText": "Viêm phổi",
+      "conclusionText": "Hóa mô miễn dịch phù hợp Hạch lympho quá sản nang.",
+      "selectedOrgan": "lung",
+      "candidates": {
+        "clinical": "lung",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0577",
+      "diagnosisText": "U ác bàng quang",
+      "conclusionText": "Ung thư biểu mô tuyến đại tràng xâm lấn bàng quang.",
+      "selectedOrgan": "urinary_male",
+      "candidates": {
+        "clinical": "urinary_male",
+        "explicitIcd10": "",
+        "suggestedIcd10": "urinary_male",
+        "hmmdConclusion": "colorectal"
+      }
+    },
+    {
+      "id": "hmmd-2025-0578",
+      "diagnosisText": "K biểu mô liên kết",
+      "conclusionText": "Hóa mô miễn dịch phù hợp U lympho ác tính. \n( Extranodal NK / T cell lymphoma).\n",
+      "selectedOrgan": "bone_soft_tissue",
+      "candidates": {
+        "clinical": "bone_soft_tissue",
+        "explicitIcd10": "",
+        "suggestedIcd10": "bone_soft_tissue",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0579",
+      "diagnosisText": "U thân D6 chèn ép tủy",
+      "conclusionText": "HMMD phù hơp: Sarcoma xơ cơ. Mô học độ II",
+      "selectedOrgan": "kidney",
+      "candidates": {
+        "clinical": "kidney",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "bone_soft_tissue"
+      }
+    },
+    {
+      "id": "hmmd-2025-0589",
+      "diagnosisText": "U ác của vú",
+      "conclusionText": "Hạch lympho quá sản. Không thấy tế bào biểu mô di căn.",
+      "selectedOrgan": "breast",
+      "candidates": {
+        "clinical": "breast",
+        "explicitIcd10": "",
+        "suggestedIcd10": "breast",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0590",
+      "diagnosisText": "U ác phế quản và phổi",
+      "conclusionText": "Hóa mô miễn dịch phù hợp Ung thư biểu mô tuyến đại tràng di căn phổi. \nPDL1(SP263): TC <1. CPS 30%.\n",
+      "selectedOrgan": "lung",
+      "candidates": {
+        "clinical": "lung",
+        "explicitIcd10": "",
+        "suggestedIcd10": "lung",
+        "hmmdConclusion": "colorectal"
+      }
+    },
+    {
+      "id": "hmmd-2025-0596",
+      "diagnosisText": "U tân sinh CRBC",
+      "conclusionText": "Hóa mô miễn dịch phù hợp Ung thư biểu mô tuyến phổi di căn. \nPDL1(SP263): Không bộc lộ. TC <1%. \n",
+      "selectedOrgan": "hematolymphoid",
+      "candidates": {
+        "clinical": "hematolymphoid",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "lung"
+      }
+    },
+    {
+      "id": "hmmd-2025-0598",
+      "diagnosisText": "U ác của tụy",
+      "conclusionText": "Hóa mô miễn dịch phù hợp u thần kinh nội tiết, độ 2. \n(Well differentiated neuroendocrine tumor, grade 2).\nMMR: Biểu hiện bình thường 4 protein MMR: MLH1, PMS2, MSH2 và MSH6. \nKhông có biểu hiện khiếm khuyết MMR hoặc hội chứng Lynch.\n",
+      "selectedOrgan": "biliary_pancreas",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "biliary_pancreas",
+        "hmmdConclusion": "kidney"
+      }
+    },
+    {
+      "id": "hmmd-2025-0602",
+      "diagnosisText": "U gan",
+      "conclusionText": "Carcinoma tế bào nhỏ của phổi.\n(Small cell carcinoma of the lung).  ICD-O: 8041/3",
+      "selectedOrgan": "liver",
+      "candidates": {
+        "clinical": "liver",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "lung"
+      }
+    }
+  ],
+  "correctedPreviouslyClassifiedExamples": [
+    {
+      "id": "hmmd-2025-0008",
+      "diagnosisText": "U ác của gan và đường mật trong gan",
+      "previousOrgan": "liver",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Đường mật",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "biliary_pancreas",
+        "hmmdConclusion": "liver"
+      }
+    },
+    {
+      "id": "hmmd-2025-0016",
+      "diagnosisText": "U ác thân vị",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "stomach",
+      "specimenSite": "Dạ dày",
+      "candidates": {
+        "clinical": "stomach",
+        "explicitIcd10": "",
+        "suggestedIcd10": "stomach",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0090",
+      "diagnosisText": "U ác thân vị",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "stomach",
+      "specimenSite": "Dạ dày",
+      "candidates": {
+        "clinical": "stomach",
+        "explicitIcd10": "",
+        "suggestedIcd10": "stomach",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0101",
+      "diagnosisText": "U tuyến thượng thận",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "endocrine",
+      "specimenSite": "Tuyến thượng thận",
+      "candidates": {
+        "clinical": "endocrine",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "kidney"
+      }
+    },
+    {
+      "id": "hmmd-2025-0105",
+      "diagnosisText": "Tắc ruột",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "hematolymphoid",
+      "specimenSite": "",
+      "candidates": {
+        "clinical": "",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0145",
+      "diagnosisText": "U mô đệm dạ dày - ruột độ ",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "stomach",
+      "specimenSite": "Dạ dày",
+      "candidates": {
+        "clinical": "stomach",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "stomach"
+      }
+    },
+    {
+      "id": "hmmd-2025-0191",
+      "diagnosisText": "U ác thân tử cung ",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "gynecologic",
+      "specimenSite": "Tử cung",
+      "candidates": {
+        "clinical": "gynecologic",
+        "explicitIcd10": "",
+        "suggestedIcd10": "gynecologic",
+        "hmmdConclusion": "gynecologic"
+      }
+    },
+    {
+      "id": "hmmd-2025-0214",
+      "diagnosisText": "Suy nhược thần kinh ",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "liver",
+      "specimenSite": "",
+      "candidates": {
+        "clinical": "",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "liver"
+      }
+    },
+    {
+      "id": "hmmd-2025-0270",
+      "diagnosisText": "Tắt ruột ",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "bone_soft_tissue",
+      "specimenSite": "",
+      "candidates": {
+        "clinical": "",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "bone_soft_tissue"
+      }
+    },
+    {
+      "id": "hmmd-2025-0353",
+      "diagnosisText": "U ruột non ",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "small_bowel",
+      "specimenSite": "Ruột non",
+      "candidates": {
+        "clinical": "small_bowel",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "stomach"
+      }
+    },
+    {
+      "id": "hmmd-2025-0408",
+      "diagnosisText": "U ác tuyến thượng thận",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "endocrine",
+      "specimenSite": "Tuyến thượng thận",
+      "candidates": {
+        "clinical": "endocrine",
+        "explicitIcd10": "",
+        "suggestedIcd10": "endocrine",
+        "hmmdConclusion": "endocrine"
+      }
+    },
+    {
+      "id": "hmmd-2025-0470",
+      "diagnosisText": "U ác tuyến thượng thận",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "endocrine",
+      "specimenSite": "Tuyến thượng thận",
+      "candidates": {
+        "clinical": "endocrine",
+        "explicitIcd10": "",
+        "suggestedIcd10": "endocrine",
+        "hmmdConclusion": "endocrine"
+      }
+    },
+    {
+      "id": "hmmd-2025-0477",
+      "diagnosisText": "Gãy thân xương cánh tay",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "bone_soft_tissue",
+      "specimenSite": "Xương",
+      "candidates": {
+        "clinical": "bone_soft_tissue",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "bone_soft_tissue"
+      }
+    },
+    {
+      "id": "hmmd-2025-0546",
+      "diagnosisText": "U tuyến thượng thận",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "endocrine",
+      "specimenSite": "Tuyến thượng thận",
+      "candidates": {
+        "clinical": "endocrine",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "skin"
+      }
+    },
+    {
+      "id": "hmmd-2025-0640",
+      "diagnosisText": "Tắc ruột",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "kidney",
+      "specimenSite": "",
+      "candidates": {
+        "clinical": "",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "kidney"
+      }
+    },
+    {
+      "id": "hmmd-2025-0668",
+      "diagnosisText": "U ác của gan và đường mật trong gan",
+      "previousOrgan": "liver",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Đường mật",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "biliary_pancreas",
+        "hmmdConclusion": "biliary_pancreas"
+      }
+    },
+    {
+      "id": "hmmd-2025-0707",
+      "diagnosisText": "U ác ruột non",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "small_bowel",
+      "specimenSite": "Ruột non",
+      "candidates": {
+        "clinical": "small_bowel",
+        "explicitIcd10": "",
+        "suggestedIcd10": "small_bowel",
+        "hmmdConclusion": "stomach"
+      }
+    },
+    {
+      "id": "hmmd-2025-0728",
+      "diagnosisText": "Lồng ruột",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "hematolymphoid",
+      "specimenSite": "",
+      "candidates": {
+        "clinical": "",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0761",
+      "diagnosisText": "U ruột non",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "small_bowel",
+      "specimenSite": "Ruột non",
+      "candidates": {
+        "clinical": "small_bowel",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0769",
+      "diagnosisText": "U ác bóng vater M gan",
+      "previousOrgan": "liver",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Bóng Vater",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "biliary_pancreas"
+      }
+    },
+    {
+      "id": "hmmd-2025-0844",
+      "diagnosisText": "U thân đuôi tụy",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Tụy",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "kidney"
+      }
+    },
+    {
+      "id": "hmmd-2025-0851",
+      "diagnosisText": "Viêm teo phình vị + thân vị",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "stomach",
+      "specimenSite": "Dạ dày",
+      "candidates": {
+        "clinical": "stomach",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0934",
+      "diagnosisText": "Viêm teo phình vị - thân vị",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "stomach",
+      "specimenSite": "Dạ dày",
+      "candidates": {
+        "clinical": "stomach",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-0946",
+      "diagnosisText": "U ác ruột non",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "small_bowel",
+      "specimenSite": "Ruột non",
+      "candidates": {
+        "clinical": "small_bowel",
+        "explicitIcd10": "",
+        "suggestedIcd10": "small_bowel",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-1062",
+      "diagnosisText": "U ác của gan và đường mật",
+      "previousOrgan": "liver",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Đường mật",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "biliary_pancreas"
+      }
+    },
+    {
+      "id": "hmmd-2025-1157",
+      "diagnosisText": "lồng ruột",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "hematolymphoid",
+      "specimenSite": "",
+      "candidates": {
+        "clinical": "",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-1307",
+      "diagnosisText": "U ác của gan và đường mật",
+      "previousOrgan": "liver",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Đường mật",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "biliary_pancreas"
+      }
+    },
+    {
+      "id": "hmmd-2025-1326",
+      "diagnosisText": "U đường mật trong gan",
+      "previousOrgan": "liver",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Đường mật",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "biliary_pancreas"
+      }
+    },
+    {
+      "id": "hmmd-2025-1330",
+      "diagnosisText": "Tổn thương dây thần kinh thị giác",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "cns",
+      "specimenSite": "",
+      "candidates": {
+        "clinical": "",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "cns"
+      }
+    },
+    {
+      "id": "hmmd-2025-1426",
+      "diagnosisText": "U ác của thân vị",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "stomach",
+      "specimenSite": "Dạ dày",
+      "candidates": {
+        "clinical": "stomach",
+        "explicitIcd10": "",
+        "suggestedIcd10": "stomach",
+        "hmmdConclusion": "stomach"
+      }
+    },
+    {
+      "id": "hmmd-2025-1461",
+      "diagnosisText": "U ác của gan và đường mật trong gan",
+      "previousOrgan": "liver",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Đường mật",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "biliary_pancreas",
+        "hmmdConclusion": "liver"
+      }
+    },
+    {
+      "id": "hmmd-2025-1473",
+      "diagnosisText": "U ác của tuyến thượng thận",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "endocrine",
+      "specimenSite": "Tuyến thượng thận",
+      "candidates": {
+        "clinical": "endocrine",
+        "explicitIcd10": "",
+        "suggestedIcd10": "endocrine",
+        "hmmdConclusion": "endocrine"
+      }
+    },
+    {
+      "id": "hmmd-2025-1512",
+      "diagnosisText": "Nhược cơ và bệnh thần kinh",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "mediastinum",
+      "specimenSite": "",
+      "candidates": {
+        "clinical": "",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "mediastinum"
+      }
+    },
+    {
+      "id": "hmmd-2025-1525",
+      "diagnosisText": "U của gan và đường mật",
+      "previousOrgan": "liver",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Đường mật",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "liver"
+      }
+    },
+    {
+      "id": "hmmd-2025-1535",
+      "diagnosisText": "U ác của gan và đường mật trong gan",
+      "previousOrgan": "liver",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Đường mật",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "biliary_pancreas",
+        "hmmdConclusion": "colorectal"
+      }
+    },
+    {
+      "id": "hmmd-2025-1609",
+      "diagnosisText": "TD viêm ruột cấp",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "hematolymphoid",
+      "specimenSite": "",
+      "candidates": {
+        "clinical": "",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-1634",
+      "diagnosisText": "Suy thận mạn tính",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "hematolymphoid",
+      "specimenSite": "",
+      "candidates": {
+        "clinical": "",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2025-1646",
+      "diagnosisText": "U ác của thân vị",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "stomach",
+      "specimenSite": "Dạ dày",
+      "candidates": {
+        "clinical": "stomach",
+        "explicitIcd10": "",
+        "suggestedIcd10": "stomach",
+        "hmmdConclusion": "stomach"
+      }
+    },
+    {
+      "id": "hmmd-2025-1668",
+      "diagnosisText": "U gan và đường mật",
+      "previousOrgan": "liver",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Đường mật",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "biliary_pancreas"
+      }
+    },
+    {
+      "id": "hmmd-2025-1690",
+      "diagnosisText": "U ác của gan và đường mật",
+      "previousOrgan": "liver",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Đường mật",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "stomach"
+      }
+    },
+    {
+      "id": "hmmd-2025-1706",
+      "diagnosisText": "U ác tụy di căn gan",
+      "previousOrgan": "liver",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Tụy",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "biliary_pancreas"
+      }
+    },
+    {
+      "id": "hmmd-2025-1825",
+      "diagnosisText": "K tụy di căn gan",
+      "previousOrgan": "liver",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Tụy",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": ""
+      }
+    },
+    {
+      "id": "hmmd-2025-1849",
+      "diagnosisText": "U thân tử cung",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "gynecologic",
+      "specimenSite": "Tử cung",
+      "candidates": {
+        "clinical": "gynecologic",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "gynecologic"
+      }
+    },
+    {
+      "id": "hmmd-2025-1853",
+      "diagnosisText": "Rò bàng quang ruột",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "urinary_male",
+      "specimenSite": "Bàng quang",
+      "candidates": {
+        "clinical": "urinary_male",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": ""
+      }
+    },
+    {
+      "id": "hmmd-2025-2324",
+      "diagnosisText": "Hạch cổ Trái? K tuyến giáp",
+      "previousOrgan": "thyroid",
+      "selectedOrgan": "hematolymphoid",
+      "specimenSite": "Hạch / hệ huyết học",
+      "candidates": {
+        "clinical": "hematolymphoid",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2026-0019",
+      "diagnosisText": "U thân vị",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "stomach",
+      "specimenSite": "Dạ dày",
+      "candidates": {
+        "clinical": "stomach",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "stomach"
+      }
+    },
+    {
+      "id": "hmmd-2026-0035",
+      "diagnosisText": "U tuyến thượng thận",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "endocrine",
+      "specimenSite": "Tuyến thượng thận",
+      "candidates": {
+        "clinical": "endocrine",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": ""
+      }
+    },
+    {
+      "id": "hmmd-2026-0169",
+      "diagnosisText": "U thân tử cung",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "gynecologic",
+      "specimenSite": "Tử cung",
+      "candidates": {
+        "clinical": "gynecologic",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "gynecologic"
+      }
+    },
+    {
+      "id": "hmmd-2026-0305",
+      "diagnosisText": "U gan / Tràn dmp",
+      "previousOrgan": "liver",
+      "selectedOrgan": "lung",
+      "specimenSite": "Phổi / phế quản",
+      "candidates": {
+        "clinical": "lung",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "lung"
+      }
+    },
+    {
+      "id": "hmmd-2026-0321",
+      "diagnosisText": "U ác của thân vị",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "stomach",
+      "specimenSite": "Dạ dày",
+      "candidates": {
+        "clinical": "stomach",
+        "explicitIcd10": "",
+        "suggestedIcd10": "stomach",
+        "hmmdConclusion": ""
+      }
+    },
+    {
+      "id": "hmmd-2026-0417",
+      "diagnosisText": "U ác đường mật ngoài gan",
+      "previousOrgan": "liver",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Đường mật",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": ""
+      }
+    },
+    {
+      "id": "hmmd-2026-0424",
+      "diagnosisText": "U ác của gan và đường mật",
+      "previousOrgan": "liver",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Đường mật",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "liver"
+      }
+    },
+    {
+      "id": "hmmd-2026-0470",
+      "diagnosisText": "Bán tắc ruột do u lympho",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "hematolymphoid",
+      "specimenSite": "Hạch / hệ huyết học",
+      "candidates": {
+        "clinical": "hematolymphoid",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2026-0586",
+      "diagnosisText": "U ác đường mật ngoài gan",
+      "previousOrgan": "liver",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Đường mật",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": ""
+      }
+    },
+    {
+      "id": "hmmd-2026-0615",
+      "diagnosisText": "U ruột non",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "small_bowel",
+      "specimenSite": "Ruột non",
+      "candidates": {
+        "clinical": "small_bowel",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "stomach"
+      }
+    },
+    {
+      "id": "hmmd-2026-0645",
+      "diagnosisText": "U tuyến thượng thận",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "endocrine",
+      "specimenSite": "Tuyến thượng thận",
+      "candidates": {
+        "clinical": "endocrine",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "endocrine"
+      }
+    },
+    {
+      "id": "hmmd-2026-0673",
+      "diagnosisText": "UT phổi xâm lấn thực quản",
+      "previousOrgan": "lung",
+      "selectedOrgan": "esophagus",
+      "specimenSite": "Thực quản",
+      "candidates": {
+        "clinical": "esophagus",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": ""
+      }
+    },
+    {
+      "id": "hmmd-2026-0694",
+      "diagnosisText": "U ruột non",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "small_bowel",
+      "specimenSite": "Ruột non",
+      "candidates": {
+        "clinical": "small_bowel",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2026-0742",
+      "diagnosisText": "K dạ dày chảy máu; U gan đa ổ B, C (-)",
+      "previousOrgan": "liver",
+      "selectedOrgan": "stomach",
+      "specimenSite": "Dạ dày",
+      "candidates": {
+        "clinical": "stomach",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "stomach"
+      }
+    },
+    {
+      "id": "hmmd-2026-0832",
+      "diagnosisText": "K biểm mô đường mật tỏng gan",
+      "previousOrgan": "liver",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Đường mật",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "liver"
+      }
+    },
+    {
+      "id": "hmmd-2026-0839",
+      "diagnosisText": "U ác tụy - phổi",
+      "previousOrgan": "lung",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Tụy",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "lung"
+      }
+    },
+    {
+      "id": "hmmd-2026-0914",
+      "diagnosisText": "Viêm dạ dày ruột",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "stomach",
+      "specimenSite": "Dạ dày",
+      "candidates": {
+        "clinical": "stomach",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": ""
+      }
+    },
+    {
+      "id": "hmmd-2026-0937",
+      "diagnosisText": "U ác của gan và đường mật trong gan",
+      "previousOrgan": "liver",
+      "selectedOrgan": "biliary_pancreas",
+      "specimenSite": "Đường mật",
+      "candidates": {
+        "clinical": "biliary_pancreas",
+        "explicitIcd10": "",
+        "suggestedIcd10": "biliary_pancreas",
+        "hmmdConclusion": "liver"
+      }
+    },
+    {
+      "id": "hmmd-2026-0941",
+      "diagnosisText": "U ruột non",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "small_bowel",
+      "specimenSite": "Ruột non",
+      "candidates": {
+        "clinical": "small_bowel",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "stomach"
+      }
+    },
+    {
+      "id": "hmmd-2026-1026",
+      "diagnosisText": "U tuyến thượng thận",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "endocrine",
+      "specimenSite": "Tuyến thượng thận",
+      "candidates": {
+        "clinical": "endocrine",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "endocrine"
+      }
+    },
+    {
+      "id": "hmmd-2026-1028",
+      "diagnosisText": "U tuyến thượng thận",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "endocrine",
+      "specimenSite": "Tuyến thượng thận",
+      "candidates": {
+        "clinical": "endocrine",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "endocrine"
+      }
+    },
+    {
+      "id": "hmmd-2026-1133",
+      "diagnosisText": "U ruột non",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "small_bowel",
+      "specimenSite": "Ruột non",
+      "candidates": {
+        "clinical": "small_bowel",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "hematolymphoid"
+      }
+    },
+    {
+      "id": "hmmd-2026-1299",
+      "diagnosisText": "U ác ruột non",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "small_bowel",
+      "specimenSite": "Ruột non",
+      "candidates": {
+        "clinical": "small_bowel",
+        "explicitIcd10": "",
+        "suggestedIcd10": "small_bowel",
+        "hmmdConclusion": "small_bowel"
+      }
+    },
+    {
+      "id": "hmmd-2026-1446",
+      "diagnosisText": "U tuyến thượng thận",
+      "previousOrgan": "kidney",
+      "selectedOrgan": "endocrine",
+      "specimenSite": "Tuyến thượng thận",
+      "candidates": {
+        "clinical": "endocrine",
+        "explicitIcd10": "",
+        "suggestedIcd10": "",
+        "hmmdConclusion": "endocrine"
+      }
+    },
+    {
+      "id": "hmmd-2026-1486",
+      "diagnosisText": "U ác ruột non",
+      "previousOrgan": "colorectal",
+      "selectedOrgan": "small_bowel",
+      "specimenSite": "Ruột non",
+      "candidates": {
+        "clinical": "small_bowel",
+        "explicitIcd10": "",
+        "suggestedIcd10": "small_bowel",
+        "hmmdConclusion": "small_bowel"
+      }
+    }
+  ],
+  "unresolvedExamples": [
+    {
+      "id": "hmmd-2025-0013",
+      "diagnosisText": "U ác ở vị trí không rõ ràng khác",
+      "conclusionText": "Ung thư biểu mô tuyến di căn. \nKhông có dấu chỉ điểm xác định nguồn gốc."
+    },
+    {
+      "id": "hmmd-2025-0014",
+      "diagnosisText": "Carcinoma tế bào nhỏ",
+      "conclusionText": "Ung thư biểu mô thần kinh nội tiết tế bào nhỏ. \n(Small cell neuroendocrine carcinoma)."
+    },
+    {
+      "id": "hmmd-2025-0082",
+      "diagnosisText": "U ác mũi",
+      "conclusionText": "Car- xi- nôm tế bào đáy xâm nhập.\n (Basal cell carcinoma)- ICD-O: 8090/ 3"
+    },
+    {
+      "id": "hmmd-2025-0089",
+      "diagnosisText": "Chảy máu đường hô hấp",
+      "conclusionText": "Tổ chức tuyến xơ - viêm mạn."
+    },
+    {
+      "id": "hmmd-2025-0146",
+      "diagnosisText": "",
+      "conclusionText": "K tuyến ống xâm nhập Grade 2 "
+    },
+    {
+      "id": "hmmd-2025-0158",
+      "diagnosisText": "",
+      "conclusionText": "HMMD phù hợp u hắc bào ác tính "
+    },
+    {
+      "id": "hmmd-2025-0257",
+      "diagnosisText": "",
+      "conclusionText": "TX"
+    },
+    {
+      "id": "hmmd-2025-0274",
+      "diagnosisText": "Xuất huyết giảm tiểu cầu ",
+      "conclusionText": "Tổ chức viêm hoại tử."
+    },
+    {
+      "id": "hmmd-2025-0288",
+      "diagnosisText": "U tủy tác phát",
+      "conclusionText": "U xơ thần kinh.\n(Neuro fibroma). ICD-O:  9540/ 0.\n"
+    },
+    {
+      "id": "hmmd-2025-0305",
+      "diagnosisText": "",
+      "conclusionText": "TX 8marker"
+    },
+    {
+      "id": "hmmd-2025-0444",
+      "diagnosisText": "U tân sinh CRTC",
+      "conclusionText": "Hóa mô miễn dịch phù hợp Large cell carcinoma.\nPD-L1(SP263): không bộc lộ. TC<1%.\n"
+    },
+    {
+      "id": "hmmd-2025-0457",
+      "diagnosisText": "Bệnh của tủy, không đặc hiệu",
+      "conclusionText": "Hóa mô miễn dịch phù hợp Schwannoma."
+    },
+    {
+      "id": "hmmd-2025-0485",
+      "diagnosisText": "U tân sinh không xác định",
+      "conclusionText": "   HMMD:    Carcinôm tuyến ống xâm nhập – Grade 2\n               Phân nhóm phân tử (Molecular grouping):   Lòng ống B (LUMB)\n"
+    },
+    {
+      "id": "hmmd-2025-0531",
+      "diagnosisText": "Đột quị, không xác định",
+      "conclusionText": "U ác tính- Hóa mô miễn dịch không xác định được nguồn gốc và thể loại tế bào u.\n       \n"
+    },
+    {
+      "id": "hmmd-2025-0565",
+      "diagnosisText": "U ác tính, không rõ vị trí nguyên phát",
+      "conclusionText": "Cac-xi-nôm tế bào gai không sừng hóa, xâm nhập\n(Squamous cell carcinoma non keratinization). ICD-O: 8072/ 3\n"
+    },
+    {
+      "id": "hmmd-2025-0597",
+      "diagnosisText": "U nguyên bào TK",
+      "conclusionText": "Hóa mô miễn dịch phù hợp Neuroblastoma."
+    },
+    {
+      "id": "hmmd-2025-0655",
+      "diagnosisText": "Đau lưng",
+      "conclusionText": "Car-xi-nôm tuyến ống xâm nhập - PDL1 (SP263): không bộc lộ. \n- Biểu hiện bình thường 4 protein MMR: MLH1, PMS2, MSH2 và MSH6.\n- Không có biểu hiện khiếm khuyết MMR hoặc hội chứng Lynch."
+    },
+    {
+      "id": "hmmd-2025-0724",
+      "diagnosisText": "K biểu mô gai tại chổ TQ",
+      "conclusionText": "Car-xi-nôm tế bào gai xâm nhập - PDL1 (SP263): không bộc lộ CPS<1.\n- Biểu hiện bình thường 4 protein MMR: MLH1, PMS2, MSH2 và MSH6.\n- Không có biểu hiện khiếm khuyết MMR hoặc hội chứng Lynch."
+    },
+    {
+      "id": "hmmd-2025-0740",
+      "diagnosisText": "Đau đầu",
+      "conclusionText": "Ung thư biểu mô tế bào gai không sừng hóa, xâm lấn."
+    },
+    {
+      "id": "hmmd-2025-0803",
+      "diagnosisText": "U ác của xọ và mặt",
+      "conclusionText": "Hóa mô miễn dịch phù hợp Adenoid cystic carcinoma. \nGrade 1."
+    },
+    {
+      "id": "hmmd-2025-0820",
+      "diagnosisText": "U ác không xác định vị trí",
+      "conclusionText": "Ung thư biểu mô tế bào gai không sừng hóa, di căn."
+    },
+    {
+      "id": "hmmd-2025-0847",
+      "diagnosisText": "Xẹp đốt sống",
+      "conclusionText": "Ung thư biểu mô di căn. Nghĩ đến biểu mô tuyến đặc.\nBàn luận:  \nPSA, NapsinA: Âm tính"
+    },
+    {
+      "id": "hmmd-2025-0864",
+      "diagnosisText": "U tân sinh không xác định",
+      "conclusionText": "Schwannoma type A"
+    },
+    {
+      "id": "hmmd-2025-0903",
+      "diagnosisText": "1B. TX 25-54",
+      "conclusionText": "Huyết học"
+    },
+    {
+      "id": "hmmd-2025-0926",
+      "diagnosisText": "U tân sinh không xác định",
+      "conclusionText": "HMMD: Carcinôm tuyến ống xâm nhập – Grade 3\nPhân nhóm phân tử (Molecular grouping): Bộ 3 âm tính dạng đáy"
+    },
+    {
+      "id": "hmmd-2025-1073",
+      "diagnosisText": "Sốt chưa rõ nguyên nhân",
+      "conclusionText": "Hủy CĐ, Bs Trần Trọng Bảo hủy"
+    },
+    {
+      "id": "hmmd-2025-1086",
+      "diagnosisText": "Ung thư biểu mô gai không sừng hóa xâm nhập",
+      "conclusionText": "Hóa mô miễn dịch phù hợp Small cell neuroendocrine carcinoma."
+    },
+    {
+      "id": "hmmd-2025-1107",
+      "diagnosisText": "U tân sinh chưa rõ bản chất",
+      "conclusionText": "Tế bào liên kết hình thoi không điển hình. Không xác định tính chất do số lượng ít. \nĐề nghị lấy thêm mẫu để chẩn đoán.\n"
+    },
+    {
+      "id": "hmmd-2025-1116",
+      "diagnosisText": "U tân sinh không xác định",
+      "conclusionText": "Ung thư biểu mô tuyến ống, xâm nhập. Mô học độ 2. \nPhân nhóm phân tử: Lòng ống B.\n"
+    },
+    {
+      "id": "hmmd-2025-1195",
+      "diagnosisText": "U ác của vị trí khác",
+      "conclusionText": "Mô học: Ung thư biểu mô tế bào gai không sừng hóa. \nPD-L1(SP263): TC 80%. CPS = 90.\n"
+    },
+    {
+      "id": "hmmd-2025-1259",
+      "diagnosisText": "U ác tính không rõ loại",
+      "conclusionText": "Quá sản tế bào trung biểu mô.\n(Mesothelial hyperplasia)\n"
+    },
+    {
+      "id": "hmmd-2025-1284",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": "Mô học và Hóa mô hướng đến bệnh Sarcoidosis. \nCần làm thêm các xét nghiệm vi sinh để loại trừ bệnh nấm và nhiễm khuẩn.\n"
+    },
+    {
+      "id": "hmmd-2025-1285",
+      "diagnosisText": "Bướu không độc",
+      "conclusionText": "Ung thư biểu mô tế bào gai không sừng hóa, xâm nhập."
+    },
+    {
+      "id": "hmmd-2025-1318",
+      "diagnosisText": "U ác tính ở lách",
+      "conclusionText": "\n        HMMD phù hơp:     Carcinoma không biệt hóa di căn.\n\n"
+    },
+    {
+      "id": "hmmd-2025-1346",
+      "diagnosisText": "",
+      "conclusionText": "Hủy CĐ"
+    },
+    {
+      "id": "hmmd-2025-1409",
+      "diagnosisText": "",
+      "conclusionText": "Hủy CĐ ( 9h30;14/8 Hảo)"
+    },
+    {
+      "id": "hmmd-2025-1496",
+      "diagnosisText": "Đột quị không xác định",
+      "conclusionText": "Ung thư biểu mô thần kinh nội tiết, tế bào nhỏ. \n(Small cell neuroendocrine carcinoma).\n"
+    },
+    {
+      "id": "hmmd-2025-1533",
+      "diagnosisText": "U ác vị trí khác và không rõ ràng",
+      "conclusionText": " Car- ci- nom tế bào vảy biệt hóa kém, xâm nhập. \n(Squamous cell carcinoma - Grade 3). ICD-O: 8071/ 3.\n"
+    },
+    {
+      "id": "hmmd-2025-1537",
+      "diagnosisText": "U tân sinh không xác định vị trí",
+      "conclusionText": "U bao schwann lành tính, Type A.\n(Schwannoma). ICD-O: 9560/ 0\n"
+    },
+    {
+      "id": "hmmd-2025-1588",
+      "diagnosisText": "U ác tim ở lách",
+      "conclusionText": "Hủy chỉ định vì hết mẫu ngày 12/9/2025"
+    },
+    {
+      "id": "hmmd-2025-1624",
+      "diagnosisText": "U tân sinh không xác định",
+      "conclusionText": "HMMD phù hợp:                   Quá sản tuyến lành tính."
+    },
+    {
+      "id": "hmmd-2025-1643",
+      "diagnosisText": "U vùng hố yên",
+      "conclusionText": "Hóa mô miễn dịch phù hợp u sọ hầu. ( Craniopharyngioma, WHO grade 1)."
+    },
+    {
+      "id": "hmmd-2025-1701",
+      "diagnosisText": "U tân sinh CRTC",
+      "conclusionText": "Mô học: Ung thư biểu mô không tế bào nhỏ, hướng đến ung thư biểu mô tuyến. \nPD-L1(SP263): TC<1%. CPS = 2.\n"
+    },
+    {
+      "id": "hmmd-2025-1732",
+      "diagnosisText": "U tiểu khung lớn",
+      "conclusionText": "HMMD phù hợp:    U tế bào quanh mạch lành tính.\n (Perivascular epithelioid cell tumor (PEComa))\n"
+    },
+    {
+      "id": "hmmd-2025-1734",
+      "diagnosisText": "U ác khẩu",
+      "conclusionText": "Car- ci- nôm tế bào vảy biệt hóa vừa, xâm nhập. PD-L1 không bộc lộ.\n(Squamous cell carcinoma - Grade 2      ICD-O: 8071/ 3.\n\n"
+    },
+    {
+      "id": "hmmd-2025-1794",
+      "diagnosisText": "U tân sinh chưa rõ",
+      "conclusionText": "Ung thư biểu mô tuyến, xâm nhập. \nMMR: Biểu hiện bình thường 4 protein MMR: MLH1, PMS2, MSH2 và MSH6. \nKhông có biểu hiện khiếm khuyết MMR hoặc hội chứng Lynch. \nHer2: âm tính.\n"
+    },
+    {
+      "id": "hmmd-2025-1814",
+      "diagnosisText": "",
+      "conclusionText": "HỦY CĐ"
+    },
+    {
+      "id": "hmmd-2025-1827",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": "Ung thư biểu mô tuyến kém biệt hóa, xâm nhập."
+    },
+    {
+      "id": "hmmd-2025-1838",
+      "diagnosisText": "Khó thở",
+      "conclusionText": "DƯ CĐ NÊN HỦY"
+    },
+    {
+      "id": "hmmd-2025-1911",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": "Ung thư biểu mô tế bào gai sừng hóa, biệt hóa vừa, xâm nhập. \nALK: âm tính. PD-L1(SP263): TC<1%. CPS<1.\n"
+    },
+    {
+      "id": "hmmd-2025-1915",
+      "diagnosisText": "Thiếu máu do thiếu sắt",
+      "conclusionText": "Car-xi-nôm tuyến ống xâm nhập – Mô học độ 2. \n- Biểu hiện bình thường 4 protein MMR (pMMR): MLH1, PMS2, MSH2 và MSH6.\n- Không có biểu hiện khiếm khuyết MMR (pMMR) hoặc hội chứng Lynch."
+    },
+    {
+      "id": "hmmd-2025-1970",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": "Car-xi-nôm thần kinh nội tiết, týp tế bào lớn- Độ thấp.\n(Lager cell neuroendocrin carcinoma)-"
+    },
+    {
+      "id": "hmmd-2025-1971",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": "Car-xi-nôm thần kinh nội tiết, týp tế bào lớn- Độ thấp.\n(Lager cell neuroendocrin carcinoma)"
+    },
+    {
+      "id": "hmmd-2025-1983",
+      "diagnosisText": "U ác của vị trí khác",
+      "conclusionText": "Hóa mô miễn dịch phù hợp Ung thư biểu mô tế bào gai kém biệt hóa, xâm nhập."
+    },
+    {
+      "id": "hmmd-2025-1988",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": "Ung thư biểu mô tế bào gai, không sừng hóa.\n"
+    },
+    {
+      "id": "hmmd-2025-2095",
+      "diagnosisText": "",
+      "conclusionText": "Car- ci- nom tế bào vảy không sừng hóa, xâm nhập. \n(Squamous cell carcinoma non keratinization). ICD-O: 8072/ 3\n"
+    },
+    {
+      "id": "hmmd-2025-2099",
+      "diagnosisText": "PDL1",
+      "conclusionText": "Car- ci- nom tế bào vảy không sừng hóa, xâm nhập. PD-L1: không bộc lộ.\n(Squamous cell carcinoma non keratinization). ICD-O: 8072/ 3\n"
+    },
+    {
+      "id": "hmmd-2025-2102",
+      "diagnosisText": "Bệnh dây tk tam thoa bên phải vô căn",
+      "conclusionText": "HMMD PHÙ HỢP NGHỊCH SẢN SỢI."
+    },
+    {
+      "id": "hmmd-2025-2107",
+      "diagnosisText": "Bỏng Vết thươn",
+      "conclusionText": "Tổ chức biểu mô lát tầng lành tính - Viêm."
+    },
+    {
+      "id": "hmmd-2025-2129",
+      "diagnosisText": "Khối u hạ vị",
+      "conclusionText": "Hóa mô miễn dịch phù hợp U carcinoid, xuất phát từ u quái trưởng thành.\n(Carcinoid tumor, insular type). Nhân chia< 2/10HPF.\n"
+    },
+    {
+      "id": "hmmd-2025-2161",
+      "diagnosisText": "",
+      "conclusionText": "Mô học: Ung thư biểu mô tuyến kém biệt hóa, xâm nhập.\nMMR: Biểu hiện bình thường 4 protein MMR: MLH1, PMS2, MSH2 và MSH6.\nKhông có biểu hiện khiếm khuyết MMR hoặc hội chứng Lynch.\nHer-2/neu: Âm tính. PD-L1(SP263): TC<1%. CPS<1."
+    },
+    {
+      "id": "hmmd-2025-2249",
+      "diagnosisText": "",
+      "conclusionText": "Hủy CĐ do không đủ mẫu."
+    },
+    {
+      "id": "hmmd-2025-2261",
+      "diagnosisText": "",
+      "conclusionText": "Mô học: Ung thư biểu mô tế bào gai biệt hóa vừa.\nP16: âm tính."
+    },
+    {
+      "id": "hmmd-2025-2268",
+      "diagnosisText": "",
+      "conclusionText": " Car-xi-nôm tuyến ống xâm nhập - Mô học độ 3.\n- Biểu hiện bình thường 4 protein MMR (pMMR): MLH1, PMS2, MSH2 và MSH6.\n- Không có biểu hiện khiếm khuyết MMR (pMMR) hoặc hội chứng Lynch.\n"
+    },
+    {
+      "id": "hmmd-2025-2274",
+      "diagnosisText": "",
+      "conclusionText": "Car- ci- nom tế bào vảy xâm nhập- mÔ HỌC ĐỘ 2.\n(Squamous cell carcinoma keratinization- Grade 2). ICD-O: 8071/ 3"
+    },
+    {
+      "id": "hmmd-2025-2306",
+      "diagnosisText": "u tân sinh",
+      "conclusionText": "Mô học hướng đến Adenocarcinoma, thành phần Lepidic nổi trội.\nKhông đánh giá được kích thước u và thành phần xâm lấn trên mẫu sinh thiết lõi."
+    },
+    {
+      "id": "hmmd-2025-2315",
+      "diagnosisText": "suy tim",
+      "conclusionText": "MẪU DỊCH: Quá sản tế bào trung biểu mô lành tính."
+    },
+    {
+      "id": "hmmd-2026-0070",
+      "diagnosisText": "",
+      "conclusionText": "Hủy chỉ định do bn yêu cầu"
+    },
+    {
+      "id": "hmmd-2026-0207",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": "Car-xi-nôm tuyến di căn"
+    },
+    {
+      "id": "hmmd-2026-0525",
+      "diagnosisText": "HMMD phù hợp: Malignant Solitary fibrous tumor. ",
+      "conclusionText": "HMMD phù hợp: Malignant Solitary fibrous tumor. "
+    },
+    {
+      "id": "hmmd-2026-0532",
+      "diagnosisText": "U tân sinh không chắc chắn",
+      "conclusionText": "U xơ thần kinh. (Neuro fibroma). ICD-O: 9540/ 0."
+    },
+    {
+      "id": "hmmd-2026-0708",
+      "diagnosisText": "U tân sinh không xác định",
+      "conclusionText": "Hóa mô miễn dịch: U tuyến dạng ống lành tính. (Ductal adenoma)"
+    },
+    {
+      "id": "hmmd-2026-0745",
+      "diagnosisText": "U tân sinh không xác định ",
+      "conclusionText": "Hóa mô miễn dịch: Atypical ductal hyperplasia of the breast (ADH)\nBàn luận: Không thấy hình ảnh DCIS.\n"
+    },
+    {
+      "id": "hmmd-2026-0858",
+      "diagnosisText": "Bệnh tim thiếu máu cục bộ mạn tính",
+      "conclusionText": "Hóa mô miễn dịch phù hợp Pheochromocytoma. PASS score < 4"
+    },
+    {
+      "id": "hmmd-2026-0891",
+      "diagnosisText": "Thoát vị bẹn P",
+      "conclusionText": "HMMD phù hợp: Adenocarcinoma- NOS. Adenocarcinoma of epididymis\n"
+    },
+    {
+      "id": "hmmd-2026-0907",
+      "diagnosisText": "U tân sinh không xác định",
+      "conclusionText": "Ung thư biểu mô tuyến ống, xâm nhập. Mô học độ II.\nPhân nhóm phân tử: Lòng ống B."
+    },
+    {
+      "id": "hmmd-2026-0994",
+      "diagnosisText": "U tân sinh k rõ",
+      "conclusionText": "PD-L1 (SP263) có bộc lộ: TPS = 70."
+    },
+    {
+      "id": "hmmd-2026-1040",
+      "diagnosisText": "U tân sinh chưa rõ",
+      "conclusionText": "Car-xi-nôm tuyến ống xâm nhập. Mô học độ 2.\n- Mất biểu hiện MLH1, PMS2- (dMMR).\n- Biểu hiện bình thường MSH2 và MSH6.\n- Có biểu hiện khiếm khuyết MMR (dMMR) hoặc hội chứng Lynch."
+    },
+    {
+      "id": "hmmd-2026-1054",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": "Hóa mô miễn dịch: Ung thư biểu mô thể ống xâm nhập dạng trưnga cá - Grade 2.\nPhân nhóm phân tử (Molecular grouping): Her-2 dương tính 3+"
+    },
+    {
+      "id": "hmmd-2026-1059",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": "Car-xi-nôm tuyến hốc xâm nhập- PD-L1 không bộc lộ.\n(Invasive Alveola adenocarcinoma). ICD-O: 8251/ 3."
+    },
+    {
+      "id": "hmmd-2026-1070",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": "Car-xi-nôm tuyến xâm nhập. PD-L1 (SP263): Âm tính (CPS<1%).\n- Biểu hiện bình thường 4 protein MMR (pMMR): MLH1, PMS2, MSH2 và MSH6.\n- Không có biểu hiện khiếm khuyết MMR (pMMR) hoặc hội chứng Lynch"
+    },
+    {
+      "id": "hmmd-2026-1072",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": "Car-xi-nôm tế bào gai xâm nhập - Grade 2.\n- Biểu hiện bình thường 4 protein MMR (pMMR): MLH1, PMS2, MSH2 và MSH6.\n- Không có biểu hiện khiếm khuyết MMR (pMMR) hoặc hội chứng Lynch."
+    },
+    {
+      "id": "hmmd-2026-1073",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": "HMMD phù hợp: Carcinoma tế bào nhỏ xâm nhập.\n(Small cell carcinoma). ICD-O: 8041/3"
+    },
+    {
+      "id": "hmmd-2026-1078",
+      "diagnosisText": "Thoát vị bẹn P",
+      "conclusionText": "HMMD phù hợp: Mesothelioma"
+    },
+    {
+      "id": "hmmd-2026-1084",
+      "diagnosisText": "",
+      "conclusionText": "Hủy CĐ"
+    },
+    {
+      "id": "hmmd-2026-1138",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": "Hóa mô miễn dịch trên mẫu sinh thiết lõi (1x10 mm) hướng đến: Solitary fibrous tumor.\nCần phẫu thuật cắt u để xác định thêm"
+    },
+    {
+      "id": "hmmd-2026-1156",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": "Hóa mô miễn dịch: Carcinôm tuyến ống xâm nhập - Grade 2\nPhân nhóm phân tử (Molecular grouping): Lòng ống B (LUMB)"
+    },
+    {
+      "id": "hmmd-2026-1165",
+      "diagnosisText": "U ác thứ phát",
+      "conclusionText": "LS xin hủy CĐ"
+    },
+    {
+      "id": "hmmd-2026-1179",
+      "diagnosisText": "K bm tuyến nhầy",
+      "conclusionText": "Car-xi-nôm tuyến nhầy, xâm nhập.\n(Metastatic Mucinous adenocarcinoma) ICD-O: 8480/9"
+    },
+    {
+      "id": "hmmd-2026-1201",
+      "diagnosisText": "Loét vùng niêm mạc",
+      "conclusionText": "HMMD phù hợp: Loạn sản biểu mô vảy độ thấp.\n(Squamous dysplasia, low grade)"
+    },
+    {
+      "id": "hmmd-2026-1234",
+      "diagnosisText": "K chưa rõ",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1253",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1254",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1262",
+      "diagnosisText": "TD bệnh bạch hầu",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1269",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1288",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1290",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1317",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1353",
+      "diagnosisText": "U tb mầm",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1364",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1399",
+      "diagnosisText": "U phần phụ",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1402",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1406",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1425",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1430",
+      "diagnosisText": "U ác thứ phát",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1434",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1438",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1441",
+      "diagnosisText": "U vùng nách",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1447",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1459",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1462",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1472",
+      "diagnosisText": "U ác ",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1473",
+      "diagnosisText": "U ác mô lk",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1483",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1490",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1491",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1495",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1511",
+      "diagnosisText": "U tân sinh",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1528",
+      "diagnosisText": "Vùng loét sùi",
+      "conclusionText": ""
+    },
+    {
+      "id": "hmmd-2026-1531",
+      "diagnosisText": "U ác tính",
+      "conclusionText": ""
+    }
+  ]
+}

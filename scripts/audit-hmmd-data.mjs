@@ -20,14 +20,31 @@ const mmrPanelCases = cases2026.filter((item) => {
   const markers = new Set([...(item.positive || []), ...(item.negative || [])]);
   return ["MLH1", "PMS2", "MSH2", "MSH6"].every((marker) => markers.has(marker));
 }).length;
-const existingCasesHash = crypto.createHash("sha256").update(JSON.stringify(cases2025)).digest("hex");
+function clinicalContentHash(cases) {
+  const immutable = cases.map((item) => ({
+    id: item.id,
+    diagnosisText: item.diagnosisText,
+    conclusionText: item.conclusionText,
+    positive: item.positive,
+    negative: item.negative,
+    positiveDisplay: item.positiveDisplay,
+    negativeDisplay: item.negativeDisplay,
+    positiveText: item.positiveText,
+    negativeText: item.negativeText,
+    notesText: item.notesText,
+    suggested: item.suggested,
+  }));
+  return crypto.createHash("sha256").update(JSON.stringify(immutable)).digest("hex");
+}
+
+const existingCasesHash = clinicalContentHash(cases2025);
 const checks = {
   caseCount: dataset.cases.length === 3924,
   metaCaseCount: dataset.meta?.caseCount === 3924,
   cases2025: cases2025.length === 2378,
   cases2026: cases2026.length === 1546,
   uniqueIds: ids.size === dataset.cases.length,
-  existingCasesPreserved: existingCasesHash === "143b12a1c483bafb1e637cee252bcc7bd64713aaafaae2d9f5a35ace8a21f328",
+  existingCasesPreserved: existingCasesHash === "16ee72a4e8b7b102ee4ce0086224bca5b79ff8ead66efff33dc0e5918c9cdfc5",
   noSensitiveKeys: exposedSensitiveKeys.length === 0,
   normalized2026Spellings: forbidden2026Spellings === 0,
   mmrPanelExpandedIn2026: mmrPanelCases >= 13,
