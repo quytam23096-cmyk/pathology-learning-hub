@@ -2878,6 +2878,7 @@ function renderAssistantControls() {
       type="button"
       data-assistant-clue="${escapeHtml(clue.id)}"
       aria-pressed="${state.assistantClues.includes(clue.id)}"
+      title="${escapeHtml(clue.caseIds.length ? `Đã đối chiếu ${clue.caseIds.length} hồ sơ atlas` : "Chưa có hồ sơ atlas đã thẩm định; chỉ tra cứu nguồn đối chiếu")}"
     >${escapeHtml(clue.label)}</button>
   `).join("");
 
@@ -2980,8 +2981,8 @@ function assistantWhoSourceResults() {
     assistantWhoSourceMode = clueTerms.length ? "morphology" : "organ";
     return deduplicateSourceEntries(clueMatches, (entry) => entry.nameEn);
   }
-  if (organ?.id !== "all" && organMatches.length) {
-    assistantWhoSourceMode = "organ-fallback";
+  if (!clueTerms.length && organ?.id !== "all" && organMatches.length) {
+    assistantWhoSourceMode = "organ";
     return deduplicateSourceEntries(organMatches, (entry) => entry.nameEn);
   }
   return [];
@@ -3005,8 +3006,8 @@ function assistantWebPathologySourceResults() {
     assistantWebPathologySourceMode = clueTerms.length ? "morphology" : "organ";
     return deduplicateSourceEntries(clueMatches, (entry) => entry.titleEn);
   }
-  if (organ?.id !== "all" && organMatches.length) {
-    assistantWebPathologySourceMode = "organ-fallback";
+  if (!clueTerms.length && organ?.id !== "all" && organMatches.length) {
+    assistantWebPathologySourceMode = "organ";
     return deduplicateSourceEntries(organMatches, (entry) => entry.titleEn);
   }
   return [];
@@ -3034,12 +3035,8 @@ function renderAssistantResults() {
   const visible = ranked.slice(0, 8);
   const visibleWho = whoSourceResults.slice(0, 16);
   const visibleWebPathology = webPathologySourceResults.slice(0, 8);
-  const whoScopeNote = assistantWhoSourceMode === "organ-fallback"
-    ? "Mở rộng theo cơ quan vì tiêu đề mục WHO không chứa trực tiếp hình thái đã chọn."
-    : "Khớp theo tên cơ quan và thuật ngữ hình thái trong mục lục nguồn.";
-  const webPathologyScopeNote = assistantWebPathologySourceMode === "organ-fallback"
-    ? "Mở rộng theo cơ quan vì tên gallery không chứa trực tiếp hình thái đã chọn."
-    : "Khớp theo tên cơ quan và thuật ngữ hình thái trong tên gallery nguồn.";
+  const whoScopeNote = "Chỉ hiển thị mục khớp trực tiếp cơ quan và thuật ngữ hình thái; không tự mở rộng sang toàn bộ cơ quan.";
+  const webPathologyScopeNote = "Chỉ hiển thị gallery có tên khớp trực tiếp; luôn đối chiếu hình trên trang nguồn trước khi học.";
 
   if (!visible.length && !visibleWho.length && !visibleWebPathology.length) {
     els.assistantResults.innerHTML = `

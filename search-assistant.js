@@ -371,6 +371,208 @@
     },
   ];
 
+  // Morphology matching favours precision over recall. Every relation below
+  // was reviewed against the positive microscopic description of the atlas
+  // case. Names, markers, pitfalls and negative statements cannot create a
+  // morphology match.
+  const morphologyCaseMatrix = {
+    glandular: [
+      "thyroid-normal", "thyroid-nodular", "thyroid-follicular-adenoma", "thyroid-niftp", "thyroid-ftc", "thyroid-graves",
+      "lung-adeno", "lung-mucinous", "lung-ais", "lung-acinar-pattern", "lung-papillary-pattern", "lung-metastatic-colon",
+      "colon-ssl", "colon-adenoma", "colon-adeno", "colon-tsa", "colon-villous", "colon-mucinous-adeno", "colon-high-grade-dysplasia", "colon-signet-ring",
+      "breast-idc", "breast-mucinous", "breast-fibroadenoma", "breast-radial-scar", "hpb-ipmn", "hpb-cholangiocarcinoma", "hpb-pdac",
+      "endometrium-endometrioid", "gyn-ovarian-serous", "gyn-endometrial-serous", "gyn-ein", "gyn-cervix-adenocarcinoma", "gyn-ovary-mucinous",
+      "prostate-adeno", "gu-bph", "gu-hgpin", "headneck-pleomorphic", "headneck-warthin", "headneck-mucoepidermoid-carcinoma",
+      "headneck-adenoid-cystic-carcinoma", "headneck-acinic-cell-carcinoma", "soft-synovial-sarcoma", "uppergi-barrett-dysplasia",
+      "uppergi-gastric-adeno", "uppergi-esophagus-ogj-adeno", "uppergi-gastric-dysplasia", "uppergi-gastric-neuroendocrine-neoplasms",
+      "eye-lacrimal-adenoid-cystic-carcinoma",
+    ],
+    squamous: [
+      "lung-squamous", "cervix-scc", "skin-scc", "skin-actinic-keratosis", "headneck-oral-scc", "uppergi-esophagus-scc", "breast-metaplastic",
+    ],
+    "small-cell": ["lung-small-cell", "heme-cll-sll", "heme-mantle-cell", "heme-marginal-zone", "eye-retinoblastoma", "cns-medulloblastoma-histologic"],
+    neuroendocrine: ["thyroid-medullary", "lung-small-cell", "lung-carcinoid", "lung-large-cell-ne", "uppergi-gastric-neuroendocrine-neoplasms"],
+    papillary: [
+      "thyroid-ptc", "lung-adeno", "lung-papillary-pattern", "hpb-ipmn", "kidney-papillary1", "colon-adenoma", "colon-tsa",
+      "colon-villous", "gyn-ovarian-serous", "gyn-endometrial-serous", "gu-urothelial-low", "headneck-warthin", "headneck-acinic-cell-carcinoma",
+    ],
+    micropapillary: ["lung-adeno", "breast-adh"],
+    cribriform: ["colon-high-grade-dysplasia", "headneck-adenoid-cystic-carcinoma", "eye-lacrimal-adenoid-cystic-carcinoma"],
+    follicular: ["thyroid-normal", "thyroid-nodular", "thyroid-follicular-adenoma", "thyroid-niftp", "thyroid-ftc", "thyroid-graves"],
+    lepidic: ["lung-adeno", "lung-mucinous", "lung-ais", "lung-papillary-pattern"],
+    trabecular: ["hpb-hcc", "thyroid-medullary", "lung-carcinoid", "lung-large-cell-ne", "uppergi-gastric-neuroendocrine-neoplasms"],
+    nested: [
+      "thyroid-medullary", "lung-carcinoid", "lung-large-cell-ne", "uppergi-gastric-neuroendocrine-neoplasms", "skin-bcc", "skin-scc",
+      "cervix-scc", "headneck-oral-scc", "uppergi-esophagus-scc", "kidney-clear-cell", "gu-seminoma",
+    ],
+    fascicular: ["gyn-leiomyoma", "gyn-leiomyosarcoma", "soft-gist", "soft-synovial-sarcoma", "cns-schwannoma"],
+    storiform: ["skin-dermatofibroma"],
+    whorled: ["cns-meningioma", "soft-gist"],
+    rosette: ["lung-large-cell-ne", "eye-retinoblastoma", "cns-medulloblastoma-histologic"],
+    mucinous: [
+      "lung-adeno", "lung-mucinous", "lung-acinar-pattern", "breast-mucinous", "breast-ilc", "hpb-ipmn", "colon-mucinous-adeno",
+      "colon-signet-ring", "ovary-krukenberg", "gyn-cervix-adenocarcinoma", "gyn-ovary-mucinous", "headneck-mucoepidermoid-carcinoma",
+      "uppergi-barrett-dysplasia", "uppergi-gastric-adeno", "uppergi-esophagus-ogj-adeno",
+    ],
+    discohesive: ["breast-ilc", "breast-lcis", "ovary-krukenberg", "colon-signet-ring", "uppergi-gastric-adeno", "uppergi-esophagus-ogj-adeno"],
+    spindle: [
+      "thyroid-medullary", "thyroid-anaplastic", "cns-meningioma", "cns-schwannoma", "soft-neurofibroma", "soft-gist", "soft-alt-wdlps",
+      "soft-dedifferentiated-liposarcoma", "soft-synovial-sarcoma", "soft-osteosarcoma", "soft-central-chondrosarcoma-grade23",
+      "breast-phyllodes", "breast-metaplastic", "breast-radial-scar", "gyn-leiomyoma", "gyn-leiomyosarcoma", "skin-dermatofibroma",
+      "eye-iris-melanoma", "eye-conjunctival-melanoma", "headneck-pleomorphic",
+    ],
+    "clear-cell": ["kidney-clear-cell", "kidney-chromophobe", "gu-seminoma", "headneck-acinic-cell-carcinoma"],
+    epithelioid: [
+      "inflammation-granuloma", "infection-tb", "infection-fungal-granuloma", "soft-gist", "eye-iris-melanoma", "eye-conjunctival-melanoma",
+      "thyroid-medullary", "gu-seminoma",
+    ],
+    oncocytic: ["thyroid-hashimoto", "headneck-warthin"],
+    basaloid: ["skin-bcc", "skin-sebk", "headneck-oropharynx-scc-hpv", "headneck-adenoid-cystic-carcinoma", "eye-lacrimal-adenoid-cystic-carcinoma"],
+    "plasmacytoid-rhabdoid": [],
+    "signet-ring": ["breast-ilc", "ovary-krukenberg", "colon-mucinous-adeno", "colon-signet-ring", "uppergi-gastric-adeno", "uppergi-esophagus-ogj-adeno"],
+    "pleomorphic-giant": [
+      "thyroid-anaplastic", "gyn-leiomyosarcoma", "soft-dedifferentiated-liposarcoma",
+    ],
+    lymphoid: [
+      "thyroid-hashimoto", "thyroid-graves", "heme-follicular", "heme-hodgkin", "heme-dlbcl", "heme-cll-sll", "heme-mantle-cell",
+      "heme-marginal-zone", "headneck-warthin", "headneck-nasopharyngeal", "headneck-oropharynx-scc-hpv", "gu-seminoma",
+    ],
+    inflammation: [
+      "thyroid-hashimoto", "thyroid-subacute", "thyroid-graves", "heme-hodgkin", "inflammation-granuloma", "colon-inflammatory-polyp",
+      "hpb-cirrhosis", "infection-tb", "infection-fungal-granuloma", "hpb-hepatocellular-adenoma",
+    ],
+    myxoid: ["headneck-pleomorphic", "soft-neurofibroma", "soft-central-chondrosarcoma-grade23"],
+    desmoplastic: [
+      "colon-adeno", "breast-idc", "lung-acinar-pattern", "skin-scc", "headneck-oral-scc", "cervix-scc", "hpb-cholangiocarcinoma",
+      "hpb-pdac", "uppergi-esophagus-scc", "uppergi-gastric-adeno", "uppergi-esophagus-ogj-adeno",
+    ],
+    "hyaline-amyloid": ["headneck-adenoid-cystic-carcinoma", "eye-lacrimal-adenoid-cystic-carcinoma"],
+    vascular: ["kidney-clear-cell", "hpb-hepatocellular-adenoma", "hpb-fnh", "cns-oligodendroglioma-idh-codeleted", "soft-synovial-sarcoma"],
+    adipocytic: ["soft-lipoma", "soft-alt-wdlps", "soft-dedifferentiated-liposarcoma"],
+    "chondroid-osteoid": [
+      "headneck-pleomorphic", "breast-metaplastic", "gyn-mature-teratoma", "soft-dedifferentiated-liposarcoma", "soft-osteosarcoma",
+      "soft-central-chondrosarcoma-grade23",
+    ],
+    "high-grade": [
+      "thyroid-anaplastic", "lung-small-cell", "heme-dlbcl", "gyn-ovarian-serous", "gyn-leiomyosarcoma", "cns-glioblastoma",
+      "lung-large-cell-ne", "cns-medulloblastoma-histologic", "headneck-oropharynx-scc-hpv", "soft-osteosarcoma",
+    ],
+    "in-situ": [
+      "breast-dcis", "breast-lcis", "breast-adh", "lung-ais", "cervix-hsil", "colon-high-grade-dysplasia", "gyn-ein", "gu-hgpin",
+      "uppergi-barrett-dysplasia", "uppergi-gastric-dysplasia",
+    ],
+    invasive: [
+      "thyroid-ftc", "thyroid-tall-cell-ptc", "lung-squamous", "lung-adeno", "lung-mucinous", "lung-acinar-pattern", "lung-papillary-pattern",
+      "lung-metastatic-colon", "breast-idc", "breast-ilc", "breast-mucinous", "breast-metaplastic", "colon-adeno", "colon-mucinous-adeno",
+      "colon-signet-ring", "cervix-scc", "endometrium-endometrioid", "ovary-krukenberg", "gyn-ovarian-serous", "gyn-leiomyosarcoma",
+      "gyn-endometrial-serous", "gyn-cervix-adenocarcinoma", "hpb-hcc", "hpb-cholangiocarcinoma", "hpb-pdac",
+      "prostate-adeno", "kidney-clear-cell", "kidney-papillary1", "kidney-chromophobe", "skin-bcc", "skin-scc",
+      "skin-melanoma", "headneck-oral-scc", "headneck-nasopharyngeal", "headneck-mucoepidermoid-carcinoma",
+      "headneck-adenoid-cystic-carcinoma", "headneck-acinic-cell-carcinoma", "headneck-oropharynx-scc-hpv", "soft-dedifferentiated-liposarcoma",
+      "soft-synovial-sarcoma", "soft-osteosarcoma", "soft-central-chondrosarcoma-grade23", "uppergi-esophagus-scc", "uppergi-gastric-adeno",
+      "uppergi-esophagus-ogj-adeno", "eye-iris-melanoma", "eye-conjunctival-melanoma", "eye-lacrimal-adenoid-cystic-carcinoma",
+    ],
+    "vascular-perineural": [
+      "thyroid-ftc", "prostate-adeno", "hpb-pdac", "uppergi-esophagus-scc", "uppergi-gastric-adeno", "uppergi-esophagus-ogj-adeno",
+      "headneck-adenoid-cystic-carcinoma", "eye-conjunctival-melanoma", "eye-lacrimal-adenoid-cystic-carcinoma",
+    ],
+  };
+
+  const morphologyOverrides = {
+    follicular: {
+      label: "Nang tuyến / vi nang",
+      terms: ["nang tuyen", "vi nang", "follicular architecture", "microfollicular"],
+      sourceTerms: ["follicular thyroid", "microfollicular thyroid"],
+      referenceUrl: "https://pubmed.ncbi.nlm.nih.gov/36193717/",
+    },
+    lepidic: {
+      label: "Lepidic / mọc dọc vách phế nang",
+      terms: ["lepidic", "moc doc vach phe nang", "alveolar wall growth"],
+      sourceTerms: ["lepidic", "adenocarcinoma in situ of the lung", "minimally invasive adenocarcinoma of the lung"],
+      allowedChapters: ["lung"],
+      referenceUrl: "https://pubmed.ncbi.nlm.nih.gov/21252716/",
+    },
+    whorled: {
+      label: "Dạng xoáy / whorled",
+      terms: ["cau truc xoay", "dang xoay", "whorl", "whorled"],
+      sourceTerms: ["whorled", "meningioma"],
+    },
+    inflammation: {
+      label: "Nền viêm / thâm nhiễm viêm",
+      terms: ["nen viem", "tham nhiem viem", "inflammatory infiltrate", "inflammation"],
+      sourceTerms: ["inflammatory", "inflammation", "abscess"],
+    },
+    "hyaline-amyloid": {
+      label: "Chất hyalin / chất màng đáy",
+      terms: ["chat hyalin", "hyaline material", "basement membrane material"],
+      sourceTerms: ["hyalinizing", "hyaline", "basement membrane material"],
+    },
+    "plasmacytoid-rhabdoid": {
+      label: "Tế bào dạng tương bào",
+      terms: ["dang tuong bao", "plasmacytoid", "eccentric nucleus"],
+      sourceTerms: ["plasmacytoid"],
+    },
+    "in-situ": {
+      label: "Nội biểu mô / tại chỗ, chưa xâm nhập",
+      terms: ["noi bieu mo", "tai cho", "in situ", "intraepithelial", "non-invasive"],
+      sourceTerms: ["in situ", "intraepithelial", "non-invasive"],
+    },
+    "high-grade": {
+      label: "Hoại tử u / hoạt động phân bào cao",
+      terms: ["hoai tu u", "phan bao cao", "high mitotic activity", "tumour necrosis"],
+      sourceTerms: ["high grade", "high-grade", "anaplastic", "poorly differentiated"],
+    },
+  };
+
+  morphologyClues.forEach((clue) => {
+    Object.assign(clue, morphologyOverrides[clue.id] || {});
+    clue.caseIds = [...(morphologyCaseMatrix[clue.id] || [])];
+    clue.auditStatus = clue.caseIds.length ? "curated-positive" : "source-only";
+  });
+
+  morphologyClues.push(
+    {
+      id: "psammoma",
+      label: "Thể cát (psammoma)",
+      group: "Chất nền",
+      patterns: [],
+      terms: ["the cat", "psammoma", "psammoma body"],
+      sourceTerms: ["psammoma", "psammoma body"],
+      caseIds: ["thyroid-ptc", "cns-meningioma"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "granulomatous",
+      label: "Viêm hạt / tế bào khổng lồ",
+      group: "Chất nền",
+      patterns: [],
+      terms: ["viem hat", "u hat", "te bao khong lo", "granuloma", "giant cell"],
+      sourceTerms: ["granulomatous", "granuloma", "giant cell"],
+      caseIds: ["thyroid-subacute", "inflammation-granuloma", "infection-tb", "infection-fungal-granuloma", "gu-seminoma"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "amyloid",
+      label: "Amyloid mô đệm",
+      group: "Chất nền",
+      patterns: [],
+      terms: ["amyloid", "congo red"],
+      sourceTerms: ["amyloid", "congo red"],
+      caseIds: ["thyroid-medullary"],
+      auditStatus: "curated-positive",
+    },
+    {
+      id: "rhabdoid",
+      label: "Tế bào dạng rhabdoid",
+      group: "Tế bào",
+      patterns: [],
+      terms: ["rhabdoid", "eccentric nucleus", "hyaline cytoplasmic inclusion"],
+      sourceTerms: ["rhabdoid"],
+      caseIds: [],
+      auditStatus: "source-only",
+    },
+  );
+
   const semanticConcepts = [
     {
       id: "malignant",
@@ -426,13 +628,16 @@
     const patterns = flatten(item.pattern);
     const markers = flatten(item.markers);
     const features = flatten([item.micro, item.report, item.memory, item.pitfall]);
+    const morphology = flatten(item.micro);
     return {
       id: item.id,
+      chapter: item.chapter,
       names,
       organ,
       patterns,
       markers,
       features,
+      morphology,
       all: [...names, ...organ, ...patterns, ...markers, ...features],
     };
   }
@@ -465,9 +670,10 @@
   }
 
   function conceptMatches(index, concept) {
-    if (concept.caseIds?.includes(index.id)) return true;
+    if (concept.allowedChapters?.length && !concept.allowedChapters.includes(index.chapter)) return false;
+    if (Array.isArray(concept.caseIds)) return concept.caseIds.includes(index.id);
     const patternMatch = concept.patterns?.some((pattern) => index.patterns.includes(normalize(pattern)));
-    return Boolean(patternMatch || includesAny(index.all, concept.terms || []));
+    return Boolean(patternMatch || includesAnyWholeTerm(index.morphology, concept.terms || []));
   }
 
   function bestTokenScore(index, token) {
@@ -537,7 +743,7 @@
         score += 34;
         reasons.push(clue.label.toLowerCase());
       });
-      if (selectedClues.length && clueMatches === 0) return null;
+      if (selectedClues.length && clueMatches !== selectedClues.length) return null;
 
       const markerMatches = markerTokens.filter((token) => index.markers.some((field) => hasToken(field, token)));
       if (markerTokens.length && markerMatches.length === 0) return null;
@@ -566,5 +772,6 @@
     caseMatchesOrgan,
     normalize,
     rankCases,
+    morphologyAuditVersion: "2026-08-02",
   };
 }());

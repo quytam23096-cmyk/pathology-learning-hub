@@ -57,6 +57,60 @@ const cases = [
     pitfall: "",
     markers: ["CK7", "CK20", "CDX2", "SATB2"],
   },
+  {
+    id: "thyroid-ftc",
+    chapter: "thyroid",
+    diagnosis: "Ung thư biểu mô tuyến giáp thể nang",
+    english: "Follicular thyroid carcinoma",
+    pattern: ["carcinoma", "glandular"],
+    micro: ["U dạng nang", "Bắt buộc có xâm lấn bao và/hoặc mạch", "Không có nhân kiểu PTC điển hình"],
+    report: [], memory: "", pitfall: "", markers: ["TTF-1", "PAX8"],
+  },
+  {
+    id: "thyroid-niftp",
+    chapter: "thyroid",
+    diagnosis: "Tân sinh tuyến giáp dạng nang không xâm nhập với đặc điểm nhân dạng nhú",
+    english: "Non-invasive follicular thyroid neoplasm with papillary-like nuclear features",
+    pattern: ["precursor", "glandular"],
+    micro: ["Cấu trúc dạng nang", "Không xâm lấn bao/mạch, không nhú thật sự đáng kể"],
+    report: [], memory: "", pitfall: "", markers: [],
+  },
+  {
+    id: "lung-ais",
+    chapter: "lung",
+    diagnosis: "Ung thư biểu mô tuyến tại chỗ của phổi",
+    english: "Adenocarcinoma in situ of the lung",
+    pattern: ["precursor", "carcinoma", "glandular"],
+    micro: ["Tăng trưởng mọc dọc vách phế nang (lepidic) thuần túy", "Không thấy xâm nhập mô đệm"],
+    report: [], memory: "", pitfall: "", markers: ["TTF-1"],
+  },
+  {
+    id: "lung-metastatic-colon",
+    chapter: "lung",
+    diagnosis: "Ung thư biểu mô tuyến đại trực tràng di căn phổi",
+    english: "Metastatic colorectal adenocarcinoma in the lung",
+    pattern: ["carcinoma", "glandular"],
+    micro: ["Thường thiếu kiểu cấu trúc mọc dọc vách phế nang (lepidic)"],
+    report: [], memory: "", pitfall: "", markers: ["SATB2", "CDX2"],
+  },
+  {
+    id: "gyn-leiomyoma",
+    chapter: "gyn",
+    diagnosis: "U cơ trơn tử cung",
+    english: "Uterine leiomyoma",
+    pattern: ["benign", "spindle"],
+    micro: ["Bó tế bào cơ trơn đan xen", "Không hoại tử u, phân bào thấp"],
+    report: [], memory: "", pitfall: "", markers: ["Desmin"],
+  },
+  {
+    id: "soft-osteosarcoma",
+    chapter: "soft",
+    diagnosis: "Sarcoma xương",
+    english: "Osteosarcoma",
+    pattern: ["spindle"],
+    micro: ["Chất dạng xương ác tính được tạo trực tiếp bởi tế bào u"],
+    report: [], memory: "", pitfall: "", markers: [],
+  },
 ];
 
 const chapterNames = { lung: "Phổi", breast: "Vú", skin: "Da", gyn: "Phụ khoa" };
@@ -75,6 +129,17 @@ const checks = [
   ["English diagnosis", rank({ query: "small cell carcinoma" })[0]?.item.id, "lung-small-cell"],
   ["Guided clue", rank({ organ: "skin", clueIds: ["squamous"] })[0]?.item.id, "skin-scc"],
   ["IHC marker", rank({ organ: "lung", marker: "INSM1 TTF-1" })[0]?.item.id, "lung-small-cell"],
+  ["Lepidic is absent from thyroid", rank({ organ: "thyroid", clueIds: ["lepidic"] }).length, 0],
+  ["Lepidic identifies lung AIS", rank({ organ: "lung", clueIds: ["lepidic"] })[0]?.item.id, "lung-ais"],
+  ["Negative lepidic statement is excluded", rank({ organ: "lung", clueIds: ["lepidic"] }).some(({ item }) => item.id === "lung-metastatic-colon"), false],
+  ["Follicular architecture identifies FTC", rank({ organ: "thyroid", clueIds: ["follicular"] })[0]?.item.id, "thyroid-ftc"],
+  ["NIFTP is not papillary architecture", rank({ organ: "thyroid", clueIds: ["papillary"] }).some(({ item }) => item.id === "thyroid-niftp"), false],
+  ["NIFTP is not invasive", rank({ organ: "thyroid", clueIds: ["invasive"] }).some(({ item }) => item.id === "thyroid-niftp"), false],
+  ["Lung AIS is not invasive", rank({ organ: "lung", clueIds: ["invasive"] }).some(({ item }) => item.id === "lung-ais"), false],
+  ["Negative necrosis statement is excluded", rank({ organ: "gyn", clueIds: ["high-grade"] }).some(({ item }) => item.id === "gyn-leiomyoma"), false],
+  ["Sụn does not match sừng", rank({ clueIds: ["chondroid-osteoid"] }).some(({ item }) => item.id === "skin-scc"), false],
+  ["Osteoid identifies osteosarcoma", rank({ organ: "soft", clueIds: ["chondroid-osteoid"] })[0]?.item.id, "soft-osteosarcoma"],
+  ["Multiple clues use intersection", rank({ organ: "lung", clueIds: ["lepidic", "small-cell"] }).length, 0],
 ];
 
 const failures = checks.filter(([, actual, expected]) => actual !== expected);
@@ -83,6 +148,12 @@ if (assistant.organOptions.length < 45) coverageFailures.push("Organ coverage be
 if (assistant.morphologyClues.length < 35) coverageFailures.push("Morphology coverage below 35 clues");
 if (assistant.morphologyClues.some((clue) => !clue.group || !clue.sourceTerms?.length)) {
   coverageFailures.push("Morphology clue missing group or source terms");
+}
+if (assistant.morphologyClues.some((clue) => !Array.isArray(clue.caseIds))) {
+  coverageFailures.push("Morphology clue missing curated case matrix");
+}
+if (assistant.morphologyAuditVersion !== "2026-08-02") {
+  coverageFailures.push("Morphology audit version is missing or stale");
 }
 if (new Set(assistant.organOptions.map((option) => option.id)).size !== assistant.organOptions.length) {
   coverageFailures.push("Duplicate organ option id");
